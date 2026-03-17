@@ -8,3 +8,5 @@ Your answer should be either 'True' or 'False'.  Use the following format:
 <answer>
 YOUR ANSWER
 </answer>
+
+The sentence is: $sentence

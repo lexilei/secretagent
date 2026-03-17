@@ -1,6 +1,9 @@
 test:
 	uv run pytest tests/ -v
 
+lint:
+	uv run ruff check src benchmarks/sports_understanding
+
 wc:
 	wc src/secretagent/*.py
 	echo 

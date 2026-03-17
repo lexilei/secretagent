@@ -29,6 +29,7 @@ import typer
 
 from secretagent import record, config
 from secretagent.core import implement_via_config
+from secretagent import implement_pydantic # force registration
 from secretagent.dataset import Dataset, Case
 from secretagent.evaluate import Evaluator
 #
@@ -83,7 +84,7 @@ def callback():
     rather than collapsing a single subcommand to the top level.
     """
 
-CONF_DIR = Path(__file__).parent / 'conf'
+CONFIG_DIR = Path(__file__).parent / 'conf'
 
 @app.command(context_settings={"allow_extra_args": True, "allow_interspersed_args": False})
 def run(ctx: typer.Context, expt_name: str = typer.Option(None, help="Set evaluate.expt_name")):
@@ -92,6 +93,10 @@ def run(ctx: typer.Context, expt_name: str = typer.Option(None, help="Set evalua
     Extra args are parsed as config overrides in dot notation, e.g.:
         uv run python expt.py run llm.model=gpt-4o cachier.enable_caching=false
     """
+
+    #
+    # load the config parameters
+    #
 
     # configure with conf/conf.yaml plus any command-line args
     config_file =  Path(__file__).parent / 'conf' / 'conf.yaml'
@@ -109,13 +114,25 @@ def run(ctx: typer.Context, expt_name: str = typer.Option(None, help="Set evalua
 
     # configure the ptools
     implement_via_config(ptools, config.require('ptools'))
+
+    # run the evaluation
     evaluator = SportsUnderstandingEvaluator()
     csv_path = evaluator.evaluate(dataset, ptools.are_sports_in_sentence_consistent)
+
+    # print a summary
     df = pd.read_csv(csv_path)
     print(df)
+    print()
+    print(df[['correct','latency','cost']].mean())
 
 @app.command(context_settings={"allow_extra_args": True, "allow_interspersed_args": False})
 def quick_test(ctx: typer.Context, expt_name: str = typer.Option(None, help="Set evaluate.expt_name")):
+    """Do a quick test of a configuration.
+
+    Configures and loads data as in the run command, but just runs the
+    top-level interface on a single example, tracing as much as
+    possible.
+    """
     config_file =  Path(__file__).parent / 'conf' / 'conf.yaml'
     config.configure(yaml_file=config_file, dotlist=ctx.args)
     config.set_root(Path(__file__).parent)
