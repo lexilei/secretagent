@@ -129,18 +129,6 @@ class MUSREvaluator(Evaluator):
     def compare_predictions(self, predicted_output, expected_output) -> dict[str, Any]:
         return dict(correct=(predicted_output == expected_output))
 
-    def measure(self, example: Case, interface: Interface) -> dict[str, Any]:
-        """Measure with error handling — parse failures count as incorrect."""
-        try:
-            return super().measure(example, interface)
-        except Exception as e:
-            print(f'  [error on {example.name}: {type(e).__name__}]')
-            return dict(
-                predicted_output=None,
-                expected_output=example.expected_output,
-                correct=False,
-                input_tokens=0, output_tokens=0, latency=0, cost=0)
-
 
 def load_dataset(split: str) -> Dataset:
     json_file = Path(__file__).parent / 'data' / f'{split}.json'
@@ -192,10 +180,9 @@ def run(ctx: typer.Context,
     interface = getattr(ptools, entry_point)
 
     evaluator = MUSREvaluator()
-    results = evaluator.evaluate(dataset, interface)
-    df = pd.DataFrame(results)
-    print(df)
-    print(f'\nAccuracy: {df["correct"].mean():.1%}')
+    csv_path = evaluator.evaluate(dataset, interface)
+    df = pd.read_csv(csv_path)
+    print(f'\nAccuracy: {df["correct"].mean():.1%} ({df["correct"].sum()}/{len(df)})')
 
 
 if __name__ == '__main__':
