@@ -1,6 +1,7 @@
 """Interfaces for MUSR team allocation."""
 
 from secretagent.core import interface
+from ptools_common import raw_answer, extract_index
 
 
 @interface
@@ -19,13 +20,12 @@ def extract_profiles(narrative: str) -> str:
 
 
 @interface
-def evaluate_allocations(narrative: str, profiles: str, question: str, choices: list) -> int:
+def evaluate_allocations(narrative: str, profiles: str, question: str, choices: list) -> str:
     """Given person profiles and allocation choices, pick the best assignment.
 
     For each choice, sum the fit scores. Prefer choices with fewer
     score-1 (severely unfit) assignments. When all choices have problems,
     pick the least bad one.
-    Return the 0-based index of the best choice.
     """
 
 
@@ -34,5 +34,13 @@ def answer_question(narrative: str, question: str, choices: list) -> int:
     """Read the narrative and determine the best team allocation.
     Return the 0-based index of the correct choice.
     """
+    text = raw_answer(narrative, question, choices)
+    return extract_index(text, choices)
+
+
+@interface
+def answer_question_workflow(narrative: str, question: str, choices: list) -> int:
+    """Solve by extracting profiles, evaluating allocations, then matching."""
     profiles = extract_profiles(narrative)
-    return evaluate_allocations(narrative, profiles, question, choices)
+    text = evaluate_allocations(narrative, profiles, question, choices)
+    return extract_index(text, choices)

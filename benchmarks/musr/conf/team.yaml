@@ -15,9 +15,15 @@ dataset:
   n: 4
 
 ptools:
+  raw_answer:
+    method: simulate
+  extract_index:
+    method: match_choice
   extract_profiles:
     method: simulate
   evaluate_allocations:
     method: simulate
   answer_question:
+    method: direct
+  answer_question_workflow:
     method: direct

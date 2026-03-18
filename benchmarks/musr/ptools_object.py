@@ -1,6 +1,7 @@
 """Interfaces for MUSR object placement (theory of mind)."""
 
 from secretagent.core import interface
+from ptools_common import raw_answer, extract_index
 
 
 @interface
@@ -19,14 +20,13 @@ def track_movements(narrative: str) -> str:
 
 
 @interface
-def infer_belief(narrative: str, movements: str, question: str, choices: list) -> int:
+def infer_belief(narrative: str, movements: str, question: str, choices: list) -> str:
     """Given object movement tracking and a question about where someone
     would look for an object, determine their belief about its location.
 
     The answer depends on what the person SAW, not where the object
     actually is. A person absent during a move still believes the
     object is in its previous location.
-    Return the 0-based index of the correct choice.
     """
 
 
@@ -38,5 +38,13 @@ def answer_question(narrative: str, question: str, choices: list) -> int:
     believes, not the object's actual location.
     Return the 0-based index of the correct choice.
     """
+    text = raw_answer(narrative, question, choices)
+    return extract_index(text, choices)
+
+
+@interface
+def answer_question_workflow(narrative: str, question: str, choices: list) -> int:
+    """Solve by tracking movements, inferring belief, then matching."""
     movements = track_movements(narrative)
-    return infer_belief(narrative, movements, question, choices)
+    text = infer_belief(narrative, movements, question, choices)
+    return extract_index(text, choices)
