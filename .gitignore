@@ -2,6 +2,7 @@
 
 benchmarks/*/llm_cache/*
 benchmarks/*/results/*
+benchmarks/*/recordings/*
 
 # emacs
 

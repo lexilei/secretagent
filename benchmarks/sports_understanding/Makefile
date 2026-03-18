@@ -49,3 +49,6 @@ pair:
 
 compare:
 	uv run python -m secretagent.cli.results compare-configs results/*
+
+costs:
+	uv run python -m secretagent.cli.costs llm_cache
