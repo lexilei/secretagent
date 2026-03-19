@@ -1,5 +1,13 @@
 # Tasks
 
+## In-context examples for simulate factory.
+
+No easy way to do this - Jerry Yan on it
+
+## Simplify expt.py 
+
+Assuming data splits in BENCHMARK/data/split.json as a serialized Dataset.
+
 ## Caching
 
  * Check if disabling caching from the command-line works
@@ -14,12 +22,13 @@
 
 Start with distilling react traces.
 
-In expt.py 
- * refactor by pulling out all the setup code in run() before the actual evaluation.
- * write a new command 'record' that records the results of an evaluation and saves 
-   a json with all the measurements and the recording of each example.
-
 Add a src/secretagent/learn subdirectory
+
+Add learn/baselines.py
+  RoteLearner(prob_threshold)
+   - report estimated coverage and accuracy
+   - return the learned code as a loadable python function
+ Test this on the zero-shot post process and `consistent_sports`
 
 Add a learn/distill_pot.py
  * takes every pot function for every example
