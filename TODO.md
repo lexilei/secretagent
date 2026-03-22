@@ -62,6 +62,7 @@ Add a learn/distill_pot.py
 
 ## Code quality/etc
 
+ * Some typehints fail
  * More guidance for claude/devs on defense programming
  * Standardize implement strategies: [un]structured_baseline, pot, workflow, react
 
