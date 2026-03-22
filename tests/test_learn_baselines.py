@@ -46,11 +46,12 @@ def _make_learner(tmp_path, interface_name, cases_data):
     """Create a RoteLearner from synthetic data."""
     records = _make_records(interface_name, cases_data)
     _make_recording_dir(tmp_path, '20260101.120000.expt', records)
-    return RoteLearner(
+    learner = RoteLearner(
         interface_name=interface_name,
-        dirs=[tmp_path / '20260101.120000.expt'],
         train_dir=str(tmp_path / 'train'),
     )
+    learner.collect_distillation_data([tmp_path / '20260101.120000.expt'])
+    return learner
 
 
 def _load_learned(path):

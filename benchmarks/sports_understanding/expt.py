@@ -30,6 +30,7 @@ import typer
 from secretagent import record, config
 from secretagent.core import implement_via_config
 import secretagent.implement_pydantic  # noqa: F401 (registers simulate_pydantic factory)
+import secretagent.learn.implement_learn  # noqa: F401 (registers learned factory)
 from secretagent.dataset import Dataset, Case
 from secretagent.evaluate import Evaluator
 

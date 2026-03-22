@@ -8,9 +8,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Optional
 
-import typer
-
-from secretagent.learn.core import Learner
+from secretagent.learn.base import Learner
 
 
 def _make_hashable(obj):
@@ -27,18 +25,13 @@ class RoteLearner(Learner):
     each input.
     """
 
-    def __init__(self, interface_name, dirs, train_dir, *,
-                 latest=1, check=None):
+    def __init__(self, interface_name, train_dir):
         super().__init__(
             interface_name=interface_name,
-            dirs=dirs,
             train_dir=train_dir,
-            file_under=f'{interface_name}.rote',
-            latest=latest,
-            check=check,
-        )
+            file_under=f'{interface_name}__rote')
 
-    def fit(self):
+    def fit(self) -> Learner:
         """Compute the most common output for each input."""
         # for each possible input, count output frequencies
         counts = defaultdict(Counter)
@@ -56,6 +49,7 @@ class RoteLearner(Learner):
             best_output, _ = counter.most_common(1)[0]
             self._most_common_output[input_key] = original_output[best_output]
         self.counts = counts
+        return self
 
     def save_code(self) -> Path:
         """Write a learned.py file with a function that returns the most common output.
@@ -64,7 +58,7 @@ class RoteLearner(Learner):
         in a precomputed dict, returning the most common output or None.
         """
         hashable_src = inspect.getsource(_make_hashable)
-        outpath = self.out_dir / 'learned.py'
+        outpath = Path(self.created_files['learned.py'])
         outpath.write_text(
             f'"""Auto-generated rote-learned implementation for {self.interface_name}."""\n\n'
             f'{hashable_src}\n'
@@ -85,34 +79,3 @@ class RoteLearner(Learner):
            inputs:             {len(self.counts)}
            estimated coverage: {total_non_singleton/total:.2f}""")
 
-
-app = typer.Typer()
-_EXTRA_ARGS = {"allow_extra_args": True, "allow_interspersed_args": False}
-@app.command(context_settings=_EXTRA_ARGS)
-def rote(
-    ctx: typer.Context,
-    interface: str = typer.Option(..., help="Interface name to extract, e.g. 'consistent_sports'"),
-    latest: int = typer.Option(1, help='Keep latest k dirs per tag; 0 for all'),
-    check: Optional[list[str]] = typer.Option(None, help='Config constraint like key=value'),
-    train_dir: str = typer.Option('/tmp/rote_train', help='Directory to store collected data'),
-):
-    """Learn input/output statistics from recorded interface calls.
-
-    Recording directories are passed as extra positional arguments.
-    They are filtered through savefile.filter_paths().
-    """
-    learner = RoteLearner(
-        interface_name=interface,
-        dirs=[Path(p) for p in ctx.args],
-        train_dir=train_dir,
-        latest=latest,
-        check=check,
-    )
-    print(f'collected {len(learner.dataset.cases)} examples in working directory {learner.out_dir}')
-    learner.fit()
-    output_file = learner.save_code()
-    print(learner.report())
-    print(f'saved output to {output_file}')
-
-if __name__ == '__main__':
-    app()
