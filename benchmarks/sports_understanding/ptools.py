@@ -74,7 +74,8 @@ def sports_understanding_workflow(sentence:str) -> bool:
   return result
 
 #
-# zeroshot unstructured model
+# zeroshot unstructured model is a workflow - first get a string
+# answer, then use a second tool to generate a bool from that
 #
 
 @implement_via('prompt_llm', prompt_template_file='prompt_templates/zeroshot.txt')

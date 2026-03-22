@@ -1,32 +1,13 @@
-"""Interfaces for MUSR team allocation."""
+"""Interfaces for MUSR team allocation.
+
+Single-ptool approach: answer_question bound to simulate with thinking
+outperforms decomposed workflows (84% vs 40-67%) on this task.
+The LLM reasons better about trade-offs holistically than through
+lossy intermediate extraction.
+"""
 
 from secretagent.core import interface
-
-
-@interface
-def extract_profiles(narrative: str) -> str:
-    """Extract person profiles and role requirements from the narrative.
-
-    For each person, assess their fit for each role on a 1-5 scale:
-    1 = severely unfit (phobia, allergy, physical danger)
-    2 = poor fit (discomfort but could manage)
-    3 = neutral
-    4 = good fit (relevant skills/experience)
-    5 = excellent fit
-
-    Also note interpersonal constraints (conflicts, synergies).
-    """
-
-
-@interface
-def evaluate_allocations(narrative: str, profiles: str, question: str, choices: list) -> int:
-    """Given person profiles and allocation choices, pick the best assignment.
-
-    For each choice, sum the fit scores. Prefer choices with fewer
-    score-1 (severely unfit) assignments. When all choices have problems,
-    pick the least bad one.
-    Return the 0-based index of the best choice.
-    """
+from ptools_common import raw_answer, extract_index
 
 
 @interface
@@ -34,5 +15,5 @@ def answer_question(narrative: str, question: str, choices: list) -> int:
     """Read the narrative and determine the best team allocation.
     Return the 0-based index of the correct choice.
     """
-    profiles = extract_profiles(narrative)
-    return evaluate_allocations(narrative, profiles, question, choices)
+    text = raw_answer(narrative, question, choices)
+    return extract_index(text, choices)

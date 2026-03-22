@@ -4,6 +4,7 @@ that this is documentation, not a full implementation.
 $stub_src
 ```
 
+$examples
 Imagine that this function was fully implemented as suggested by the
 documentation stub, and that function were called with these arguments:
 

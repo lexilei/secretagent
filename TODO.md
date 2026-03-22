@@ -1,12 +1,26 @@
 # Tasks
 
+## Core issues
+
+ * non-primitive types don't work with Simulate
+   * problem is output validation
+   * should at least give warnings
+   * when errors are caught by evaluator's, should _record relevant
+     information from the stack trace
+   * move expt.py into core
+
 ## In-context examples for simulate factory.
 
 No easy way to do this - Jerry Yan on it
 
-## Simplify expt.py 
+## Simplify expt.py
 
 Assuming data splits in BENCHMARK/data/split.json as a serialized Dataset.
+
+## CLI improvements
+
+  * results.py validate [--require xxx] [--purge] ...
+  * results.py delete-obsolete
 
 ## Caching
 
@@ -33,7 +47,7 @@ Add learn/baselines.py
 Add a learn/distill_pot.py
  * takes every pot function for every example
  * uses simulated interfaces to convert to a 'canonical' functional form
-   "def workflow(...) -> ..." 
+   "def workflow(...) -> ..."
  * uses ast to rename all the variables to v01, v02, ...
  * hashes them to get a smaller set of functions
  * computes coverage of each function (correct/incorrect)
@@ -41,9 +55,13 @@ Add a learn/distill_pot.py
  * incrementally calls a simulated interface to refactor the workflows
    into one program
 
+## Code quality/etc
+
+ * More guidance for claude/devs on defense programming
+ * Standardize implement strategies: [un]structured_baseline, pot, workflow, react
+
 ## Known issues
 
  * Running the simulate_pydantic with tools leads to a bunch of
    litellm task warnings, which are meaningless but annoying and
    seemingly hard to fix.
-

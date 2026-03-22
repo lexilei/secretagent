@@ -1,13 +1,8 @@
 """Tests for examples/sports_understanding.py."""
 
-import os
 import pytest
+from conftest import needs_api_key, CI_TEST_MODEL
 from secretagent import config, record
-
-needs_api_key = pytest.mark.skipif(
-    not os.environ.get("ANTHROPIC_API_KEY"),
-    reason="ANTHROPIC_API_KEY not set",
-)
 
 def _import_sports():
     import importlib
@@ -25,18 +20,18 @@ def _bind_simulate(su):
 def test_workflow():
     su = _import_sports()
     _bind_simulate(su)
-    with config.configuration(llm={'model': "claude-haiku-4-5-20251001"}):
+    with config.configuration(llm={'model': CI_TEST_MODEL}):
         result = su.sports_understanding_workflow('Kobe Bryant scored a layup')
         assert result
 
-        result = su.sports_understanding_workflow('Santi Cazorla scored a touchdown')
+        result = su.sports_understanding_workflow('LeBron James scored a touchdown')
         assert not result
 
 @needs_api_key
 def test_recording():
     su = _import_sports()
     _bind_simulate(su)
-    with config.configuration(llm={'model': "claude-haiku-4-5-20251001"}), record.recorder() as rollout:
+    with config.configuration(llm={'model': CI_TEST_MODEL}), record.recorder() as rollout:
         su.sports_understanding_workflow("DeMar DeRozan was called for the goal tend.")
         assert len(rollout) >= 4
         for entry in rollout:

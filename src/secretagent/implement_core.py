@@ -23,6 +23,18 @@ def _load_template(name: str) -> Template:
     """Load a prompt template from the prompt_templates directory."""
     return Template((PROMPT_TEMPLATE_DIR / name).read_text())
 
+def _format_examples_as_doctests(interface_name: str, cases: list) -> str:
+    """Format example cases as doctest-style examples for the prompt."""
+    lines = ["Here are some examples:", ""]
+    for case in cases:
+        args = case.get('input_args', []) if isinstance(case, dict) else (case.input_args or [])
+        out = case.get('expected_output') if isinstance(case, dict) else case.expected_output
+        args_str = ', '.join(repr(a) for a in args)
+        lines.append(f">>> {interface_name}({args_str})")
+        lines.append(repr(out))
+    return '\n'.join(lines) + '\n'
+
+
 def resolve_dotted(name: str) -> Any:
     """Resolve a dotted name like 'module.func' to the actual object.
     """
@@ -77,10 +89,15 @@ class DirectFactory(Implementation.Factory):
 class SimulateFactory(Implementation.Factory):
     """Simulate a function call with an LLM.
     """
-    def build_fn(self, interface: Interface, **prompt_kw) -> Callable:
+    def build_fn(self, interface: Interface, example_file=None, **prompt_kw) -> Callable:
+        examples_cases = None
+        if example_file:
+            import json
+            data = json.loads(pathlib.Path(example_file).read_text())
+            examples_cases = data.get(interface.name, [])
         def result_fn(*args, **kw):
             with config.configuration(**prompt_kw):
-                prompt = self.create_prompt(interface, *args, **kw)
+                prompt = self.create_prompt(interface, *args, examples=examples_cases, **kw)
                 llm_output, stats = llm_util.llm(
                     prompt, config.require('llm.model'))
                 return_type = interface.annotations.get('return', str)
@@ -89,7 +106,7 @@ class SimulateFactory(Implementation.Factory):
                 return answer
         return result_fn
 
-    def create_prompt(self, interface, *args, **kw):
+    def create_prompt(self, interface, *args, examples=None, **kw):
         """Construct a prompt that calls an LLM to predict the output of the function.
         """
         template = _load_template('simulate.txt')
@@ -100,10 +117,14 @@ class SimulateFactory(Implementation.Factory):
             thoughts = "<thought>\nANY THOUGHTS\n</thought>\n"
         else:
             thoughts = ""
+        examples_text = ""
+        if examples:
+            examples_text = _format_examples_as_doctests(interface.name, examples)
         prompt = template.substitute(
             dict(stub_src=interface.src,
                  input_args=input_args,
-                 thoughts=thoughts))
+                 thoughts=thoughts,
+                 examples=examples_text))
         return prompt
 
     def parse_output(self, return_type, text):

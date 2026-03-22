@@ -14,18 +14,18 @@ dataset:
   shuffle_seed: 42
   n: 4
 
-# Workflow condition (default): answer_question bound to direct
-# runs the body which calls extract_evidence -> deduce_answer.
-#
-# Zero-shot override:
-#   ptools.answer_question.method=simulate
-#
-# Agent loop override:
-#   ptools.answer_question.method=program_of_thought
 ptools:
-  extract_evidence:
+  raw_answer:
     method: simulate
-  deduce_answer:
+  extract_index:
+    method: simulate
+  extract_suspects_and_evidence:
+    method: simulate
+  verify_alibis:
+    method: simulate
+  deduce_murderer:
     method: simulate
   answer_question:
+    method: direct
+  answer_question_workflow:
     method: direct
