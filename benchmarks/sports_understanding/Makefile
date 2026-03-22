@@ -61,6 +61,8 @@ costs:
 #    Recordings are just like evaluations but keep some extra information around.
 #
 
+learn_pipeline: record_workflow learn_consistent_sports evaluate_learned_consistent_sports avg
+
 RECORD_OPTS = dataset.split=train evaluate.record_details=true evaluate.result_dir=recordings
 
 record_workflow:
@@ -75,7 +77,7 @@ record_workflow:
 # consistent_sports__rote
 
 learn_consistent_sports:
-	uv run python -m secretagent.cli.learn --interface consistent_sports --train-dir training recordings/*
+	uv run python -m secretagent.cli.learn rote --interface consistent_sports --train-dir training recordings/*
 
 # 3) Now we can configure the learned implementation 
 

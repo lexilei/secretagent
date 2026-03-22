@@ -85,6 +85,11 @@ class SimulatePydanticFactory(SimulateFactory):
     the <answer> scaffolding and delegates to a pydantic-ai Agent
     for execution and output parsing.
 
+    Examples:
+      foo.implement_via('simulate_pydantic')
+      foo.implement_via('simulate_pydantic', tools='__all__')
+      foo.implement_via('simulate_pydantic', tools=[bar, baz])
+
     The options tools can take on several values
       tools = None or missing means don't use tools
       tools = '__all__' means use all other registered interfaces

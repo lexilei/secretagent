@@ -19,64 +19,12 @@ from secretagent.core import Interface, Implementation, register_factory, all_in
 
 PROMPT_TEMPLATE_DIR = pathlib.Path(__file__).parent / 'prompt_templates'
 
-def _load_template(name: str) -> Template:
-    """Load a prompt template from the prompt_templates directory."""
-    return Template((PROMPT_TEMPLATE_DIR / name).read_text())
-
-def _format_examples_as_doctests(interface_name: str, cases: list) -> str:
-    """Format example cases as doctest-style examples for the prompt."""
-    lines = ["Here are some examples:", ""]
-    for case in cases:
-        args = case.get('input_args', []) if isinstance(case, dict) else (case.input_args or [])
-        out = case.get('expected_output') if isinstance(case, dict) else case.expected_output
-        args_str = ', '.join(repr(a) for a in args)
-        lines.append(f">>> {interface_name}({args_str})")
-        lines.append(repr(out))
-    return '\n'.join(lines) + '\n'
-
-
-def resolve_dotted(name: str) -> Any:
-    """Resolve a dotted name like 'module.func' to the actual object.
-    """
-    parts = name.split('.')
-    obj = importlib.import_module(parts[0])
-    for part in parts[1:]:
-        obj = getattr(obj, part)
-    return obj
-
-
-def resolve_tools(interface: Interface, tools) -> list[Callable]:
-    """Resolve a tools specification into a list of callables.
-
-    The tools parameter can be:
-      - None or [] → no tools (returns [])
-      - '__all__' → all implemented interfaces except the given one
-      - a list where each element is:
-          - a callable (used as-is)
-          - an Interface (resolved to its implementing function)
-          - a string (resolved via resolve_dotted)
-    """
-    if tools == '__all__':
-        tools = [iface for iface in all_interfaces()
-                 if iface is not interface and iface.implementation is not None]
-    tools = tools or []
-    resolved = []
-    for tool in tools:
-        if isinstance(tool, str):
-            tool = resolve_dotted(tool)
-        if isinstance(tool, Interface):
-            if tool.implementation is None:
-                raise ValueError(f'Interface {tool.name!r} has no implementation')
-            resolved.append(tool.implementation.implementing_fn)
-        else:
-            resolved.append(tool)
-    return resolved
-
-
 class DirectFactory(Implementation.Factory):
     """Use a Python function as the implementation.
 
     Defaults to the body of the interface functions.
+
+    Example: foo.implement_via('direct', pyfn_implementing_foo)
     """
     def build_fn(self, interface: Interface, fn: Callable | str | None = None, **_kw) -> Callable:
         if isinstance(fn, str):
@@ -88,6 +36,21 @@ class DirectFactory(Implementation.Factory):
 
 class SimulateFactory(Implementation.Factory):
     """Simulate a function call with an LLM.
+
+    Examples: 
+      foo.implement_via('simulate')
+      foo.implement_via('simulate', llm.model=..., example_file='foo_demonstrations.json')
+
+    The json files look like this:
+    {
+      "sport_for": [
+        {"input_args": ["Bam Adebayo"], "expected_output": "basketball"},
+        {"input_args": ["scored a reverse layup"], "expected_output": "basketball"}
+      ],
+      "analyze_sentence": [
+        {"input_args": ["Bam Adebayo scored a reverse layup."], "expected_output": ["Bam Adebayo", "scored a reverse layup", ""]}
+      ]
+    }
     """
     def build_fn(self, interface: Interface, example_file=None, **prompt_kw) -> Callable:
         examples_cases = None
@@ -151,6 +114,11 @@ class PromptLLMFactory(Implementation.Factory):
     lets the caller supply their own prompt template and answer-extraction
     pattern.
 
+    Examples:
+      foo.implement_via('prompt_llm', prompt_template_str='Is $sentence true?')
+      foo.implement_via('prompt_llm', prompt_template_file='prompts/foo.txt',
+                        answer_pattern=r'<answer>(.*)</answer>')
+
     Builder kwargs (passed to implement_via):
         prompt_template_str: A string.Template with $args
             placeholders. Exactly one of prompt_template_str or
@@ -205,7 +173,14 @@ def _extract_answer(return_type, text, answer_pattern):
     return ast.literal_eval(final_answer)
 
 class PoTFactory(Implementation.Factory):
-    """Generate Python code and execute it.
+    """Generate Python code with an LLM and execute it in a sandbox.
+
+    Examples:
+      foo.implement_via('program_of_thought')
+      foo.implement_via('program_of_thought', tools='__all__')
+      foo.implement_via('program_of_thought',
+                        tools=[bar, baz],
+                        additional_imports=['numpy'])
     """
     def build_fn(
             self,
@@ -292,6 +267,66 @@ class PoTFactory(Implementation.Factory):
         template = _load_template('program_of_thought.txt')
         prompt = template.substitute(**template_bindings)
         return prompt
+
+
+#
+# helpers
+# 
+
+def _load_template(name: str) -> Template:
+    """Load a prompt template from the prompt_templates directory."""
+    return Template((PROMPT_TEMPLATE_DIR / name).read_text())
+
+def _format_examples_as_doctests(interface_name: str, cases: list) -> str:
+    """Format example cases as doctest-style examples for the prompt."""
+    lines = ["Here are some examples:", ""]
+    for case in cases:
+        args = case.get('input_args', []) if isinstance(case, dict) else (case.input_args or [])
+        out = case.get('expected_output') if isinstance(case, dict) else case.expected_output
+        args_str = ', '.join(repr(a) for a in args)
+        lines.append(f">>> {interface_name}({args_str})")
+        lines.append(repr(out))
+    return '\n'.join(lines) + '\n'
+
+
+def resolve_dotted(name: str) -> Any:
+    """Resolve a dotted name like 'module.func' to the actual object.
+    """
+    parts = name.split('.')
+    obj = importlib.import_module(parts[0])
+    for part in parts[1:]:
+        obj = getattr(obj, part)
+    return obj
+
+
+def resolve_tools(interface: Interface, tools) -> list[Callable]:
+    """Resolve a tools specification into a list of callables.
+
+    The tools parameter can be:
+      - None or [] → no tools (returns [])
+      - '__all__' → all implemented interfaces except the given one
+      - a list where each element is:
+          - a callable (used as-is)
+          - an Interface (resolved to its implementing function)
+          - a string (resolved via resolve_dotted)
+    """
+    if tools == '__all__':
+        tools = [iface for iface in all_interfaces()
+                 if iface is not interface and iface.implementation is not None]
+    tools = tools or []
+    resolved = []
+    for tool in tools:
+        if isinstance(tool, str):
+            tool = resolve_dotted(tool)
+        if isinstance(tool, Interface):
+            if tool.implementation is None:
+                raise ValueError(f'Interface {tool.name!r} has no implementation')
+            resolved.append(tool.implementation.implementing_fn)
+        else:
+            resolved.append(tool)
+    return resolved
+
+
 
 
 register_factory('direct', DirectFactory())
