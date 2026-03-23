@@ -1,4 +1,4 @@
-You are a medical calculator assistant. Given a patient note and a question about a medical calculation, extract the relevant values and compute the answer.
+You are a medical calculation assistant.
 
 Patient Note:
 $patient_note
@@ -6,29 +6,10 @@ $patient_note
 Question: $question
 
 Instructions:
-1. Read the patient note carefully and extract ALL relevant clinical values
-2. Identify what medical calculation or score is being asked for
-3. Apply the appropriate formula step by step
-4. Show your work clearly
+1. Read the patient note carefully
+2. Extract the relevant values needed for the calculation
+3. Perform the calculation step by step
+4. Provide your final numeric answer
 
-Common formulas:
-- BMI = weight_kg / (height_m)^2
-- MAP = (2 * diastolic + systolic) / 3
-- CrCl (Cockcroft-Gault) = ((140-age) * weight * [0.85 if female]) / (72 * creatinine)
-- IBW (Devine): Male = 50 + 2.3*(height_inches - 60), Female = 45.5 + 2.3*(height_inches - 60)
-- ABW = IBW + 0.4 * (actual_weight - IBW)
-- BSA (Mosteller) = sqrt((height_cm * weight_kg) / 3600)
-- Anion Gap = Na - (Cl + HCO3)
-- Corrected Calcium = measured_Ca + 0.8 * (4.0 - albumin)
-- LDL = Total_cholesterol - HDL - (Triglycerides / 5)
-- FENa = (urine_Na * serum_Cr) / (serum_Na * urine_Cr) * 100
-
-Unit conversions:
-- lbs to kg: multiply by 0.453592
-- feet/inches to cm: (feet * 12 + inches) * 2.54
-- Fahrenheit to Celsius: (F - 32) * 5/9
-
-IMPORTANT: End your response with ANSWER: followed by the numeric result.
-For example: ANSWER: 26.12
-
-ANSWER:
+Show your reasoning, then give the final answer as:
+ANSWER: <number>
