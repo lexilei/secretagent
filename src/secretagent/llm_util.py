@@ -42,11 +42,10 @@ def _llm_impl(prompt: str, model: str) -> tuple[str, dict[str, Any]]:
         model=model, messages=messages, stream=True,
         stream_options={'include_usage': True},
     )
-    usage = None
     for chunk in response_stream:
-      if chunk.usage:
-        usage = chunk.usage
-      delta = chunk.choices[0].delta.content if chunk.choices and chunk.choices[0].delta.content else ''
+      delta = ''
+      if chunk.choices:
+        delta = chunk.choices[0].delta.content or ''
       chunks.append(delta)
       if config.get('echo.stream') and delta:
         sys.stderr.write(delta)
@@ -56,9 +55,9 @@ def _llm_impl(prompt: str, model: str) -> tuple[str, dict[str, Any]]:
     latency = time.time() - start_time
     model_output = ''.join(chunks)
 
-    input_tokens = usage.prompt_tokens if usage else token_counter(model=model, messages=messages)
-    output_tokens = usage.completion_tokens if usage else token_counter(model=model, text=model_output)
-    # Estimate cost from token counts
+    # Estimate tokens since streaming doesn't reliably return usage
+    input_tokens = token_counter(model=model, messages=messages)
+    output_tokens = token_counter(model=model, text=model_output)
     try:
       from litellm import model_cost
       cost_info = model_cost.get(model, {})
