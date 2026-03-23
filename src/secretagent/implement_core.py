@@ -147,7 +147,7 @@ class PromptLLMFactory(Implementation.Factory):
     def build_fn(self, interface: Interface,
                  prompt_template_str=None,
                  prompt_template_file=None,
-                 answer_pattern=None,
+                 answer_pattern=r'<answer>(.*)</answer>',
                  **prompt_kw) -> Callable:
         if (prompt_template_str is None) == (prompt_template_file is None):
             raise ValueError(
