@@ -75,7 +75,13 @@ def _llm_impl(prompt: str, model: str) -> tuple[str, dict[str, Any]]:
   else:
     response = completion(model=model, messages=messages)
     latency = time.time() - start_time
-    model_output = response.choices[0].message.content
+    msg = response.choices[0].message
+    # Thinking models (e.g. Qwen 3.5) put content in reasoning_content.
+    # Concatenate so downstream parsers (like SimulateFactory) can find
+    # <answer> tags regardless of where the model placed them.
+    reasoning = getattr(msg, 'reasoning_content', None) or ''
+    content = msg.content or ''
+    model_output = (reasoning + '\n' + content).strip() if reasoning else content
 
     stats = dict(
       input_tokens=response.usage.prompt_tokens,
