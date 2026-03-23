@@ -1,5 +1,5 @@
 llm:
-  model: claude-haiku-4-5-20251001
+  model: together_ai/deepseek-ai/DeepSeek-V3  # claude-haiku-4-5-20251001
 
 cachier:
   cache_dir: llm_cache
@@ -10,6 +10,7 @@ evaluate:
 
 dataset:
   domain: airline   # airline | nba | tax
+  split: valid      # train | valid | test
   complexity: all   # all | 0 | 1 | 2
   shuffle_seed: 137
   n: 30

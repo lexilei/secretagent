@@ -1,3 +1,13 @@
+# Path to the RuleArena repo clone — only needed to run 'make prepare'
+RULEARENA_DIR ?= ../../../RuleArena
+
+#
+# One-time data preparation (run before any experiment)
+#
+
+prepare:
+	uv run python data/prepare.py $(RULEARENA_DIR)
+
 #
 # L0: Oracle baseline (Python calculators with ground-truth parameters, no LLM)
 #
@@ -73,6 +83,33 @@ l3_tax:
 	uv run expt.py run evaluate.expt_name=l3_tax dataset.domain=tax \
 	  ptools.compute_rulearena_answer.method=simulate_pydantic \
 	  "ptools.compute_rulearena_answer.tools=[ptools.extract_tax_params,ptools.compute_tax_calculator]"
+
+#
+# Learning pipeline (airline domain, l1 extract workflow)
+#
+
+RECORD_OPTS = dataset.split=train evaluate.record_details=true evaluate.result_dir=recordings
+
+learn_pipeline: record_l1_airline learn_extract_airline evaluate_learned_l1_airline avg
+
+record_l1_airline:
+	uv run expt.py run evaluate.expt_name=l1_airline dataset.domain=airline \
+	  ptools.compute_rulearena_answer.method=direct \
+	  ptools.compute_rulearena_answer.fn=ptools.l1_extract_workflow \
+	  $(RECORD_OPTS)
+
+learn_extract_airline:
+	uv run python -m secretagent.cli.learn rote --interface extract_airline_params \
+	  --train-dir training recordings/*
+
+evaluate_learned_l1_airline:
+	uv run expt.py run evaluate.expt_name=l1_airline_learned dataset.domain=airline \
+	  learn.train_dir=training \
+	  ptools.extract_airline_params.method=learned \
+	  ptools.extract_airline_params.learner=rote \
+	  ptools.extract_airline_params.backoff=True \
+	  ptools.compute_rulearena_answer.method=direct \
+	  ptools.compute_rulearena_answer.fn=ptools.l1_extract_workflow
 
 #
 # View results of past experiments

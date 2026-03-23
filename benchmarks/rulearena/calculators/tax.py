@@ -2,8 +2,8 @@ import sys
 from pathlib import Path
 from typing import Dict, Any, Optional
 
-RULEARENA_PATH = Path(__file__).parent.parent.parent.parent.parent / "external" / "RuleArena"
-TAX_DIR = str(RULEARENA_PATH / "tax")
+DATA_DIR = Path(__file__).parent.parent / "data"
+TAX_DIR = str(DATA_DIR / "tax")
 
 if TAX_DIR not in sys.path:
     sys.path.insert(0, TAX_DIR)

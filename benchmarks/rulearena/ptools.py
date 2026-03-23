@@ -23,8 +23,7 @@ from typing import Any
 
 from secretagent.core import interface, implement_via
 
-# Path to external RuleArena repo, used by _build_tax_forms_query
-_RULEARENA_PATH = Path(__file__).parent.parent.parent.parent / "external" / "RuleArena"
+_DATA_DIR = Path(__file__).parent / "data"
 
 # ---------------------------------------------------------------------------
 # LLM extraction interfaces
@@ -264,7 +263,7 @@ def _get_tax_prompt_module():
     global _tax_prompt_module
     if _tax_prompt_module is not None:
         return _tax_prompt_module
-    prompt_path = _RULEARENA_PATH / "tax" / "prompt.py"
+    prompt_path = _DATA_DIR / "tax" / "prompt.py"
     spec = importlib.util.spec_from_file_location("tax_prompt", prompt_path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)

@@ -65,7 +65,8 @@ class RoteLearner(Learner):
             f'def {self.interface_name}(*args, **kw):\n'
             f'    args_key = _make_hashable(list(args))\n'
             f'    kw_key = _make_hashable(kw)\n'
-            f'    return _MOST_COMMON_OUTPUT.get((args_key, kw_key))\n'
+            f'    return _MOST_COMMON_OUTPUT.get((args_key, kw_key))\n',
+            encoding='utf-8',
         )
         return outpath
 
