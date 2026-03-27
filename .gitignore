@@ -4,6 +4,10 @@ benchmarks/*/llm_cache/*
 benchmarks/*/results/*
 benchmarks/*/recordings/*
 benchmarks/*/training/*
+orchestrate_cache/
+*_results.json
+docs/orchestrator_demo.html
+docs/presentation.md
 
 # emacs
 
@@ -218,3 +222,6 @@ marimo/_lsp/
 __marimo__/
 
 .env
+.claude/
+.cursor/
+.codex/
