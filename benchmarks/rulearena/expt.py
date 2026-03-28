@@ -33,6 +33,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import pandas as pd
 import pprint
 import typer
@@ -64,13 +65,25 @@ def _within_tolerance(predicted: Any, expected: Any, tol: float = 0.01) -> bool:
     return abs(p - e) / abs(e) <= tol
 
 
+def _isclose_match(predicted: Any, expected: Any) -> bool:
+    """Tight tolerance match using np.isclose (rtol=1e-5, atol=1e-8)."""
+    try:
+        p = float(predicted)
+        e = float(expected)
+    except (TypeError, ValueError):
+        return False
+    return bool(np.isclose(p, e))
+
+
 class RuleArenaEvaluator(Evaluator):
     def compare_predictions(self, predicted_output, expected_output) -> dict[str, Any]:
         if isinstance(expected_output, bool):
             correct = float(bool(predicted_output) == expected_output)
+            correct_tolerance = correct
         else:
             correct = float(_within_tolerance(predicted_output, expected_output))
-        return dict(correct=correct)
+            correct_tolerance = float(_isclose_match(predicted_output, expected_output))
+        return dict(correct=correct, correct_tolerance=correct_tolerance)
 
 
 # ---------------------------------------------------------------------------

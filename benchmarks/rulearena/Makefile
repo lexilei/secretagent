@@ -119,7 +119,7 @@ list:
 	uv run python -m secretagent.cli.results list results/*
 
 avg:
-	uv run python -m secretagent.cli.results average --metric correct --metric cost results/*
+	uv run python -m secretagent.cli.results average --metric correct --metric correct_tolerance --metric cost results/*
 
 pair:
 	uv run python -m secretagent.cli.results pair --metric correct --metric cost results/*

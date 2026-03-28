@@ -279,9 +279,8 @@ _TAX_PROMPT_TEMPLATE = (
     "payer:\n$forms\nCalculate the tax owed by the payer step-by-step according to "
     "the information provided by the forms. You should calculate all fields marked "
     "with [__]. DO NOT round numbers without explicit instructions. End your response "
-    "with:\n1. \"The total tax owed is $xxx.\" (xxx is a number) if there is tax "
-    "owed.\n2. \"The total tax overpaid is $xxx.\" (xxx is a number) if there is tax "
-    "overpaid (and should be refunded).\nYour response:\n"
+    "with <answer>xxx</answer> where xxx is the total tax amount as a number "
+    "(negative if overpaid/refunded).\nYour response:\n"
 )
 
 
