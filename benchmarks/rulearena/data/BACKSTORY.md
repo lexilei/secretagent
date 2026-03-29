@@ -11,9 +11,15 @@ The benchmark covers three domains:
 - nba: 216 problems, NBA CBA salary cap rule compliance checking
 - tax: 300 problems, US federal income tax computation
 
-Problems are loaded at runtime from the RuleArena repository (external/RuleArena).
-Clone it before running experiments:
+Problem data, rules text, airline fee tables, and tax Python modules are
+vendored locally under data/{domain}/ and committed to this repo. You do
+not need to clone RuleArena to run experiments.
 
-    git clone https://github.com/SkyRiver-2000/RuleArena external/RuleArena
+To regenerate the local data from a fresh RuleArena clone (e.g. after an
+upstream update), run from benchmarks/rulearena/:
 
-where external/ is a sibling of the secretagent/ directory.
+    git clone https://github.com/SkyRiver-2000/RuleArena ../../../RuleArena
+    make prepare
+
+prepare.py splits each domain+level 60/20/20 into train/valid/test using
+random.seed(137), preserving the original per-level instance indices.

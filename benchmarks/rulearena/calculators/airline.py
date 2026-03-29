@@ -3,14 +3,14 @@ from pathlib import Path
 from typing import Dict, Any
 
 BENCHMARK_ROOT = Path(__file__).parent.parent
-RULEARENA_PATH = BENCHMARK_ROOT.parent.parent.parent.parent / "external" / "RuleArena"
+DATA_DIR = BENCHMARK_ROOT / "data"
 
 if str(BENCHMARK_ROOT) not in sys.path:
     sys.path.insert(0, str(BENCHMARK_ROOT))
 
 try:
     import rulearena_reference
-    FEE_TABLES = rulearena_reference.load_checking_fee(str(RULEARENA_PATH))
+    FEE_TABLES = rulearena_reference.load_checking_fee(str(DATA_DIR))
 except Exception as e:
     print(f"Warning: Could not load airline fee tables: {e}")
     FEE_TABLES = None

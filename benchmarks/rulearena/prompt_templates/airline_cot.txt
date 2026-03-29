@@ -12,10 +12,10 @@ John is a Main Plus Class passenger flying from Orlando to Lima with the followi
 3. A backpack: 46 x 29 x 24 inches, 85 lbs;
 4. A luggage box: 35 x 12 x 11 inches, 44 lbs;
 5. A luggage box: 30 x 11 x 10 inches, 33 lbs;
-John's flight ticket is $448. Compute the total cost for him step by step and end your response with "The total cost is $xxx." (xxx is a number)
+John's flight ticket is $$448. Compute the total cost for him step by step and end your response with "The total cost is $$xxx." (xxx is a number)
 Your response:
-The total cost is $1,198.
+<answer>1198</answer>
 </example>
 
-$problem_text Compute the total cost step by step (don't omit any bag) and end your response with "The total cost is $xxx." (xxx is a number)
+$problem_text Compute the total cost step by step (don't omit any bag) and end your response with <answer>xxx</answer> where xxx is the total cost as a number.
 Your response:

@@ -108,19 +108,45 @@ class SimulateFactory(Implementation.Factory):
 
     def parse_output(self, return_type, text):
         """Take LLM output and return the final answer, in the correct type.
+
+        Tries <answer>...</answer> tags first.  For dict/list return types,
+        falls back to extracting JSON from a markdown code block or the first
+        bare {...} / [...] object in the output — handles models that don't
+        follow the tag format for complex types.
         """
-        try:
-            match_result = re.search(r'<answer>(.*)</answer>', text, re.DOTALL|re.MULTILINE)
+        import json as _json
+        match_result = re.search(r'<answer>(.*)</answer>', text, re.DOTALL|re.MULTILINE)
+        if match_result:
             final_answer = match_result.group(1).strip()
-        except AttributeError:
-            raise AttributeError('cannot find final answer')
-        if return_type in [int, str, float]:
-            result = return_type(final_answer)
-        else:
-            # type is complex - for now don't both validating it
-            # with typeguard.check_type(result, return_type)
-            result = ast.literal_eval(final_answer)
-        return result
+            if return_type in [int, str, float]:
+                return return_type(final_answer)
+            try:
+                return _json.loads(final_answer)
+            except _json.JSONDecodeError:
+                return ast.literal_eval(final_answer)
+
+        # Fallback for dict/list: extract JSON from the raw output
+        if return_type in [dict, list] or (hasattr(return_type, '__origin__')
+                                           and return_type.__origin__ in [dict, list]):
+            open_ch, close_ch = ('{', '}') if return_type is dict else ('[', ']')
+            # prefer a fenced code block
+            code_match = re.search(
+                r'```(?:json|python)?\s*(' + re.escape(open_ch) + r'.*?' + re.escape(close_ch) + r')\s*```',
+                text, re.DOTALL)
+            if code_match:
+                candidate = code_match.group(1).strip()
+            else:
+                # find the outermost balanced bracket span
+                start = text.find(open_ch)
+                end = text.rfind(close_ch)
+                candidate = text[start:end + 1].strip() if start != -1 and end != -1 else ''
+            if candidate:
+                try:
+                    return _json.loads(candidate)
+                except _json.JSONDecodeError:
+                    return ast.literal_eval(candidate)
+
+        raise AttributeError('cannot find final answer')
 
 
 class PromptLLMFactory(Implementation.Factory):

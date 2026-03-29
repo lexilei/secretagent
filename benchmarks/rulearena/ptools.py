@@ -23,8 +23,7 @@ from typing import Any
 
 from secretagent.core import interface, implement_via
 
-# Path to external RuleArena repo, used by _build_tax_forms_query
-_RULEARENA_PATH = Path(__file__).parent.parent.parent.parent / "external" / "RuleArena"
+_DATA_DIR = Path(__file__).parent / "data"
 
 # ---------------------------------------------------------------------------
 # LLM extraction interfaces
@@ -264,7 +263,7 @@ def _get_tax_prompt_module():
     global _tax_prompt_module
     if _tax_prompt_module is not None:
         return _tax_prompt_module
-    prompt_path = _RULEARENA_PATH / "tax" / "prompt.py"
+    prompt_path = _DATA_DIR / "tax" / "prompt.py"
     spec = importlib.util.spec_from_file_location("tax_prompt", prompt_path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
@@ -280,9 +279,8 @@ _TAX_PROMPT_TEMPLATE = (
     "payer:\n$forms\nCalculate the tax owed by the payer step-by-step according to "
     "the information provided by the forms. You should calculate all fields marked "
     "with [__]. DO NOT round numbers without explicit instructions. End your response "
-    "with:\n1. \"The total tax owed is $xxx.\" (xxx is a number) if there is tax "
-    "owed.\n2. \"The total tax overpaid is $xxx.\" (xxx is a number) if there is tax "
-    "overpaid (and should be refunded).\nYour response:\n"
+    "with <answer>xxx</answer> where xxx is the total tax amount as a number "
+    "(negative if overpaid/refunded).\nYour response:\n"
 )
 
 
@@ -351,7 +349,7 @@ def _build_nba_query(problem_text: str, rules_text: str, metadata: dict) -> str:
 
     return (
         f"Reference Rules in NBA Collective Bargaining Agreement:\n\n"
-        f"{rules_text[:6000]}\n\n"
+        f"{rules_text}\n\n"
         f"{_NBA_ASSUMPTIONS}\n"
         f"Decide whether any operation by any team violates the rules:\n\n"
         f"{question}"
@@ -414,7 +412,7 @@ def l1_extract_workflow(
     """
     metadata = json.loads(metadata_json)
     if domain == "airline":
-        query = f"RULES:\n{rules_text[:3000]}\n\nQUERY:\n{problem_text}"
+        query = f"RULES:\n{rules_text}\n\nQUERY:\n{problem_text}"
         params = extract_airline_params(query)
         return float(_airline_calc_fn(params))
 

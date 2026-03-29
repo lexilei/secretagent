@@ -33,6 +33,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import pandas as pd
 import pprint
 import typer
@@ -40,13 +41,13 @@ import typer
 from secretagent import config, record
 from secretagent.core import implement_via_config
 from secretagent import implement_pydantic  # force registration
+import secretagent.learn.implement_learn  # noqa: F401 (registers learned factory)
 from secretagent.dataset import Dataset, Case
 from secretagent.evaluate import Evaluator
 
 import ptools
 
-# Path to external RuleArena repository
-_RULEARENA_PATH = Path(__file__).parent.parent.parent.parent / "external" / "RuleArena"
+DATA_DIR = Path(__file__).parent / "data"
 
 
 # ---------------------------------------------------------------------------
@@ -64,13 +65,33 @@ def _within_tolerance(predicted: Any, expected: Any, tol: float = 0.01) -> bool:
     return abs(p - e) / abs(e) <= tol
 
 
+def _isclose_match(predicted: Any, expected: Any) -> bool:
+    """Tight tolerance match using np.isclose (rtol=1e-5, atol=1e-8)."""
+    try:
+        p = float(predicted)
+        e = float(expected)
+    except (TypeError, ValueError):
+        return False
+    return bool(np.isclose(p, e))
+
+
 class RuleArenaEvaluator(Evaluator):
     def compare_predictions(self, predicted_output, expected_output) -> dict[str, Any]:
         if isinstance(expected_output, bool):
             correct = float(bool(predicted_output) == expected_output)
+            correct_tolerance = correct
         else:
             correct = float(_within_tolerance(predicted_output, expected_output))
-        return dict(correct=correct)
+            correct_tolerance = float(_isclose_match(predicted_output, expected_output))
+        if isinstance(predicted_output, str) and predicted_output.startswith("**exception"):
+            failure_mode = "extraction_failure"
+        elif predicted_output is None:
+            failure_mode = "extraction_failure"
+        elif correct:
+            failure_mode = "none"
+        else:
+            failure_mode = "calculation_error"
+        return dict(correct=correct, correct_tolerance=correct_tolerance, failure_mode=failure_mode)
 
 
 # ---------------------------------------------------------------------------
@@ -79,9 +100,9 @@ class RuleArenaEvaluator(Evaluator):
 
 def _load_rules(domain: str) -> str:
     if domain == "airline":
-        rules_file = _RULEARENA_PATH / "airline" / "reference_rules_textual.txt"
+        rules_file = DATA_DIR / "airline" / "reference_rules_textual.txt"
     elif domain == "nba":
-        rules_file = _RULEARENA_PATH / "nba" / "reference_rules.txt"
+        rules_file = DATA_DIR / "nba" / "reference_rules.txt"
     elif domain == "tax":
         return ""
     else:
@@ -106,50 +127,26 @@ def _compute_ground_truth(domain: str, problem_data: dict, metadata: dict) -> An
     return None
 
 
-def _iter_domain(domain: str, complexity: str):
-    """Yield (problem_data, metadata, complexity_level) for each instance."""
-    levels = [0, 1, 2] if complexity == "all" else [int(complexity)]
-
-    for level in levels:
-        if domain == "airline":
-            data_dir = _RULEARENA_PATH / "airline" / "synthesized_problems"
-            problem_file = data_dir / f"comp_{level}.jsonl"
-            if not problem_file.exists():
+def _iter_domain(domain: str, split: str, complexity: str = "all"):
+    """Yield (orig_idx, level, problem_data, metadata) from a local split file."""
+    split_file = DATA_DIR / domain / f"{split}.jsonl"
+    with open(split_file, encoding="utf-8") as f:
+        for line in f:
+            record = json.loads(line)
+            level = record["level"]
+            orig_idx = record["orig_idx"]
+            if complexity != "all" and level != int(complexity):
                 continue
-            with open(problem_file, encoding="utf-8") as f:
-                for idx, line in enumerate(f):
-                    problem_data = json.loads(line)
-                    metadata = problem_data.get("info", {})
-                    yield idx, level, problem_data, metadata
-
-        elif domain == "nba":
-            data_dir = _RULEARENA_PATH / "nba" / "annotated_problems"
-            problem_file = data_dir / f"comp_{level}.json"
-            if not problem_file.exists():
-                continue
-            with open(problem_file, encoding="utf-8") as f:
-                problems = json.load(f)
-            for idx, problem_data in enumerate(problems):
-                metadata = problem_data
-                yield idx, level, problem_data, metadata
-
-        elif domain == "tax":
-            data_dir = _RULEARENA_PATH / "tax" / "synthesized_problems"
-            problem_file = data_dir / f"comp_{level}.json"
-            if not problem_file.exists():
-                continue
-            with open(problem_file, encoding="utf-8") as f:
-                problems = json.load(f)
-            for idx, problem_data in enumerate(problems):
-                metadata = problem_data
-                yield idx, level, problem_data, metadata
+            problem_data = {k: v for k, v in record.items() if k not in ("level", "orig_idx")}
+            metadata = problem_data.get("info", {}) if domain == "airline" else problem_data
+            yield orig_idx, level, problem_data, metadata
 
 
-def load_dataset(domain: str, complexity: str = "all") -> Dataset:
+def load_dataset(domain: str, split: str, complexity: str = "all") -> Dataset:
     rules_text = _load_rules(domain)
     cases = []
 
-    for idx, level, problem_data, metadata in _iter_domain(domain, complexity):
+    for idx, level, problem_data, metadata in _iter_domain(domain, split, complexity):
         instance_id = f"{domain}_{level}_{idx}"
         problem_text = problem_data.get("prompt", "")
 
@@ -178,7 +175,7 @@ def load_dataset(domain: str, complexity: str = "all") -> Dataset:
             expected_output=ground_truth,
         ))
 
-    return Dataset(name=f"rulearena_{domain}", split=complexity, cases=cases)
+    return Dataset(name=f"rulearena_{domain}", split=split, cases=cases)
 
 
 # ---------------------------------------------------------------------------
@@ -208,9 +205,10 @@ def run(ctx: typer.Context, expt_name: str = typer.Option(None, help="Set evalua
     config.set_root(Path(__file__).parent)
 
     domain = config.require("dataset.domain")
+    split = config.require("dataset.split")
     complexity = config.get("dataset.complexity") or "all"
 
-    dataset = load_dataset(domain, complexity).configure(
+    dataset = load_dataset(domain, split, complexity).configure(
         shuffle_seed=config.get("dataset.shuffle_seed"),
         n=config.get("dataset.n") or None,
     )
@@ -224,7 +222,7 @@ def run(ctx: typer.Context, expt_name: str = typer.Option(None, help="Set evalua
     df = pd.read_csv(csv_path)
     print(df)
     print()
-    print(df[["correct", "latency", "cost"]].mean())
+    print(df.select_dtypes(include='number').mean())
 
 
 @app.command(context_settings={"allow_extra_args": True, "allow_interspersed_args": False})
@@ -236,9 +234,10 @@ def quick_test(ctx: typer.Context, expt_name: str = typer.Option(None, help="Set
     pprint.pprint(config.GLOBAL_CONFIG)
 
     domain = config.require("dataset.domain")
+    split = config.require("dataset.split")
     complexity = config.get("dataset.complexity") or "all"
 
-    dataset = load_dataset(domain, complexity).configure(
+    dataset = load_dataset(domain, split, complexity).configure(
         shuffle_seed=config.get("dataset.shuffle_seed"),
         n=config.get("dataset.n") or None,
     )
