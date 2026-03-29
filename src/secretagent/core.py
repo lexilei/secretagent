@@ -172,3 +172,5 @@ class Implementation(BaseModel):
 import secretagent.implement_core  # noqa: E402, F401
 import secretagent.orchestrate  # noqa: E402, F401
 import secretagent.implement_selfconsistency  # noqa: E402, F401
+import secretagent.implement_selfdiscover  # noqa: E402, F401
+import secretagent.implement_react  # noqa: E402, F401

@@ -66,11 +66,19 @@ class Evaluator(ABC):
         recorder() as rec', which means that it will have a 'stats'
         key storing the llm_util statistics.  This is normally used as
         a helper function for measure().
+
+        In addition to summing token/cost stats, also counts:
+        - num_llm_calls: total number of LLM calls made for this instance
         """
         result: dict[str, float] = {}
+        num_calls = 0
         for rec in records:
-            for key, value in rec['stats'].items():
-                result[key] = result.get(key, 0.0) + value
+            stats = rec.get('stats', {})
+            if stats:
+                num_calls += 1
+                for key, value in stats.items():
+                    result[key] = result.get(key, 0.0) + value
+        result['num_llm_calls'] = num_calls
         return result
 
     def measurements(self, dataset: Dataset, interface: Interface) -> Iterator[dict[str, Any]]:

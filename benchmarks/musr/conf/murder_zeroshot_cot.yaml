@@ -1,0 +1,34 @@
+# Zero-shot CoT baseline: 1 LLM call (fixed)
+# Uses llm.thinking to enable chain-of-thought
+llm:
+  model: claude-haiku-4-5-20251001
+  thinking: true
+
+cachier:
+  cache_dir: llm_cache
+
+evaluate:
+  expt_name: murder_zeroshot_cot
+  result_dir: results
+  entry_point: answer_question
+
+dataset:
+  split: murder_mysteries
+  shuffle_seed: 42
+  n: null
+
+ptools:
+  raw_answer:
+    method: simulate
+  extract_index:
+    method: simulate
+  extract_suspects_and_evidence:
+    method: simulate
+  verify_alibis:
+    method: simulate
+  deduce_murderer:
+    method: simulate
+  answer_question:
+    method: direct
+  answer_question_workflow:
+    method: direct

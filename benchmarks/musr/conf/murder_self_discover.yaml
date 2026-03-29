@@ -1,0 +1,33 @@
+# Self-Discover baseline: 3-4 LLM calls (fixed)
+# SELECT -> ADAPT -> IMPLEMENT -> SOLVE
+llm:
+  model: claude-haiku-4-5-20251001
+
+cachier:
+  cache_dir: llm_cache
+
+evaluate:
+  expt_name: murder_self_discover
+  result_dir: results
+  entry_point: answer_question
+
+dataset:
+  split: murder_mysteries
+  shuffle_seed: 42
+  n: null
+
+ptools:
+  raw_answer:
+    method: simulate
+  extract_index:
+    method: simulate
+  extract_suspects_and_evidence:
+    method: simulate
+  verify_alibis:
+    method: simulate
+  deduce_murderer:
+    method: simulate
+  answer_question:
+    method: self_discover
+  answer_question_workflow:
+    method: direct
