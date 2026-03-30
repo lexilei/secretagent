@@ -1,5 +1,4 @@
-# ReAct baseline: variable LLM calls (open-ended agent loop)
-# Thought -> Action -> Observation loop with tool use
+# Naive ReAct: no tools, pure reasoning loop
 llm:
   model: together_ai/deepseek-ai/DeepSeek-V3.1
 
@@ -8,29 +7,26 @@ cachier:
   enable_caching: false
 
 evaluate:
-  expt_name: murder_react
+  expt_name: object_react_naive
   result_dir: results
   entry_point: answer_question
   record_details: true
 
 dataset:
-  split: murder_mysteries
+  split: object_placements
   shuffle_seed: 42
-  n: null
+  n: 75
 
 ptools:
   raw_answer:
     method: simulate
   extract_index:
     method: simulate
-  extract_suspects_and_evidence:
-    method: simulate
-  verify_alibis:
-    method: simulate
-  deduce_murderer:
+  infer_belief:
     method: simulate
   answer_question:
     method: react
     max_steps: 10
+    tools: []
   answer_question_workflow:
     method: direct

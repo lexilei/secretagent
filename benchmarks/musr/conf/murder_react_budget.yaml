@@ -1,7 +1,7 @@
 # ReAct + budget cap: capped LLM calls
 # Same as ReAct but with a hard limit on calls to match ptool budget
 llm:
-  model: claude-haiku-4-5-20251001
+  model: together_ai/deepseek-ai/DeepSeek-V3.1
 
 cachier:
   cache_dir: llm_cache

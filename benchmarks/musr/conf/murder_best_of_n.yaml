@@ -1,7 +1,7 @@
 # Best-of-N CoT: N LLM calls (fixed), pick majority vote
 # Uses self_consistency factory with inner simulate
 llm:
-  model: claude-haiku-4-5-20251001
+  model: together_ai/deepseek-ai/DeepSeek-V3.1
 
 cachier:
   cache_dir: llm_cache

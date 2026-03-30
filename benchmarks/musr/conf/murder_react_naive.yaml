@@ -1,20 +1,22 @@
-# Self-Consistency: majority vote over N workflow runs
-# Applies self_consistency at the workflow level
+# Naive ReAct: no tools, pure reasoning loop
+# The agent can only think and produce an answer — no ptools available
 llm:
   model: together_ai/deepseek-ai/DeepSeek-V3.1
 
 cachier:
   cache_dir: llm_cache
+  enable_caching: false
 
 evaluate:
-  expt_name: murder_self_consistency_5
+  expt_name: murder_react_naive
   result_dir: results
-  entry_point: answer_question_workflow
+  entry_point: answer_question
+  record_details: true
 
 dataset:
   split: murder_mysteries
   shuffle_seed: 42
-  n: null
+  n: 75
 
 ptools:
   raw_answer:
@@ -28,8 +30,8 @@ ptools:
   deduce_murderer:
     method: simulate
   answer_question:
-    method: direct
+    method: react
+    max_steps: 10
+    tools: []
   answer_question_workflow:
-    method: self_consistency
-    inner_method: direct
-    n_samples: 5
+    method: direct

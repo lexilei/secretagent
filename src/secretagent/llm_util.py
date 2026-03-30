@@ -35,7 +35,8 @@ def _llm_impl(prompt: str, model: str) -> tuple[str, dict[str, Any]]:
   messages = [dict(role='user', content=prompt)]
   stream = config.get('llm.stream', False)
   max_tokens = config.get('llm.max_tokens', None)
-  extra_kw = {}
+  timeout = config.get('llm.timeout', 300)  # default 5 min
+  extra_kw = {'timeout': timeout}
   if max_tokens:
     extra_kw['max_tokens'] = int(max_tokens)
   start_time = time.time()
