@@ -1,0 +1,167 @@
+{
+  "iteration_stats": [
+    {
+      "iteration": 0,
+      "n_ptools": 0,
+      "accuracy": 0.68,
+      "n_correct": 51,
+      "n_total": 75,
+      "avg_cost": 0.0170471,
+      "avg_latency": 51.10246657053629,
+      "ptool_uses": 0,
+      "do_uses": 190,
+      "max_step_hits": 5,
+      "neg1_answers": 5,
+      "extracted_finishes": 0
+    },
+    {
+      "iteration": 1,
+      "n_ptools": 1,
+      "accuracy": 0.7733333333333333,
+      "n_correct": 58,
+      "n_total": 75,
+      "avg_cost": 0.01479126666666667,
+      "avg_latency": 31.01410646120707,
+      "ptool_uses": 176,
+      "do_uses": 57,
+      "max_step_hits": 0,
+      "neg1_answers": 0,
+      "extracted_finishes": 10
+    },
+    {
+      "iteration": 2,
+      "n_ptools": 2,
+      "accuracy": 0.8266666666666667,
+      "n_correct": 62,
+      "n_total": 75,
+      "avg_cost": 0.018583099999999998,
+      "avg_latency": 28.119709615707396,
+      "ptool_uses": 275,
+      "do_uses": 40,
+      "max_step_hits": 0,
+      "neg1_answers": 0,
+      "extracted_finishes": 8
+    },
+    {
+      "iteration": 3,
+      "n_ptools": 3,
+      "accuracy": 0.7466666666666667,
+      "n_correct": 56,
+      "n_total": 75,
+      "avg_cost": 0.025827649999999997,
+      "avg_latency": 25.70200267155965,
+      "ptool_uses": 353,
+      "do_uses": 68,
+      "max_step_hits": 0,
+      "neg1_answers": 0,
+      "extracted_finishes": 9
+    },
+    {
+      "iteration": 4,
+      "n_ptools": 4,
+      "accuracy": 0.76,
+      "n_correct": 57,
+      "n_total": 75,
+      "avg_cost": 0.029685516666666665,
+      "avg_latency": 27.146686016718547,
+      "ptool_uses": 412,
+      "do_uses": 67,
+      "max_step_hits": 0,
+      "neg1_answers": 0,
+      "extracted_finishes": 8
+    }
+  ],
+  "ptools": [
+    {
+      "id": "ptool_001",
+      "func_name": "holistic_suspect_evaluation",
+      "display_name": "HolisticSuspectEvaluation",
+      "short_desc": "Evaluates suspects based on means, motive, opportunity, and evidence alignment with the crime scene.",
+      "doc": "Analyzes potential suspects in a murder mystery by examining three key criteria:\n\n1. MEANS: Assesses if the suspect had access to the murder weapon/tool and capability to commit the crime\n2. MOTIVE: Evaluates reasons why the suspect would want to harm the victim (financial gain, revenge, etc.)\n3. OPPORTUNITY: Determines if the suspect had the chance to commit the crime (alibi verification, timeline alignment)\n\nAdditionally evaluates how well the suspect's profile matches crime scene evidence and witness statements.\n\nParameters:\n    narrative (str): The full murder mystery text containing clues, evidence, and character information\n    focus (str): Specific evaluation focus (e.g., 'all suspects', 'Nicole and Isabelle', 'means only', 'opportunity comparison')\n\nReturns:\n    str: A structured evaluation including:\n    - Suspect-by-suspect breakdown of means, motive, and opportunity\n    - Assessment of evidence alignment with each suspect\n    - Comparative analysis when multiple suspects are evaluated\n    - Any contradictions or gaps in the evidence\n    - Final likelihood assessment for each suspect\n\nPay special attention to:\n- Timeline consistency with alibis\n- Physical capability to commit the crime\n- Psychological plausibility of motives\n- Direct vs circumstantial evidence\n- Witness reliability and corroboration",
+      "source_pattern": "Holistic Suspect Evaluation",
+      "examples": [
+        "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+        "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+        "Compare the alibis and opportunities for both suspects",
+        "Do[Evaluate means, motive, and opportunity for Nicole and Isabelle based on the narrative]\n\nObservation 1: \n- **Nicole's Means**: There is no evidence Nicole owns a crossbow or has any skill in using ",
+        "Do[Compare the motives and opportunities of Clyde and Paul based on the narrative]\nObservation 1"
+      ]
+    },
+    {
+      "id": "ptool_002",
+      "func_name": "summarize_suspect_evidence",
+      "display_name": "SummarizeSuspectEvidence",
+      "short_desc": "Extracts and summarizes evidence for a specific suspect including motive, opportunity, means, and suspicious behavior.",
+      "doc": "Extracts comprehensive evidence information about a specific suspect from the murder mystery narrative.\n\nFocuses on four key categories:\n1. Motive: Reasons why the suspect might want the victim dead (grudges, conflicts, financial gain)\n2. Opportunity: Evidence placing suspect near crime scene or confirming they could have committed the act\n3. Means: Access to murder weapon or required knowledge/skills\n4. Suspicious Behavior: Any unusual actions, lies, or peculiar behavior related to the crime\n\nParameters:\n    narrative (str): The full murder mystery text\n    focus (str): The specific suspect name to analyze (e.g., \"Clyde\", \"Paul\", \"Lillian\")\n\nReturns:\n    str: A structured summary organized by category with specific evidence points extracted from the narrative\n    \nNotes:\n    - Extract only information directly related to the specified suspect\n    - Include verbatim quotes from the narrative when possible\n    - Note any contradictions or alibis mentioned\n    - Pay special attention to timestamps, locations, and relationships mentioned\n    - Format response with clear headings for each category\n    - Return 'No evidence found' if nothing relevant appears in narrative",
+      "source_pattern": "Summarizing Suspect Information",
+      "examples": [
+        "Summarize evidence for Clyde: motive, opportunity, means, and any suspicious behavior]\nObservation 1: \n- **Motive**: Clyde was publicly humiliated by Faith at his promotion ceremony. He expressed a ch",
+        "Summarize evidence for Paul: motive, opportunity, means, and any suspicious behavior",
+        "Summarize evidence for Clyde: motive, opportunity, means, and any suspicious behavior",
+        "Summarize key evidence and relationships for each suspect",
+        "List all evidence for Lillian: her relationship to Jamal, motive, opportunity, and connection to the frog poison."
+      ]
+    },
+    {
+      "id": "ptool_003",
+      "func_name": "timeline_opportunity_analysis",
+      "display_name": "TimelineOpportunityAnalysis",
+      "short_desc": "Analyzes timelines, locations, and opportunity for suspects in relation to a specific event or person.",
+      "doc": "Analyzes the narrative to determine timeline, location, and opportunity information for suspects related to a specific focus.\n\nExtracts and examines:\n- Timelines: Specific dates, times, durations, and sequences of events\n- Locations: Where people were positioned and their movements\n- Alibis: Statements about whereabouts or activities\n- Opportunity: Gaps in timelines or access to victim/evidence\n- Contradictions: Inconsistencies in statements about timeline/location\n\nFocus parameter should specify:\n- A person (suspect, victim, witness)\n- An event/time period (murder night, specific date)\n- Location (crime scene, specific place)\n- Or combination (person + time + location)\n\nResponse structure:\n1. Timeline reconstruction for focus period\n2. Location/movement analysis for relevant individuals\n3. Opportunity assessment for each suspect\n4. Contradictions or gaps in alibis\n5. Key evidence supporting/refuting opportunity\n\nPay attention to:\n- Exact time mentions (specific hours, days, durations)\n- Location descriptions and proximity to crime scene\n- Witness statements about others' whereabouts\n- Physical evidence placing people at locations\n- Overlap between suspect/victim timelines\n- Time required to commit crime vs. alibi coverage",
+      "source_pattern": "Timeline & Opportunity Analysis",
+      "examples": [
+        "Check if Ronald was at the mosque or had opportunity to poison Kent",
+        "Check timeline and opportunity for both suspects on the day Isabella died",
+        "Check if the murder night was specifically Tuesday night",
+        "Check if Taylor was at Clyde's chalet on the day he died"
+      ]
+    },
+    {
+      "id": "ptool_004",
+      "func_name": "alibi_analysis",
+      "display_name": "AlibiAnalysis",
+      "short_desc": "Analyzes the alibi of a suspect or person of interest by checking their whereabouts during the murder or specified event.",
+      "doc": "This function analyzes the alibi of a given individual (focus) within the provided narrative. It extracts all mentions of the person's activities, locations, and timeframes related to the murder or specified event. The analysis includes:\n- Identifying explicit alibi statements (e.g., 'was at home', 'with friends').\n- Checking for time gaps or inconsistencies in the alibi.\n- Cross-referencing with other events or testimonies (e.g., overlaps with arrival/departure times of others).\n- Noting any supporting evidence (e.g., witnesses, CCTV) or contradictions.\nThe response is structured as a summary of the alibi, followed by key points (evidence, inconsistencies, witnesses), and a conclusion on reliability.\nParameters:\n  narrative (str): The full text of the murder mystery.\n  focus (str): The person to analyze (e.g., 'Isolde', 'Mark').\nReturns:\n  str: A formatted string with alibi details, including timeframes, activities, supporting evidence, and any gaps or issues.",
+      "source_pattern": "Alibi Analysis",
+      "examples": [
+        "Check if the narrative provides any information about Isolde's whereabouts during the night of the murder or her work schedule",
+        "Check if Rosemary's alibi is solid or if there are gaps",
+        "Check if Mark's alibi for the murder time is verified or if there is any evidence placing him at the mosque",
+        "Check if Russell has an alibi for the time of Isabella's death",
+        "Check if there is any information about Letti leaving Charlotte's house or overlapping with Deborah's arrival"
+      ]
+    },
+    {
+      "id": "ptool_005",
+      "func_name": "synthesize_evidence",
+      "display_name": "SynthesizeEvidence",
+      "short_desc": "Compiles and summarizes all relevant evidence from the narrative about a specific person or aspect of the case.",
+      "doc": "Extracts and synthesizes evidence from the murder mystery narrative related to a specific focus.\n\nFocus should typically be a person's name (e.g., 'Randy', 'Isla') or specific aspect (e.g., 'alibi', 'motive', 'opportunity').\n\nExtracts:\n- All direct statements about the focus from the narrative\n- Actions, behaviors, or characteristics attributed to the focus\n- Relationships and interactions with other characters\n- Physical evidence, alibis, motives, or opportunities\n- Any suspicious or noteworthy details\n\nStructures response as:\n1. Clear heading identifying the focus\n2. Bulleted list of evidence points (each starting with '- ')\n3. Concise summary of key findings\n\nPay special attention to:\n- Distinguishing between facts and speculation\n- Noting contradictions or inconsistencies\n- Identifying both incriminating and exonerating evidence\n- Contextualizing evidence within the overall narrative\n- Including specific details like timestamps, locations, and relationships",
+      "source_pattern": "Evidence Synthesis and Comparison",
+      "examples": [
+        "List all evidence against Randy and Isla from the narrative",
+        "Summarize key evidence for Richard: He works at the mosque, practices nunchaku, was in the same martial arts class as Isabella, has abrasions and sweat marks suggesting recent nunchaku use, and is fas",
+        "Summarize key evidence for Malaysia: She is a hairdresser with volatile behavior, practices martial arts, owns nunchaku, and was not scheduled to work on the day of the murder (weak alibi). She freque",
+        "Summarize alibi and key evidence for Lloyd",
+        "Summarize alibi and key evidence for Naomi"
+      ]
+    }
+  ],
+  "config": {
+    "n_cases": 75,
+    "n_iters": 5,
+    "model": "together_ai/deepseek-ai/DeepSeek-V3",
+    "seed": 42,
+    "min_count": 3,
+    "max_steps": 14,
+    "sim_threshold": 0.75,
+    "batch_size": 1,
+    "source": "actions",
+    "structured_output": false,
+    "output_dir": "iterations_v6a",
+    "fixes": [
+      "F: ptool-specific focus",
+      "H: LLM answer extraction"
+    ]
+  }
+}

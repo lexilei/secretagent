@@ -1,0 +1,15 @@
+{
+  "id": "ptool_003",
+  "func_name": "evidence_summarization",
+  "display_name": "EvidenceSummarization",
+  "short_desc": "evidence summarization",
+  "doc": "Evidence Summarization.\n\nAnalyze the narrative with the given focus.",
+  "source_pattern": "Evidence Summarization",
+  "examples": [
+    "Summarize evidence and motives for Addison and Octavia",
+    "ExtractEvidenceSummary[Gloria]\nObservation 1: Gloria, the Choreographer, had a motive for murder after Murray leaked her proprietary choreography to a rival dance troupe, devastating her career. She w",
+    "ExtractEvidenceSummary[Gloria]\nObservation 1: Gloria had a strong motive: Murray leaked her proprietary choreography to a rival dance troupe, devastating her career. She was knowledgeable about chemic",
+    "ExtractEvidenceSummary[Gloria]\nObservation 1: Gloria had a strong motive: Murray leaked her proprietary choreography to a rival dance troupe, devastating her career. She was knowledgeable about chemic",
+    "ExtractEvidenceSummary[Gloria]\nObservation 1: Based on the narrative, Gloria had a strong motive: Murray leaked her proprietary choreography to a rival dance troupe, devastating her career. She was kn"
+  ]
+}

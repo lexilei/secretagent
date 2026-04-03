@@ -1,0 +1,13 @@
+{
+  "id": "ptool_005",
+  "display_name": "ReviewSuspectEvidence",
+  "description": "Reviews and summarizes all evidence, motives, and opportunities related to a specific suspect in the case.",
+  "source_pattern": "Review Suspect Evidence",
+  "examples": [
+    "ReviewEvidence[focus: Addison]\nObservation",
+    "ReviewEvidence[focus: Evidence against Harper]\nObservation 1: Based on the narrative, the direct evidence against Harper is as follows:\n*   **Motive:** Isabelle threatened to expose a secret involving",
+    "ReviewEvidence[focus: Gerald]\nObservation",
+    "** ReviewEvidence[focus: Suspect Abigail - motives, opportunities, and evidence linking her to the crime]\n**Observation 2:** Based on the narrative provided, here is the information directly stated or",
+    "ReviewEvidence[focus: Evidence against Randy]\nObservation"
+  ]
+}

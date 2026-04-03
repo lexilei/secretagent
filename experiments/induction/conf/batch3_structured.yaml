@@ -1,0 +1,7 @@
+# Batch 3 + structured output
+source: actions
+batch_size: 3
+n_iters: 3
+synthesis:
+  structured_output: true
+output_dir: results/batch3_structured

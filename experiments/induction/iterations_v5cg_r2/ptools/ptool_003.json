@@ -1,0 +1,15 @@
+{
+  "id": "ptool_003",
+  "func_name": "extract_suspect_motives",
+  "display_name": "ExtractSuspectMotives",
+  "short_desc": "Extracts and analyzes potential motives for each suspect mentioned in the murder mystery narrative.",
+  "doc": "Analyzes the murder mystery narrative to identify all suspects and extract their potential motives for committing the crime.\n\nArgs:\n    narrative (str): The full text of the murder mystery story\n    focus (str): Specific aspect to focus on (e.g., 'financial motives', 'revenge motives', 'specific suspect')\n\nReturns:\n    dict: A structured dictionary with suspect names as keys, each containing:\n          - potential_motives: list of identified motives with supporting text evidence\n          - motive_strength: qualitative assessment (weak/medium/strong)\n          - related_relationships: people connected to this motive\n          - narrative_evidence: direct quotes supporting each motive\n\nExample:\n    {\n        \"John Doe\": {\n            \"potential_motives\": [\"Financial gain\", \"Revenge\"],\n            \"motive_strength\": \"strong\",\n            \"related_relationships\": [\"Victim (business partner)\", \"Mary Smith (beneficiary)\"],\n            \"narrative_evidence\": [\n                \"John stood to inherit the business if the victim died\",\n                \"The victim had recently cheated John out of $50,000\"\n            ]\n        },\n        \"Mary Smith\": {\n            \"potential_motives\": [\"Jealousy\"],\n            \"motive_strength\": \"weak\",\n            \"related_relationships\": [\"Victim (romantic partner)\"],\n            \"narrative_evidence\": [\n                \"Mary was seen arguing with the victim about his new assistant\"\n            ]\n        }\n    }",
+  "source_pattern": "Tool Usage",
+  "examples": [
+    "Thought 4: The tool didn't provide the direct comparison I was expecting. Let me try using CompareSuspects instead to get a structured comparison between Peyton and Isolde based on the narrative.",
+    "Thought 3: The tool's response seems to be a summary rather than a direct comparison. I need a more detailed analysis to weigh the evidence. Let me use `CompareSuspectEvidence` to get a structured com",
+    "Thought 5: The observation from Action 4 states \"Nicole is the murderer,\" but this seems to be a conclusion rather than a comparison of evidence strength. I need to carefully evaluate the evidence aga",
+    "Observation 2: The tool did not provide a direct comparison. Let me try using the other specialized tool to compare the evidence against each suspect more directly.\n\nThought 3: I need a more focused c",
+    "Thought 3: The comparison tool suggests Harry is more likely, but I should delve deeper into the evidence. Specifically, I want to compare the evidence against each suspect in detail, especially regar"
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "iteration_stats": [
+    {
+      "iteration": 0,
+      "n_ptools": 0,
+      "accuracy": 0.68,
+      "n_correct": 51,
+      "n_total": 75,
+      "avg_cost": 0.0170471,
+      "avg_latency": 51.10246657053629,
+      "ptool_uses": 0,
+      "do_uses": 190,
+      "max_step_hits": 5,
+      "neg1_answers": 5
+    },
+    {
+      "iteration": 1,
+      "n_ptools": 1,
+      "accuracy": 0.6533333333333333,
+      "n_correct": 49,
+      "n_total": 75,
+      "avg_cost": 0.020127766666666668,
+      "avg_latency": 44.525399154027305,
+      "ptool_uses": 134,
+      "do_uses": 106,
+      "max_step_hits": 7,
+      "neg1_answers": 14
+    },
+    {
+      "iteration": 2,
+      "n_ptools": 2,
+      "accuracy": 0.64,
+      "n_correct": 48,
+      "n_total": 75,
+      "avg_cost": 0.028262133333333328,
+      "avg_latency": 39.123285341262815,
+      "ptool_uses": 149,
+      "do_uses": 143,
+      "max_step_hits": 14,
+      "neg1_answers": 14
+    },
+    {
+      "iteration": 3,
+      "n_ptools": 3,
+      "accuracy": 0.8133333333333334,
+      "n_correct": 61,
+      "n_total": 75,
+      "avg_cost": 0.021586866666666673,
+      "avg_latency": 15.002260042826334,
+      "ptool_uses": 223,
+      "do_uses": 86,
+      "max_step_hits": 3,
+      "neg1_answers": 3
+    },
+    {
+      "iteration": 4,
+      "n_ptools": 4,
+      "accuracy": 0.6666666666666666,
+      "n_correct": 50,
+      "n_total": 75,
+      "avg_cost": 0.03336461666666666,
+      "avg_latency": 34.650720494588214,
+      "ptool_uses": 255,
+      "do_uses": 114,
+      "max_step_hits": 11,
+      "neg1_answers": 11
+    }
+  ],
+  "ptools": [
+    {
+      "id": "ptool_001",
+      "func_name": "summarize_evidence",
+      "display_name": "SummarizeEvidence",
+      "short_desc": "Extracts and organizes key evidence for a specific suspect or topic from the narrative.",
+      "doc": "Extracts and summarizes evidence related to a specific focus (suspect, location, or object) from the murder mystery narrative.\n\nThis function analyzes the provided text to identify and categorize evidence into motive, opportunity,\nmeans, alibi, and contradictions. It focuses on finding factual statements rather than making judgments.\n\nArgs:\n    narrative (str): The full text of the murder mystery story.\n    focus (str): The specific person, place, or item to analyze (e.g., 'Peyton', 'the knife', 'the mall').\n\nReturns:\n    dict: A structured summary with the following keys:\n        - 'motive': List of strings describing potential motives\n        - 'opportunity': List of strings describing evidence related to being at the scene\n        - 'means': List of strings describing access to murder weapons or required knowledge\n        - 'alibi': List of strings supporting an alibi or lack of opportunity\n        - 'contradictions': List of strings showing inconsistencies in statements or evidence\n\n    Each list contains specific, verbatim quotes or close paraphrases from the narrative.\n\nExample:\n    {\n        'motive': ['Guy threatened to expose her secret'],\n        'opportunity': ['Shops at the mall frequently', 'Works daytime shifts'],\n        'means': ['Trained in martial arts'],\n        'alibi': ['Was at work during the night of the murder'],\n        'contradictions': ['Claimed to be home but was seen near crime scene']\n    }",
+      "source_pattern": "Evidence Summary & Analysis",
+      "examples": [
+        "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+        "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+        "Summarize the evidence against Nicole and Isabelle based on the narrative",
+        "Do[Summarize the evidence against Nicole and Isabelle based on the narrative]\nObservation 1: Based on the narrative, the evidence is as follows:\n\n**Evidence against Nicole:**\n*   She was the last know",
+        "Do[Summarize the key evidence for Nicole and Isabelle from the narrative]\nObservation 1: \n**Evidence against Nicole:**\n- She was the last known person to see Wilhelmina alive (coffee and snacks at her"
+      ]
+    },
+    {
+      "id": "ptool_002",
+      "func_name": "summarize_evidence",
+      "display_name": "SummarizeEvidence",
+      "short_desc": "Extracts and summarizes all evidence related to a specific person or aspect from the mystery narrative.",
+      "doc": "Extracts and summarizes all evidence related to a specific person, relationship, or aspect from the murder mystery narrative.\n\nArgs:\n    narrative (str): The full text of the murder mystery narrative\n    focus (str): The specific person, relationship, or aspect to focus on (e.g., \"Chris\", \"Julia\", \"Elizabeth\", \"Gerald's alibi\")\n\nReturns:\n    dict: A structured summary containing:\n        {\n            \"focus\": \"[name/aspect from input]\",\n            \"relationships\": [list of relationships with other characters],\n            \"motive\": [summary of potential motives],\n            \"opportunity\": [summary of timing/alibi information],\n            \"contradictions\": [list of inconsistencies or suspicious behavior],\n            \"supporting_evidence\": [list of concrete evidence supporting involvement],\n            \"exonerating_evidence\": [list of evidence suggesting innocence]\n        }\n\nExample output:\n    {\n        \"focus\": \"Elizabeth\",\n        \"relationships\": [\"Married to Thomas\", \"Director of the play\", \"Had conflict with Eleanor\"],\n        \"motive\": \"Eleanor was having an affair with her husband and mocked her during a confrontation\",\n        \"opportunity\": \"Was present at the theater during the murder timeframe\",\n        \"contradictions\": [\"Changed story about whereabouts\", \"Denied argument but witnesses confirm\"],\n        \"supporting_evidence\": [\"Found with victim's personal item\", \"Had access to murder weapon\"],\n        \"exonerating_evidence\": [\"Security footage shows her in different location\"]\n    }\n\nFocus on extracting specific details from the narrative rather than making judgments. Include both incriminating and exonerating evidence. Pay special attention to relationships, timelines, alibis, and any concrete physical evidence mentioned.",
+      "source_pattern": "Evidence Summary & Extraction",
+      "examples": [
+        "SummarizeEvidence[Chris]\nObservation",
+        "SummarizeEvidence[Julia]\nObservation 1",
+        "SummarizeEvidence[Elizabeth]\nObservation 1: Elizabeth is the director of the play where Eleanor was murdered. She had a strong personal motive: Eleanor was having an affair with her husband and mocked",
+        "SummarizeEvidence[Elizabeth]\n\nObservation 1: Elizabeth is the director of the play. She had a personal motive: Eleanor was having an affair with her husband and mocked her during a confrontation. She ",
+        "Extract all evidence related to Gerald: his relationship with Jamal, his alibi, his actions, and any suspicious behavior"
+      ]
+    },
+    {
+      "id": "ptool_003",
+      "func_name": "finalize_suspect_verdict",
+      "display_name": "FinalizeSuspectVerdict",
+      "short_desc": "Concludes the investigation by declaring the most likely murderer with supporting evidence summary.",
+      "doc": "Finalizes the murder investigation by identifying the most probable suspect and summarizing the evidence against them.\n\nThis function analyzes the narrative to determine which suspect has the strongest evidence pointing\nagainst them, considering factors like opportunity, motive, contradictory statements, and lack of alibi.\n\nArgs:\n    narrative (str): The full murder mystery text containing clues, statements, and evidence.\n    focus (str): The specific suspect index or name to focus on for final conclusion.\n\nReturns:\n    dict: A structured verdict containing:\n        {\n            \"conclusion\": \"Guilty\" or \"Not Guilty\",\n            \"suspect_name\": \"Name of the suspect\",\n            \"suspect_index\": 0-3 (based on narrative options),\n            \"confidence_level\": \"High\", \"Medium\", or \"Low\",\n            \"key_evidence\": [\"list\", \"of\", \"3-5\", \"most\", \"critical\", \"pieces\", \"of\", \"evidence\"],\n            \"contradictions\": [\"list\", \"of\", \"inconsistencies\", \"in\", \"their\", \"story\"],\n            \"motive\": \"Brief description of potential motive\",\n            \"opportunity\": \"Brief description of when/how they could have committed the crime\"\n        }\n\nExample output:\n    {\n        \"conclusion\": \"Guilty\",\n        \"suspect_name\": \"Taylor\",\n        \"suspect_index\": 1,\n        \"confidence_level\": \"High\",\n        \"key_evidence\": [\"Seen near crime scene at time of murder\", \"Inconsistent alibi timeline\", \"Financial motive inheritance\"],\n        \"contradictions\": [\"Claimed to be in meeting but no one can verify\", \"Changed story about phone call timing\"],\n        \"motive\": \"$500,000 inheritance from victim\",\n        \"opportunity\": \"Was alone in the west wing during the 30-minute murder window\"\n    }",
+      "source_pattern": "Conclusion Finalization",
+      "examples": [
+        "Finish[1] (Paul is suspect index 1)",
+        "Finish[1] (Taylor is the most likely murderer, as index 1 corresponds to Taylor in the choices: (0) Mack, (1) Taylor).",
+        "Finish[0] (Meredith is the most likely murderer)",
+        "Finish[1] (Freya)",
+        "Finish[1] (Freya)"
+      ]
+    },
+    {
+      "id": "ptool_004",
+      "func_name": "extract_evidence",
+      "display_name": "ExtractEvidence",
+      "short_desc": "Extracts all evidence related to a specific person, object, or location from the narrative.",
+      "doc": "Extracts all evidence from the murder mystery narrative related to a specific focus (person, object, or location).\n\nThis function scans the narrative for any mentions, actions, relationships, or circumstances\nrelated to the focus. It identifies both direct evidence (explicit mentions) and indirect\nevidence (implied connections or contextual information).\n\nArgs:\n    narrative (str): The full text of the murder mystery story\n    focus (str): The specific person, object, or location to find evidence about\n\nReturns:\n    str: A structured list of evidence items in the following format:\n    \n    EVIDENCE RELATED TO [focus]:\n    - [Category 1]: [Specific evidence details]\n    - [Category 2]: [Specific evidence details]\n    - [Category 3]: [Specific evidence details]\n    ...\n    \n    Categories may include but are not limited to:\n    - Direct statements/actions\n    - Relationships/connections\n    - Motive/opportunity\n    - Alibi/whereabouts\n    - Physical evidence\n    - Suspicious behavior\n    - Contradictions/inconsistencies\n    - Background/history\n    - Witness testimony\n    \n    Example output for focus=\"Frederick\":\n    \n    EVIDENCE RELATED TO Frederick:\n    - Direct statements: Frederick was heard arguing with the victim the night before\n    - Relationships: Frederick was the victim's business partner\n    - Motive: Frederick stood to inherit the victim's business\n    - Alibi: Claims to be at home alone during the murder\n    - Physical evidence: Fingerprints found on the murder weapon\n    - Contradictions: Neighbor reported seeing Frederick's car leave around the time of the murder\n    - Background: Had a criminal record for assault",
+      "source_pattern": "Evidence Extraction",
+      "examples": [
+        "Extract all evidence related to Frederick from the narrative",
+        "Do[List all evidence related to Marianne]\nObservation 1: \n- Marianne has a background as a miner and is familiar with pickaxes (the murder weapon).\n- She has significant financial debt and is facing p",
+        "Extract key evidence against Xenia: motive, opportunity, connection to weapon",
+        "List all evidence related to Lloyd: his relationship with Russell, motive, alibi, and any physical or circumstantial evidence.",
+        "Do[List all evidence related to Naomi: her relationship with Russell, motive, alibi, and any physical or circumstantial evidence.]\nObservation"
+      ]
+    },
+    {
+      "id": "ptool_005",
+      "func_name": "analyze_suspect_consistency",
+      "display_name": "AnalyzeSuspectConsistency",
+      "short_desc": "Evaluates a suspect's statements and behaviors for contradictions or inconsistencies with known evidence",
+      "doc": "Analyzes a specific suspect's statements and actions for inconsistencies with established facts or contradictions within their own testimony.\n\nThis function examines the narrative to identify:\n- Contradictions between the suspect's statements and physical evidence\n- Inconsistencies in the suspect's timeline or alibi\n- Behavioral anomalies or suspicious actions\n- Statements that conflict with other witnesses' accounts\n- Changes in the suspect's story over time\n\nArgs:\n    narrative (str): The full murder mystery text containing all evidence, statements, and facts\n    focus (str): The specific suspect name to analyze (e.g., 'Clyde', 'Aubrey', 'Harry')\n\nReturns:\n    dict: A structured analysis of inconsistencies with the following format:\n    {\n        \"suspect\": \"suspect_name\",\n        \"has_contradictions\": true/false,\n        \"contradiction_details\": [\n            {\n                \"type\": \"alibi_contradiction/statement_inconsistency/behavioral_anomaly/evidence_conflict\",\n                \"description\": \"Detailed description of the specific contradiction\",\n                \"supporting_evidence\": \"Quoted text from narrative supporting this finding\"\n            }\n        ],\n        \"consistency_assessment\": \"Brief overall assessment of how consistent the suspect's account appears\"\n    }\n    \n    Example output:\n    {\n        \"suspect\": \"Clyde\",\n        \"has_contradictions\": true,\n        \"contradiction_details\": [\n            {\n                \"type\": \"behavioral_anomaly\",\n                \"description\": \"Claimed to be meticulous cleaner but neighbors saw him mowing lawn at unusual hours\",\n                \"supporting_evidence\": \"Neighbors saw Clyde mowing his lawn at 2 AM with a heavy lawnmower\"\n            }\n        ],\n        \"consistency_assessment\": \"Multiple inconsistencies suggest possible deception\"\n    }",
+      "source_pattern": "Suspect Evidence Analysis",
+      "examples": [
+        "Examine any behavioral clues or inconsistencies in the suspects' actions or statements",
+        "SummarizeEvidence[Clyde]\nObservation 1: \n- Clyde is an army man with meticulous cleaning habits (only cleans when alone)\n- Neighbors saw him mowing his lawn recently with a heavy lawnmower (similar to",
+        "Check if there is any evidence that might exonerate one suspect or implicate the other more strongly, such as alibis, forensic details, or inconsistencies",
+        "Extract key evidence for Aubrey: \n- Aubrey is the museum curator with keys to the cemetery gates (but not directly to the mosque murder room). \n- She had weapon-handling training for farming tools (in",
+        "SummarizeEvidence[Harry]\nObservation"
+      ]
+    }
+  ],
+  "config": {
+    "n_cases": 75,
+    "n_iters": 5,
+    "model": "together_ai/deepseek-ai/DeepSeek-V3",
+    "seed": 42,
+    "min_count": 3,
+    "max_steps": 14,
+    "sim_threshold": 0.75,
+    "batch_size": 1,
+    "source": "actions",
+    "structured_output": true,
+    "output_dir": "iterations_v5g",
+    "fixes": [
+      "F: ptool-specific focus args",
+      "G: structured output docstrings"
+    ]
+  }
+}

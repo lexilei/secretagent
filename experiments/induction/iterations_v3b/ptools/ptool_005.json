@@ -1,0 +1,15 @@
+{
+  "id": "ptool_005",
+  "func_name": "assess_opportunity",
+  "display_name": "AssessOpportunity",
+  "short_desc": "Evaluates whether a person had access to the crime scene, murder weapon, or was present at the location/time of the murder.",
+  "doc": "Analyzes the narrative to assess opportunity for a specific person or group regarding the murder.\n\nExtracts and evaluates:\n1. Location evidence: Where the person was before/during/after the murder\n2. Access to crime scene: Whether the person could physically reach the murder location\n3. Weapon access: Whether the person had access to the murder weapon\n4. Timeline alignment: Whether the person's known movements fit with the time of death\n5. Witness sightings: Any reports of the person near the crime scene/time\n6. Physical barriers: Any obstacles that would prevent access\n\nFocus parameter should specify:\n- A person's name (e.g., 'Isolde', 'Clyde')\n- A location (e.g., 'the mall', 'mosque')\n- A specific access point (e.g., 'Faith's tool shed')\n\nStructure the response with:\n1. Clear assessment conclusion\n2. Supporting evidence from narrative\n3. Timeline analysis if relevant\n4. Any conflicting information\n5. Confidence level in opportunity assessment\n\nPay attention to:\n- Specific timestamps and location mentions\n- Physical access requirements\n- Witness testimonies about presence/absence\n- Contradictions in alibis or movements",
+  "source_pattern": "Opportunity Assessment",
+  "examples": [
+    "Check if the bar is in the mall or if Isolde could have been at the mall that night",
+    "Compare Clyde and Paul's access to the crime scene and murder weapon. Clyde has his own lawnmower and was seen mowing recently, but does he have access to Faith's tool shed? Paul tended Faith's lawn, ",
+    "Check if Ronald has any connection to the mosque or was present there on the day of the murder",
+    "Analyze who had the opportunity and means to commit the murder based on the timeline and evidence",
+    "Check who had access to the murder weapon and opportunity to use it"
+  ]
+}

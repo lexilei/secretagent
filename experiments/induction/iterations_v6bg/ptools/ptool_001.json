@@ -1,0 +1,15 @@
+{
+  "id": "ptool_001",
+  "func_name": "assess_mmo",
+  "display_name": "MMOAssessment",
+  "short_desc": "Evaluates means, motive, and opportunity for a specific suspect or group of suspects.",
+  "doc": "Evaluates means, motive, and opportunity for a specific suspect or group based on the narrative.\n\nArgs:\n    narrative (str): The full murder mystery text containing all evidence and statements.\n    focus (str): The specific subject to evaluate (e.g., 'Peyton', 'Nicole and Isabelle', 'Chris and Gloria').\n\nReturns:\n    dict: A structured assessment with the following keys:\n        - 'subject': The name(s) of the suspect(s) evaluated\n        - 'means_assessment': Evaluation of capability/access to murder weapon/method\n        - 'motive_assessment': Evaluation of reasons/benefits from the murder\n        - 'opportunity_assessment': Evaluation of presence/access at crime scene/time\n        - 'key_evidence': List of relevant evidence supporting each assessment\n        - 'contradictions': List of any conflicting evidence or alibis\n\nExample output:\n    {\n        'subject': 'Peyton',\n        'means_assessment': 'Has professional access to poison',\n        'motive_assessment': 'Strong - Guy threatened to expose her secret',\n        'opportunity_assessment': 'Weak - Works daytime shifts, murder occurred at night',\n        'key_evidence': ['Works as pharmacist', 'Guy knew about prescription fraud'],\n        'contradictions': ['Clock-in records show she was at work during murder time']\n    }\n\nFocus on:\n- Extracting specific evidence related to means (weapon access/skills)\n- Identifying stated or implied motives (threats, financial gain, revenge)\n- Analyzing timeline and location evidence for opportunity\n- Noting contradictions in alibis or statements\n- Being specific about what evidence supports each assessment",
+  "source_pattern": "MMO Assessment",
+  "examples": [
+    "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+    "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+    "Do[Evaluate means, motive, and opportunity for Nicole and Isabelle based on the narrative]\n\nObservation 1: \n- **Nicole's Means**: There is no evidence Nicole owns a crossbow or has any skill in using ",
+    "Review motives and opportunities for Chris and Gloria",
+    "Evaluate who had the best opportunity to administer the venom at the mosque"
+  ]
+}

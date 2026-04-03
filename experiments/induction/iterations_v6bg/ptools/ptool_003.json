@@ -1,0 +1,15 @@
+{
+  "id": "ptool_003",
+  "func_name": "verify_evidence",
+  "display_name": "VerifyEvidence",
+  "short_desc": "Checks for contradictions, inconsistencies, or specific evidence links in the narrative based on a focus area.",
+  "doc": "Analyzes the murder mystery narrative to verify evidence related to a specific focus area.\n\nThis function examines the narrative to identify:\n- Contradictions or inconsistencies in statements or evidence\n- Specific evidence linking suspects to crime scenes, weapons, or victims\n- Alibi verification and validation\n- Direct implications or exonerating evidence\n- Any conflicts between witness statements and physical evidence\n\nArgs:\n    narrative (str): The complete murder mystery text containing all clues, statements, and evidence.\n    focus (str): The specific aspect to investigate (e.g., \"Penelope's alibi\", \"knife fingerprints\", \"witness statements about the library\").\n\nReturns:\n    dict: A structured analysis with the following keys:\n        - \"contradictions_found\" (bool): True if any contradictions were identified\n        - \"direct_evidence_found\" (bool): True if direct evidence linking to the focus was found\n        - \"alibi_status\" (str): \"confirmed\", \"contradicted\", or \"unverified\"\n        - \"evidence_details\" (list): Specific quotes or evidence found in the narrative\n        - \"inconsistencies\" (list): Any contradictory statements or evidence found\n        - \"assessment\" (str): Overall assessment of the evidence quality for the focus area\n\nExample:\n    {\n        \"contradictions_found\": true,\n        \"direct_evidence_found\": false,\n        \"alibi_status\": \"contradicted\",\n        \"evidence_details\": [\"Witness saw suspect near scene at 9PM\", \"Fingerprints found on weapon\"],\n        \"inconsistencies\": [\"Suspect claimed to be at restaurant but receipt shows different time\"],\n        \"assessment\": \"Multiple contradictions cast doubt on suspect's story\"\n    }",
+  "source_pattern": "Evidence Verification",
+  "examples": [
+    "Check for any contradictions or inconsistencies in the evidence for Penelope and Francis",
+    "Check if there is any evidence specifically linking one suspect to the murder scene or weapon more directly. Also, consider any contradictory evidence or alibis.",
+    "Re-read the narrative to confirm Travis's statement about being in the labyrinth with Isabella on the day she died",
+    "Look for any evidence linking the trap to a specific suspect or any inconsistencies in their stories",
+    "Confirm if any evidence contradicts Letti's alibi or directly implicates Deborah beyond motive and opportunity"
+  ]
+}

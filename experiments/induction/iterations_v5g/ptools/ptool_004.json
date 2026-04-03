@@ -1,0 +1,15 @@
+{
+  "id": "ptool_004",
+  "func_name": "extract_evidence",
+  "display_name": "ExtractEvidence",
+  "short_desc": "Extracts all evidence related to a specific person, object, or location from the narrative.",
+  "doc": "Extracts all evidence from the murder mystery narrative related to a specific focus (person, object, or location).\n\nThis function scans the narrative for any mentions, actions, relationships, or circumstances\nrelated to the focus. It identifies both direct evidence (explicit mentions) and indirect\nevidence (implied connections or contextual information).\n\nArgs:\n    narrative (str): The full text of the murder mystery story\n    focus (str): The specific person, object, or location to find evidence about\n\nReturns:\n    str: A structured list of evidence items in the following format:\n    \n    EVIDENCE RELATED TO [focus]:\n    - [Category 1]: [Specific evidence details]\n    - [Category 2]: [Specific evidence details]\n    - [Category 3]: [Specific evidence details]\n    ...\n    \n    Categories may include but are not limited to:\n    - Direct statements/actions\n    - Relationships/connections\n    - Motive/opportunity\n    - Alibi/whereabouts\n    - Physical evidence\n    - Suspicious behavior\n    - Contradictions/inconsistencies\n    - Background/history\n    - Witness testimony\n    \n    Example output for focus=\"Frederick\":\n    \n    EVIDENCE RELATED TO Frederick:\n    - Direct statements: Frederick was heard arguing with the victim the night before\n    - Relationships: Frederick was the victim's business partner\n    - Motive: Frederick stood to inherit the victim's business\n    - Alibi: Claims to be at home alone during the murder\n    - Physical evidence: Fingerprints found on the murder weapon\n    - Contradictions: Neighbor reported seeing Frederick's car leave around the time of the murder\n    - Background: Had a criminal record for assault",
+  "source_pattern": "Evidence Extraction",
+  "examples": [
+    "Extract all evidence related to Frederick from the narrative",
+    "Do[List all evidence related to Marianne]\nObservation 1: \n- Marianne has a background as a miner and is familiar with pickaxes (the murder weapon).\n- She has significant financial debt and is facing p",
+    "Extract key evidence against Xenia: motive, opportunity, connection to weapon",
+    "List all evidence related to Lloyd: his relationship with Russell, motive, alibi, and any physical or circumstantial evidence.",
+    "Do[List all evidence related to Naomi: her relationship with Russell, motive, alibi, and any physical or circumstantial evidence.]\nObservation"
+  ]
+}

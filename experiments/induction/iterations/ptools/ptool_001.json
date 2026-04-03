@@ -1,0 +1,13 @@
+{
+  "id": "ptool_001",
+  "display_name": "ReviewEvidence",
+  "description": "Examines the available evidence with a specific focus to find clues, inconsistencies, or connections between suspects, objects, and locations.",
+  "source_pattern": "Review Evidence",
+  "examples": [
+    "Check for any physical evidence linking either suspect to the crowbar or the crime scene",
+    "Check for any physical evidence or alibis that might rule out one suspect or point to the other",
+    "Check if there is any evidence that Mack was at the chalet or could have administered the venom remotely. Also, examine Taylor's behavior and statements for inconsistencies.",
+    "Check if there is any evidence directly placing Chris or Gloria in Murray's office or handling the poison on the day of the murder",
+    "Look for any forensic or physical evidence mentioned, like fingerprints or transfer of evidence, and consider Winston's observations"
+  ]
+}

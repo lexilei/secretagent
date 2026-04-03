@@ -1,0 +1,15 @@
+{
+  "id": "ptool_001",
+  "func_name": "summarize_evidence",
+  "display_name": "SummarizeEvidence",
+  "short_desc": "Extracts and summarizes key evidence, motives, opportunities, and contradictions for specified suspects.",
+  "doc": "Extracts and synthesizes evidence from a murder mystery narrative for specified suspects.\n\nExtracts the following information for each suspect mentioned in the focus parameter:\n- Direct evidence linking them to the crime\n- Potential motives (financial, personal, professional)\n- Opportunities (alibis, access, timing)\n- Relevant expertise or capabilities\n- Contradictions or inconsistencies in their story\n- Relationships to the victim and other suspects\n\nFocus parameter should specify which suspects to analyze (e.g., 'Nicole and Isabelle', 'all suspects', 'Mack and Taylor').\n\nResponse structure:\n- Organized by suspect name\n- Bullet points for each category (evidence, motives, opportunities, etc.)\n- Clear distinction between direct evidence and circumstantial evidence\n- Specific quotes or references from the narrative when possible\n- Notes on contradictions or suspicious behavior\n\nPay special attention to:\n- Timeline inconsistencies\n- Physical evidence mentioned\n- Witness statements\n- Suspicious behaviors or statements\n- Relationships that might indicate motive",
+  "source_pattern": "Evidence Synthesis & Summarization",
+  "examples": [
+    "Summarize the evidence against Nicole and Isabelle based on the narrative",
+    "Do[Summarize the evidence against Nicole and Isabelle based on the narrative]\nObservation 1: Based on the narrative, the evidence is as follows:\n\n**Evidence against Nicole:**\n*   She was the last know",
+    "Do[Summarize the key evidence for Nicole and Isabelle from the narrative]\nObservation 1: \n**Evidence against Nicole:**\n- She was the last known person to see Wilhelmina alive (coffee and snacks at her",
+    "Summarize key details about Mack and Taylor, including their motives, opportunities, and expertise related to snakes.",
+    "Summarize the key evidence for each suspect: motives, opportunities, and any contradictions."
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "iteration_stats": [
+    {
+      "iteration": 0,
+      "n_ptools": 0,
+      "accuracy": 0.68,
+      "n_correct": 51,
+      "n_total": 75,
+      "avg_cost": 0.0170471,
+      "avg_latency": 51.10246657053629,
+      "ptool_uses": 0,
+      "do_uses": 190,
+      "max_step_hits": 5,
+      "neg1_answers": 5,
+      "extracted_finishes": 0
+    },
+    {
+      "iteration": 1,
+      "n_ptools": 3,
+      "accuracy": 0.8133333333333334,
+      "n_correct": 61,
+      "n_total": 75,
+      "avg_cost": 0.027685216666666658,
+      "avg_latency": 40.084448906580604,
+      "ptool_uses": 142,
+      "do_uses": 262,
+      "max_step_hits": 0,
+      "neg1_answers": 0,
+      "extracted_finishes": 5
+    },
+    {
+      "iteration": 2,
+      "n_ptools": 6,
+      "accuracy": 0.84,
+      "n_correct": 63,
+      "n_total": 75,
+      "avg_cost": 0.03386535000000001,
+      "avg_latency": 44.78996723175049,
+      "ptool_uses": 154,
+      "do_uses": 316,
+      "max_step_hits": 0,
+      "neg1_answers": 0,
+      "extracted_finishes": 6
+    }
+  ],
+  "ptools": [
+    {
+      "id": "ptool_001",
+      "func_name": "assess_mmo",
+      "display_name": "MMOAssessment",
+      "short_desc": "Evaluates means, motive, and opportunity for a specific suspect or group of suspects.",
+      "doc": "Evaluates means, motive, and opportunity for a specific suspect or group based on the narrative.\n\nArgs:\n    narrative (str): The full murder mystery text containing all evidence and statements.\n    focus (str): The specific subject to evaluate (e.g., 'Peyton', 'Nicole and Isabelle', 'Chris and Gloria').\n\nReturns:\n    dict: A structured assessment with the following keys:\n        - 'subject': The name(s) of the suspect(s) evaluated\n        - 'means_assessment': Evaluation of capability/access to murder weapon/method\n        - 'motive_assessment': Evaluation of reasons/benefits from the murder\n        - 'opportunity_assessment': Evaluation of presence/access at crime scene/time\n        - 'key_evidence': List of relevant evidence supporting each assessment\n        - 'contradictions': List of any conflicting evidence or alibis\n\nExample output:\n    {\n        'subject': 'Peyton',\n        'means_assessment': 'Has professional access to poison',\n        'motive_assessment': 'Strong - Guy threatened to expose her secret',\n        'opportunity_assessment': 'Weak - Works daytime shifts, murder occurred at night',\n        'key_evidence': ['Works as pharmacist', 'Guy knew about prescription fraud'],\n        'contradictions': ['Clock-in records show she was at work during murder time']\n    }\n\nFocus on:\n- Extracting specific evidence related to means (weapon access/skills)\n- Identifying stated or implied motives (threats, financial gain, revenge)\n- Analyzing timeline and location evidence for opportunity\n- Noting contradictions in alibis or statements\n- Being specific about what evidence supports each assessment",
+      "source_pattern": "MMO Assessment",
+      "examples": [
+        "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+        "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+        "Do[Evaluate means, motive, and opportunity for Nicole and Isabelle based on the narrative]\n\nObservation 1: \n- **Nicole's Means**: There is no evidence Nicole owns a crossbow or has any skill in using ",
+        "Review motives and opportunities for Chris and Gloria",
+        "Evaluate who had the best opportunity to administer the venom at the mosque"
+      ]
+    },
+    {
+      "id": "ptool_002",
+      "func_name": "investigate_weapon",
+      "display_name": "WeaponInvestigation",
+      "short_desc": "Analyze weapons in the crime scene and their connections to suspects",
+      "doc": "Investigates weapons mentioned in the murder mystery narrative to determine:\n- What weapons are present/relevant to the crime\n- Which suspects had access to each weapon\n- Who had the skill/ability to use each weapon effectively\n- Any evidence linking specific weapons to the crime scene\n- Contradictions in weapon-related evidence\n\nParameters:\n    narrative (str): The full murder mystery text\n    focus (str): Specific aspect to investigate (e.g., 'shotgun access', 'halberd skills', 'weapon transfer')\n\nReturns:\n    dict: A dictionary mapping each weapon to its investigation details with structure:\n    {\n        \"weapon_name\": {\n            \"type\": \"type_of_weapon\",\n            \"location_found\": \"where_weapon_was_discovered\",\n            \"murder_weapon\": true/false,\n            \"access_analysis\": {\n                \"suspect_name\": {\n                    \"had_access\": true/false,\n                    \"access_details\": \"how/why they had access\",\n                    \"skill_level\": \"expert/novice/none\",\n                    \"opportunity\": \"when/how could they access it\"\n                }\n            },\n            \"forensic_evidence\": [\"list\", \"of\", \"physical\", \"evidence\"],\n            \"contradictions\": [\"list\", \"of\", \"inconsistencies\"]\n        }\n    }\n\nExample output:\n    {\n        \"shotgun\": {\n            \"type\": \"firearm\",\n            \"location_found\": \"study desk\",\n            \"murder_weapon\": true,\n            \"access_analysis\": {\n                \"Colonel_Mustard\": {\n                    \"had_access\": true,\n                    \"access_details\": \"owned the shotgun, kept in study\",\n                    \"skill_level\": \"expert\",\n                    \"opportunity\": \"present in mansion all evening\"\n                },\n                \"Professor_Plum\": {\n                    \"had_access\": false,\n                    \"access_details\": \"never allowed in study\",\n                    \"skill_level\": \"none\",\n                    \"opportunity\": \"was in library all night\"\n                }\n            },\n            \"forensic_evidence\": [\"gunpowder residue on desk\", \"matching pellets in victim\"],\n            \"contradictions\": [\"shotgun recently cleaned despite regular use\"]\n        }\n    }",
+      "source_pattern": "Weapon Investigation",
+      "examples": [
+        "Focus on the murder weapon: who had access to a shotgun and the skill to use it?",
+        "Examine access to the halberd and opportunity for both suspects",
+        "Determine which halberd was used in the murder and if there is any evidence pointing to its origin",
+        "Do[Check the timing of the murder and whether Freya could have accessed the theater prop]\nObservation",
+        "Re-examine the evidence to see if the murder weapon was definitively the theater prop or if Freya's halberd could have been used"
+      ]
+    },
+    {
+      "id": "ptool_003",
+      "func_name": "verify_evidence",
+      "display_name": "VerifyEvidence",
+      "short_desc": "Checks for contradictions, inconsistencies, or specific evidence links in the narrative based on a focus area.",
+      "doc": "Analyzes the murder mystery narrative to verify evidence related to a specific focus area.\n\nThis function examines the narrative to identify:\n- Contradictions or inconsistencies in statements or evidence\n- Specific evidence linking suspects to crime scenes, weapons, or victims\n- Alibi verification and validation\n- Direct implications or exonerating evidence\n- Any conflicts between witness statements and physical evidence\n\nArgs:\n    narrative (str): The complete murder mystery text containing all clues, statements, and evidence.\n    focus (str): The specific aspect to investigate (e.g., \"Penelope's alibi\", \"knife fingerprints\", \"witness statements about the library\").\n\nReturns:\n    dict: A structured analysis with the following keys:\n        - \"contradictions_found\" (bool): True if any contradictions were identified\n        - \"direct_evidence_found\" (bool): True if direct evidence linking to the focus was found\n        - \"alibi_status\" (str): \"confirmed\", \"contradicted\", or \"unverified\"\n        - \"evidence_details\" (list): Specific quotes or evidence found in the narrative\n        - \"inconsistencies\" (list): Any contradictory statements or evidence found\n        - \"assessment\" (str): Overall assessment of the evidence quality for the focus area\n\nExample:\n    {\n        \"contradictions_found\": true,\n        \"direct_evidence_found\": false,\n        \"alibi_status\": \"contradicted\",\n        \"evidence_details\": [\"Witness saw suspect near scene at 9PM\", \"Fingerprints found on weapon\"],\n        \"inconsistencies\": [\"Suspect claimed to be at restaurant but receipt shows different time\"],\n        \"assessment\": \"Multiple contradictions cast doubt on suspect's story\"\n    }",
+      "source_pattern": "Evidence Verification",
+      "examples": [
+        "Check for any contradictions or inconsistencies in the evidence for Penelope and Francis",
+        "Check if there is any evidence specifically linking one suspect to the murder scene or weapon more directly. Also, consider any contradictory evidence or alibis.",
+        "Re-read the narrative to confirm Travis's statement about being in the labyrinth with Isabella on the day she died",
+        "Look for any evidence linking the trap to a specific suspect or any inconsistencies in their stories",
+        "Confirm if any evidence contradicts Letti's alibi or directly implicates Deborah beyond motive and opportunity"
+      ]
+    },
+    {
+      "id": "ptool_004",
+      "func_name": "assess_mmo",
+      "display_name": "MMOAssessment",
+      "short_desc": "Evaluates a suspect's means, motive, and opportunity for committing the crime.",
+      "doc": "Analyzes the narrative to assess a specific suspect's Means (ability to commit the crime),\nMotive (reason to commit the crime), and Opportunity (chance to commit the crime).\n\nArgs:\n    narrative (str): The full murder mystery text containing all clues and statements.\n    focus (str): The name of the suspect to evaluate (e.g., \"Peyton\", \"Addison\").\n\nReturns:\n    dict: A structured assessment with three main keys:\n        - \"means\": {\n            \"assessment\": \"yes/no/unclear\",\n            \"supporting_evidence\": \"textual evidence from narrative\",\n            \"contradicting_evidence\": \"textual evidence from narrative\"\n          }\n        - \"motive\": {\n            \"assessment\": \"yes/no/unclear\",\n            \"supporting_evidence\": \"textual evidence from narrative\",\n            \"contradicting_evidence\": \"textual evidence from narrative\"\n          }\n        - \"opportunity\": {\n            \"assessment\": \"yes/no/unclear\",\n            \"supporting_evidence\": \"textual evidence from narrative\",\n            \"contradicting_evidence\": \"textual evidence from narrative\"\n          }\n        - \"overall_risk\": \"low/medium/high\"\n\nExample output:\n    {\n        \"means\": {\n            \"assessment\": \"yes\",\n            \"supporting_evidence\": \"Peyton is a trained surgeon with knowledge of anatomy\",\n            \"contradicting_evidence\": \"None\"\n        },\n        \"motive\": {\n            \"assessment\": \"yes\",\n            \"supporting_evidence\": \"Victim was blackmailing Peyton about medical malpractice\",\n            \"contradicting_evidence\": \"Peyton claimed they had reconciled\"\n        },\n        \"opportunity\": {\n            \"assessment\": \"unclear\",\n            \"supporting_evidence\": \"Peyton was seen near crime scene around time of murder\",\n            \"contradicting_evidence\": \"Peyton's alibi claims they were in surgery\"\n        },\n        \"overall_risk\": \"high\"\n    }\n\nNote: Pay close attention to direct evidence, alibis, relationships with victim,\nskills/abilities, and timeline inconsistencies when making assessments.",
+      "source_pattern": "Suspect MMO Assessment",
+      "examples": [
+        "MMOAssessment[Peyton]",
+        "MMOAssessment[Addison]",
+        "MMOAssessment[Octavia]",
+        "MMOAssessment[Nicole]",
+        "MMOAssessment[Isabelle]"
+      ]
+    },
+    {
+      "id": "ptool_005",
+      "func_name": "investigate_suspect_connections",
+      "display_name": "InvestigateSuspectConnections",
+      "short_desc": "Examines the narrative for connections, motives, opportunities, or access between a suspect and another person, location, or object.",
+      "doc": "Parses the narrative to find any direct or indirect connections related to the specified focus. The focus should be a string describing the specific relationship or attribute to investigate (e.g., 'connection between Penelope and Francis', 'motive Abigail had against Jacqueline', 'Gordon and the chalet', 'opportunity at laser tag arena', 'Lloyd access to shovel').\n\nReturns:\n    A dictionary with two keys:\n    - 'connections_found': A boolean indicating if any relevant connections were found.\n    - 'details': A list of strings, each describing a specific connection, motive, opportunity, or piece of evidence found in the narrative. If no connections are found, this list is empty.\n\nExample output:\n    {\n        'connections_found': True,\n        'details': ['Penelope was seen arguing with Francis at the party.', 'Francis owed Penelope a large sum of money.']\n    }",
+      "source_pattern": "Suspect Investigation",
+      "examples": [
+        "Check if there is any connection between Penelope and Francis, or if the narrative suggests only one meeting took place",
+        "Search the narrative for any motive Abigail might have had against Jacqueline, or any connection between Abigail and Veronica",
+        "Check if Gordon has any direct connection to the chalet or the crime scene beyond proximity",
+        "Check if either suspect had opportunity at the laser tag arena on the day of the murder",
+        "Check if Lloyd had access to the shovel or any connection to it"
+      ]
+    },
+    {
+      "id": "ptool_006",
+      "func_name": "analyze_evidence",
+      "display_name": "EvidenceAnalysis",
+      "short_desc": "Examines the narrative for specific evidence related to a focus area or individual.",
+      "doc": "Analyzes the murder mystery narrative for evidence related to a specific focus (suspect, location, object, etc.).\n\nArgs:\n    narrative (str): The full text of the murder mystery narrative.\n    focus (str): The specific aspect to focus on (e.g., suspect name, location, object).\n\nReturns:\n    dict: A dictionary with two keys:\n        - 'evidence_for': List of evidence supporting involvement/connection\n        - 'evidence_against': List of evidence contradicting involvement/connection\n        - 'neutral_observations': List of relevant but inconclusive observations\n    Each list contains strings with brief evidence descriptions and their narrative source.\n\nExample output:\n    {\n        'evidence_for': ['Seen near crime scene (paragraph 3)', 'Owns similar weapon (paragraph 5)'],\n        'evidence_against': ['Has alibi for time of death (paragraph 7)'],\n        'neutral_observations': ['Had motive but no direct evidence (paragraph 2)']\n    }\n\nPay attention to:\n- Direct quotes or observations mentioning the focus\n- Contextual clues that support or contradict involvement\n- Timeline consistency with the focus\n- Physical evidence connections\n- Witness statements about the focus",
+      "source_pattern": "Evidence Analysis",
+      "examples": [
+        "Check for any evidence placing Ronald at the mosque or linking the venom directly to the crime",
+        "Confirm if Timothy is shown with a nunchaku in the photos at the laser tag arena",
+        "List all evidence for Roxanne and Clyde based on the narrative",
+        "Check for any evidence directly linking Mackenzie to the axe or the murder weapon",
+        "Re-read the narrative to find exact references to the car where the body was found"
+      ]
+    },
+    {
+      "id": "ptool_007",
+      "func_name": "specific_evidence_analysis",
+      "display_name": "SpecificEvidenceAnalysis",
+      "short_desc": "specific evidence analysis",
+      "doc": "Specific Evidence Analysis.\n\nAnalyze the narrative with the given focus.",
+      "source_pattern": "Specific Evidence Analysis",
+      "examples": [
+        "EvidenceAnalysis[missing sai]",
+        "EvidenceAnalysis[Octavia deleting social media apps]",
+        "EvidenceAnalysis[Addison's presence at campground]",
+        "EvidenceAnalysis[crowbar]",
+        "EvidenceAnalysis[Nicole's computer and grocery receipt]"
+      ]
+    },
+    {
+      "id": "ptool_008",
+      "func_name": "timeline_analysis",
+      "display_name": "TimelineAnalysis",
+      "short_desc": "Analyze the sequence and timing of events from the narrative to identify temporal relationships or inconsistencies.",
+      "doc": "Extracts and organizes events from the narrative into a chronological timeline, focusing on the timing of key occurrences related to the focus.\n\nThis function parses the narrative to identify events with timestamps (e.g., specific times, dates, or relative time references like 'before', 'after', 'during'). It constructs a timeline of these events, paying special attention to those relevant to the focus string (e.g., a murder, an alibi, or a specific incident). The output includes both absolute timestamps (when available) and relative temporal relationships to help identify potential contradictions or sequences.\n\nArgs:\n    narrative (str): The full text of the murder mystery.\n    focus (str): The specific event or period to focus the timeline on (e.g., 'the murder', 'the argument', 'Alice\\'s alibi').\n\nReturns:\n    dict: A structured timeline analysis with the following keys:\n        - 'timeline': A list of events, each represented as a dictionary with keys 'event_description', 'timestamp' (if explicit), and 'relative_time' (e.g., 'before murder', 'after dinner').\n        - 'focus_events': A subset of events specifically related to the focus.\n        - 'temporal_relationships': A list of strings describing inferred relationships between events (e.g., 'The argument occurred before the murder').\n        - 'potential_inconsistencies': A list of any timeline contradictions found.\n\nExample output:\n    {\n        'timeline': [\n            {'event_description': 'Octavia started patrol', 'timestamp': '20:00', 'relative_time': 'evening'},\n            {'event_description': 'Heard loud argument', 'timestamp': '21:30', 'relative_time': 'night'},\n            {'event_description': 'Murder occurred', 'timestamp': '22:00', 'relative_time': 'late night'}\n        ],\n        'focus_events': [\n            {'event_description': 'Murder occurred', 'timestamp': '22:00', 'relative_time': 'late night'}\n        ],\n        'temporal_relationships': [\n            'Octavia\\'s patrol was ongoing at the time of the argument',\n            'The argument happened before the murder'\n        ],\n        'potential_inconsistencies': [\n            'Alibi claims presence elsewhere at 22:00 but was seen near scene'\n        ]\n    }",
+      "source_pattern": "Timeline Analysis",
+      "examples": [
+        "Check if the murder occurred at night based on Octavia's patrol",
+        "Find when Ernest was murdered",
+        "Check for any evidence about the timing of the murder relative to the argument and Elizabeth's alibi during the wrestling match",
+        "Analyze the timeline of events: when was the pickaxe purchased by Francis? When was Penelope seen with it? When was the murder?",
+        "Check the timeline of the murder and Alice's Tuesday night fight club routine"
+      ]
+    }
+  ],
+  "config": {
+    "n_cases": 75,
+    "n_iters": 3,
+    "model": "together_ai/deepseek-ai/DeepSeek-V3",
+    "seed": 42,
+    "min_count": 3,
+    "max_steps": 14,
+    "sim_threshold": 0.75,
+    "batch_size": 3,
+    "source": "actions",
+    "structured_output": true,
+    "output_dir": "iterations_v6bg",
+    "fixes": [
+      "F: ptool-specific focus",
+      "H: LLM answer extraction",
+      "G: structured output"
+    ]
+  }
+}

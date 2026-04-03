@@ -1,0 +1,133 @@
+{
+  "iteration_stats": [
+    {
+      "iteration": 0,
+      "n_ptools": 0,
+      "accuracy": 0.68,
+      "n_correct": 51,
+      "n_total": 75,
+      "avg_cost": 0.0170471,
+      "avg_latency": 51.10246657053629,
+      "ptool_uses": 0,
+      "do_uses": 190
+    },
+    {
+      "iteration": 1,
+      "n_ptools": 1,
+      "accuracy": 0.64,
+      "n_correct": 48,
+      "n_total": 75,
+      "avg_cost": 0.018404116666666668,
+      "avg_latency": 30.118030392328897,
+      "ptool_uses": 161,
+      "do_uses": 49
+    },
+    {
+      "iteration": 2,
+      "n_ptools": 2,
+      "accuracy": 0.6133333333333333,
+      "n_correct": 46,
+      "n_total": 75,
+      "avg_cost": 0.02149805,
+      "avg_latency": 31.76888615290324,
+      "ptool_uses": 210,
+      "do_uses": 32
+    },
+    {
+      "iteration": 3,
+      "n_ptools": 3,
+      "accuracy": 0.5866666666666667,
+      "n_correct": 44,
+      "n_total": 75,
+      "avg_cost": 0.026365283333333336,
+      "avg_latency": 31.489056955973307,
+      "ptool_uses": 251,
+      "do_uses": 48
+    },
+    {
+      "iteration": 4,
+      "n_ptools": 4,
+      "accuracy": 0.5866666666666667,
+      "n_correct": 44,
+      "n_total": 75,
+      "avg_cost": 0.028048916666666663,
+      "avg_latency": 31.35056790669759,
+      "ptool_uses": 263,
+      "do_uses": 45
+    }
+  ],
+  "ptools": [
+    {
+      "id": "ptool_001",
+      "display_name": "ReviewEvidence",
+      "description": "Examines the available evidence with a specific focus to find clues, inconsistencies, or connections between suspects, objects, and locations.",
+      "source_pattern": "Review Evidence",
+      "examples": [
+        "Check for any physical evidence linking either suspect to the crowbar or the crime scene",
+        "Check for any physical evidence or alibis that might rule out one suspect or point to the other",
+        "Check if there is any evidence that Mack was at the chalet or could have administered the venom remotely. Also, examine Taylor's behavior and statements for inconsistencies.",
+        "Check if there is any evidence directly placing Chris or Gloria in Murray's office or handling the poison on the day of the murder",
+        "Look for any forensic or physical evidence mentioned, like fingerprints or transfer of evidence, and consider Winston's observations"
+      ]
+    },
+    {
+      "id": "ptool_002",
+      "display_name": "CheckEvidenceLinkage",
+      "description": "Checks for evidence linking a person, object, or location to a specific event or another element in the case.",
+      "source_pattern": "Check Evidence Linkage",
+      "examples": [
+        "Check if there is any evidence placing Addison or Octavia at the scene with the crowbar or any direct witness accounts",
+        "Check if there is any direct evidence linking Chris to the murder, such as the incident report or other clues",
+        "Check if Ronald has any connection to the mosque or was seen there on the day of the murder",
+        "Check if there is any mention of Mark being near the mosque or having an opportunity to commit the murder",
+        "Check if there is any direct evidence linking either suspect to the crime scene or the time of murder"
+      ]
+    },
+    {
+      "id": "ptool_003",
+      "display_name": "ExamineEvidenceConnections",
+      "description": "Analyzes how specific pieces of evidence, objects, or locations connect to a suspect, alibi, or the crime scene.",
+      "source_pattern": "Examine Evidence Connections",
+      "examples": [
+        "CheckEvidenceLinkage[focus: Lawnmower as murder weapon]\nObservation 3",
+        "Determine if the murder weapon was the prop from Elizabeth's play or Freya's personal halberd",
+        "Check if there is any evidence that Aubrey was at the mosque or had access to the murder scene, and if the murder weapon was specifically from the museum or Garry's tools",
+        "CheckEvidenceLinkage[focus: Randy's revolver to the murder]\nObservation",
+        "** CheckEvidenceLinkage[focus: sawdust and taxidermy connection to Letti]\n**Observation 2:** The narrative directly links Letti to the peculiar crime scene details:\n*   Charlotte's body was \"filled wi"
+      ]
+    },
+    {
+      "id": "ptool_004",
+      "display_name": "AnalyzeEvidenceConnections",
+      "description": "Examines how different pieces of evidence, suspects, or events connect to each other and the central case.",
+      "source_pattern": "Analyze Evidence Connections",
+      "examples": [
+        "CheckEvidenceLinkage[focus: Gloria and the murder]\nObservation 3",
+        "ExamineEvidenceConnections[focus: The meeting at the abandoned factory]\nObservation 5: Based on the narrative, the connections to the meeting at the abandoned factory are:\n- Kaylee's diary entry state",
+        "CheckEvidenceLinkage[focus: Mark's alibi and presence at crime scene]\nObservation",
+        "ExamineEvidenceConnections[focus: how Travis's ink or Russell's frogs connect to the crime scene and alibis]\nObservation 3",
+        "Check if there is any connection between Russell and Travis, or if Russell could have supplied the poison to Travis"
+      ]
+    },
+    {
+      "id": "ptool_005",
+      "display_name": "ReviewSuspectEvidence",
+      "description": "Reviews and summarizes all evidence, motives, and opportunities related to a specific suspect in the case.",
+      "source_pattern": "Review Suspect Evidence",
+      "examples": [
+        "ReviewEvidence[focus: Addison]\nObservation",
+        "ReviewEvidence[focus: Evidence against Harper]\nObservation 1: Based on the narrative, the direct evidence against Harper is as follows:\n*   **Motive:** Isabelle threatened to expose a secret involving",
+        "ReviewEvidence[focus: Gerald]\nObservation",
+        "** ReviewEvidence[focus: Suspect Abigail - motives, opportunities, and evidence linking her to the crime]\n**Observation 2:** Based on the narrative provided, here is the information directly stated or",
+        "ReviewEvidence[focus: Evidence against Randy]\nObservation"
+      ]
+    }
+  ],
+  "config": {
+    "n_cases": 75,
+    "n_iters": 5,
+    "model": "together_ai/deepseek-ai/DeepSeek-V3",
+    "seed": 42,
+    "min_count": 3
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "iteration": 1,
+  "n_ptools": 1,
+  "accuracy": 0.6133333333333333,
+  "n_correct": 46,
+  "n_total": 75,
+  "avg_cost": 0.02715669999999999,
+  "avg_latency": 48.09651436169942,
+  "ptool_uses": 113,
+  "do_uses": 172,
+  "max_step_hits": 11,
+  "neg1_answers": 12,
+  "new_ptools": [
+    {
+      "id": "ptool_002",
+      "func_name": "extract_evidence_summary",
+      "display_name": "ExtractEvidenceSummary",
+      "short_desc": "Summarize evidence for and against each suspect based on the narrative.",
+      "doc": "Extract and summarize evidence from the murder mystery narrative for each suspect.\n\nArgs:\n    narrative (str): The full text of the murder mystery.\n    focus (str): Specific aspect to focus on (e.g., 'for Nicole', 'against Isabelle').\n\nReturns:\n    str: A structured summary of evidence for and against each suspect, formatted as JSON.\n\nThis function analyzes the narrative to identify key evidence points for each suspect,\nseparating exculpatory evidence (for) and incriminating evidence (against). It then\nprovides a concise summary for each suspect, highlighting the most critical points\nthat support or undermine their potential guilt.",
+      "source_pattern": "Evidence Synthesis and Summarization",
+      "examples": [
+        "List all evidence for Nicole and Isabelle separately",
+        "Summarize the evidence against Penelope",
+        "Summarize the evidence against Francis",
+        "List all evidence for Harper and Lance",
+        "Summarize the evidence against Timothy and Adam"
+      ]
+    }
+  ]
+}

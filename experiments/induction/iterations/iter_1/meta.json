@@ -1,0 +1,24 @@
+{
+  "iteration": 1,
+  "n_ptools": 1,
+  "accuracy": 0.64,
+  "n_correct": 48,
+  "n_total": 75,
+  "avg_cost": 0.018404116666666668,
+  "avg_latency": 30.118030392328897,
+  "ptool_uses": 161,
+  "do_uses": 49,
+  "new_ptool": {
+    "id": "ptool_002",
+    "display_name": "CheckEvidenceLinkage",
+    "description": "Checks for evidence linking a person, object, or location to a specific event or another element in the case.",
+    "source_pattern": "Check Evidence Linkage",
+    "examples": [
+      "Check if there is any evidence placing Addison or Octavia at the scene with the crowbar or any direct witness accounts",
+      "Check if there is any direct evidence linking Chris to the murder, such as the incident report or other clues",
+      "Check if Ronald has any connection to the mosque or was seen there on the day of the murder",
+      "Check if there is any mention of Mark being near the mosque or having an opportunity to commit the murder",
+      "Check if there is any direct evidence linking either suspect to the crime scene or the time of murder"
+    ]
+  }
+}

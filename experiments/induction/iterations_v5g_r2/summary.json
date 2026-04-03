@@ -1,0 +1,120 @@
+{
+  "iteration_stats": [
+    {
+      "iteration": 0,
+      "n_ptools": 0,
+      "accuracy": 0.68,
+      "n_correct": 51,
+      "n_total": 75,
+      "avg_cost": 0.0170471,
+      "avg_latency": 51.10246657053629,
+      "ptool_uses": 0,
+      "do_uses": 190,
+      "max_step_hits": 5,
+      "neg1_answers": 5
+    },
+    {
+      "iteration": 1,
+      "n_ptools": 1,
+      "accuracy": 0.5733333333333334,
+      "n_correct": 43,
+      "n_total": 75,
+      "avg_cost": 0.02689808333333333,
+      "avg_latency": 48.541405585606896,
+      "ptool_uses": 78,
+      "do_uses": 171,
+      "max_step_hits": 12,
+      "neg1_answers": 12
+    },
+    {
+      "iteration": 2,
+      "n_ptools": 2,
+      "accuracy": 0.6533333333333333,
+      "n_correct": 49,
+      "n_total": 75,
+      "avg_cost": 0.02845081666666667,
+      "avg_latency": 53.85856996536255,
+      "ptool_uses": 73,
+      "do_uses": 209,
+      "max_step_hits": 10,
+      "neg1_answers": 11
+    },
+    {
+      "iteration": 3,
+      "n_ptools": 3,
+      "accuracy": 0.64,
+      "n_correct": 48,
+      "n_total": 75,
+      "avg_cost": 0.03096411666666665,
+      "avg_latency": 41.94337686220805,
+      "ptool_uses": 86,
+      "do_uses": 274,
+      "max_step_hits": 7,
+      "neg1_answers": 8
+    }
+  ],
+  "ptools": [
+    {
+      "id": "ptool_001",
+      "func_name": "analyze_opportunity",
+      "display_name": "AnalyzeOpportunity",
+      "short_desc": "Evaluates suspects' opportunities by examining alibis, timelines, and location access.",
+      "doc": "Analyzes opportunity for suspects in a murder mystery by examining alibis, timelines, and location access.\n\nExtracts information about:\n- Each suspect's whereabouts during the crime timeframe\n- Alibi verification (witnesses, evidence supporting alibi)\n- Access to crime scene location\n- Timeline contradictions or gaps\n- Physical/geographical constraints\n\nReturns:\n    dict: A structured analysis of opportunity for each suspect with keys:\n        - has_alibi: boolean indicating if suspect has a verifiable alibi\n        - alibi_details: string describing the alibi and its verification\n        - timeline_consistency: boolean indicating if timeline is consistent\n        - location_access: boolean indicating if suspect could access crime scene\n        - opportunity_score: integer from 0-10 (10 = high opportunity)\n        - contradictions: list of any timeline or location contradictions found\n\nExample output:\n    {\n        \"Nicole\": {\n            \"has_alibi\": false,\n            \"alibi_details\": \"Claimed to be at home alone, no witnesses\",\n            \"timeline_consistent\": true,\n            \"location_access\": true,\n            \"opportunity_score\": 8,\n            \"contradictions\": []\n        },\n        \"Isabelle\": {\n            \"has_alibi\": true,\n            \"alibi_details\": \"Verified at work with multiple coworkers\",\n            \"timeline_consistent\": false,\n            \"location_access\": false,\n            \"opportunity_score\": 2,\n            \"contradictions\": [\"Timecard shows left work 30 minutes early\"]\n        }\n    }",
+      "source_pattern": "Opportunity Analysis",
+      "examples": [
+        "Compare the alibis and opportunities for both suspects",
+        "Do[Evaluate means, motive, and opportunity for Nicole and Isabelle based on the narrative]\n\nObservation 1: \n- **Nicole's Means**: There is no evidence Nicole owns a crossbow or has any skill in using ",
+        "Do[Compare the motives and opportunities of Clyde and Paul based on the narrative]\nObservation 1",
+        "Check if there is any evidence that Mack was at the chalet or could have administered the venom remotely. Also, examine Taylor's behavior and statements for inconsistencies.",
+        "Review motives and opportunities for Chris and Gloria"
+      ]
+    },
+    {
+      "id": "ptool_002",
+      "func_name": "evidence_collection_organization",
+      "display_name": "EvidenceCollection&Organization",
+      "short_desc": "evidence collection & organization",
+      "doc": "Evidence Collection & Organization.\n\nAnalyze the narrative with the given focus.",
+      "source_pattern": "Evidence Collection & Organization",
+      "examples": [
+        "Re-read the narrative to find any clues about the time of the murder and any alibi details for Peyton and Isolde",
+        "List the motives, alibis, and evidence for Addison and Octavia",
+        "Do[List all evidence for Nicole and Isabelle separately]\nObservation",
+        "Find the exact quote about who was seen at the chalet]\nObservation 5: The narrative states: \"Other than Taylor, nobody else was seen at the chalet during the time of the incident.\" This is a direct ob",
+        "List the motives and opportunities for each suspect based on the narrative."
+      ]
+    },
+    {
+      "id": "ptool_003",
+      "func_name": "collect_and_organize_evidence",
+      "display_name": "EvidenceCollection",
+      "short_desc": "Collects and organizes all physical evidence, digital evidence, and witness statements related to a specific suspect or topic.",
+      "doc": "Collects and organizes all evidence from the narrative pertaining to a specific suspect or focus area.\n\nThis function scans the provided murder mystery narrative for any information that can be considered\nphysical evidence, digital evidence, or a witness statement. It then categorizes this information\nbased on the specified focus, which can be a suspect's name (e.g., 'Peyton') or a broader category\n(e.g., 'all', 'weapon').\n\nArgs:\n    narrative (str): The full text of the murder mystery story.\n    focus (str): The specific subject for evidence collection. This can be:\n                - A suspect's name (e.g., 'Nicole', 'Isolde')\n                - The string 'all' to collect evidence on all subjects.\n                - A specific category (e.g., 'motive', 'alibi', 'weapon').\n\nReturns:\n    dict: A dictionary where each key is a suspect's name or a category found in the narrative.\n          The value for each key is another dictionary containing the organized evidence,\n          structured with the following keys:\n          - 'physical_evidence': A list of strings describing physical clues.\n          - 'digital_evidence': A list of strings describing digital clues (emails, texts, files).\n          - 'witness_statements': A list of strings quoting or summarizing witness accounts.\n          - 'inferred_motives': A list of strings describing motives inferred from the narrative.\n          - 'inferred_opportunities': A list of strings describing opportunities inferred from timelines or alibis.\n          - 'contradictions': A list of strings highlighting inconsistencies in a suspect's story.\n\n    If the specified focus is not found, an empty dictionary is returned for that key.\n    If focus is 'all', the dictionary will contain keys for all identified subjects/categories.\n\nExample:\n    {\n        \"Nicole\": {\n            \"physical_evidence\": [\"Fiber from her coat found on victim\"],\n            \"digital_evidence\": [\"Email to victim: 'This isn't over.'\"],\n            \"witness_statements\": [\"Witness A saw Nicole arguing with victim earlier.\"],\n            \"inferred_motives\": [\"Financial gain from victim's will.\"],\n            \"inferred_opportunities\": [\"Was unaccounted for during the time of murder.\"],\n            \"contradictions\": [\"Claimed to be at home, but cell phone pinged near crime scene.\"]\n        },\n        \"weapon\": {\n            \"physical_evidence\": [\"Candlestick found with fingerprints\", \"Rope with traces of victim's blood\"],\n            \"witness_statements\": [],\n            ...\n        }\n    }",
+      "source_pattern": "Evidence Collection",
+      "examples": [
+        "EvidenceCollection&Organization[Peyton]",
+        "EvidenceCollection&Organization[Isolde]",
+        "EvidenceCollection&Organization[Collect and organize all physical evidence, digital evidence, and witness statements related to the murder of Ernest]",
+        "EvidenceCollection&Organization[all]",
+        "EvidenceCollection&Organization[all]\n\nObservation 1: Based on the provided narrative, here is the evidence collected and organized:\n\n**Suspect: Nicole**\n*   **Motive (Inferable):** Financial gain. She"
+      ]
+    }
+  ],
+  "config": {
+    "n_cases": 75,
+    "n_iters": 5,
+    "model": "together_ai/deepseek-ai/DeepSeek-V3",
+    "seed": 42,
+    "min_count": 3,
+    "max_steps": 14,
+    "sim_threshold": 0.75,
+    "batch_size": 1,
+    "source": "actions",
+    "structured_output": true,
+    "output_dir": "iterations_v5g_r2",
+    "fixes": [
+      "F: ptool-specific focus args",
+      "G: structured output docstrings"
+    ]
+  }
+}

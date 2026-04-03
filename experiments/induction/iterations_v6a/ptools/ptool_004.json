@@ -1,0 +1,15 @@
+{
+  "id": "ptool_004",
+  "func_name": "alibi_analysis",
+  "display_name": "AlibiAnalysis",
+  "short_desc": "Analyzes the alibi of a suspect or person of interest by checking their whereabouts during the murder or specified event.",
+  "doc": "This function analyzes the alibi of a given individual (focus) within the provided narrative. It extracts all mentions of the person's activities, locations, and timeframes related to the murder or specified event. The analysis includes:\n- Identifying explicit alibi statements (e.g., 'was at home', 'with friends').\n- Checking for time gaps or inconsistencies in the alibi.\n- Cross-referencing with other events or testimonies (e.g., overlaps with arrival/departure times of others).\n- Noting any supporting evidence (e.g., witnesses, CCTV) or contradictions.\nThe response is structured as a summary of the alibi, followed by key points (evidence, inconsistencies, witnesses), and a conclusion on reliability.\nParameters:\n  narrative (str): The full text of the murder mystery.\n  focus (str): The person to analyze (e.g., 'Isolde', 'Mark').\nReturns:\n  str: A formatted string with alibi details, including timeframes, activities, supporting evidence, and any gaps or issues.",
+  "source_pattern": "Alibi Analysis",
+  "examples": [
+    "Check if the narrative provides any information about Isolde's whereabouts during the night of the murder or her work schedule",
+    "Check if Rosemary's alibi is solid or if there are gaps",
+    "Check if Mark's alibi for the murder time is verified or if there is any evidence placing him at the mosque",
+    "Check if Russell has an alibi for the time of Isabella's death",
+    "Check if there is any information about Letti leaving Charlotte's house or overlapping with Deborah's arrival"
+  ]
+}

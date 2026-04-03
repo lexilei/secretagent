@@ -1,0 +1,31 @@
+{
+  "iteration": 2,
+  "n_ptools": 2,
+  "accuracy": 0.7733333333333333,
+  "n_correct": 58,
+  "n_total": 75,
+  "avg_cost": 0.021092599999999993,
+  "avg_latency": 40.45904301961263,
+  "ptool_uses": 253,
+  "do_uses": 93,
+  "max_step_hits": 0,
+  "neg1_answers": 0,
+  "extracted_finishes": 8,
+  "new_ptools": [
+    {
+      "id": "ptool_003",
+      "func_name": "summarize_evidence",
+      "display_name": "SummarizeEvidence",
+      "short_desc": "Summarizes key evidence for a specific person including motive, opportunity, weapon access, sightings, alibi, and relationship to victim.",
+      "doc": "Analyzes the murder mystery narrative to extract and summarize evidence related to a specific individual.\n\nExtracts information about:\n- Motive: Reasons why the person might want to harm the victim\n- Opportunity: Whether the person could have been present at the crime scene/time\n- Weapon Access: Whether the person had access to the murder weapon\n- Sightings: Any reported sightings of the person around the crime scene/time\n- Alibi: Any claimed or verified alibi for the time of the murder\n- Relationship: How the person was connected to the victim\n- Suspicious Behavior: Any notable suspicious actions or statements\n\nArgs:\n    narrative (str): The full murder mystery text\n    focus (str): The name of the person to analyze evidence for\n\nReturns:\n    dict: A structured summary of evidence with the following keys:\n        - has_motive: bool (True if motive evidence exists)\n        - motive_details: str (description of motive evidence)\n        - has_opportunity: bool (True if opportunity evidence exists)\n        - opportunity_details: str (description of opportunity evidence)\n        - weapon_access: bool (True if weapon access evidence exists)\n        - weapon_details: str (description of weapon access evidence)\n        - sightings: list[str] (list of sighting reports)\n        - has_alibi: bool (True if alibi evidence exists)\n        - alibi_details: str (description of alibi evidence)\n        - relationship: str (description of relationship to victim)\n        - suspicious_behavior: list[str] (list of suspicious actions/statements)\n\nExample output:\n    {\n        \"has_motive\": True,\n        \"motive_details\": \"Owed victim $10,000 and had argued about repayment\",\n        \"has_opportunity\": True,\n        \"opportunity_details\": \"Was seen near victim's office around the time of murder\",\n        \"weapon_access\": True,\n        \"weapon_details\": \"Had access to the kitchen where the knife was taken\",\n        \"sightings\": [\"Seen leaving building at 8:05 PM\", \"Spotted near crime scene at 8:15 PM\"],\n        \"has_alibi\": False,\n        \"alibi_details\": \"Claims to be home alone but no verification\",\n        \"relationship\": \"Business partner and creditor\",\n        \"suspicious_behavior\": [\"Left town abruptly after murder\", \"Lied about knowing the victim\"]\n    }",
+      "source_pattern": "Evidence Summary",
+      "examples": [
+        "Summarize key evidence for Peyton: motive, opportunity, weapon access, sightings, alibi, and relationship to victim.",
+        "Summarize key evidence for Isolde: motive, opportunity, weapon access, sightings, alibi, and relationship to victim.",
+        "List key evidence for Nicole and Isabelle separately",
+        "Analyze evidence for Clyde: motive, opportunity, weapon access, suspicious behavior",
+        "Analyze evidence for Paul: motive, opportunity, weapon access, suspicious behavior"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "ptool_008",
+  "func_name": "timeline_analysis",
+  "display_name": "TimelineAnalysis",
+  "short_desc": "Analyze the sequence and timing of events from the narrative to identify temporal relationships or inconsistencies.",
+  "doc": "Extracts and organizes events from the narrative into a chronological timeline, focusing on the timing of key occurrences related to the focus.\n\nThis function parses the narrative to identify events with timestamps (e.g., specific times, dates, or relative time references like 'before', 'after', 'during'). It constructs a timeline of these events, paying special attention to those relevant to the focus string (e.g., a murder, an alibi, or a specific incident). The output includes both absolute timestamps (when available) and relative temporal relationships to help identify potential contradictions or sequences.\n\nArgs:\n    narrative (str): The full text of the murder mystery.\n    focus (str): The specific event or period to focus the timeline on (e.g., 'the murder', 'the argument', 'Alice\\'s alibi').\n\nReturns:\n    dict: A structured timeline analysis with the following keys:\n        - 'timeline': A list of events, each represented as a dictionary with keys 'event_description', 'timestamp' (if explicit), and 'relative_time' (e.g., 'before murder', 'after dinner').\n        - 'focus_events': A subset of events specifically related to the focus.\n        - 'temporal_relationships': A list of strings describing inferred relationships between events (e.g., 'The argument occurred before the murder').\n        - 'potential_inconsistencies': A list of any timeline contradictions found.\n\nExample output:\n    {\n        'timeline': [\n            {'event_description': 'Octavia started patrol', 'timestamp': '20:00', 'relative_time': 'evening'},\n            {'event_description': 'Heard loud argument', 'timestamp': '21:30', 'relative_time': 'night'},\n            {'event_description': 'Murder occurred', 'timestamp': '22:00', 'relative_time': 'late night'}\n        ],\n        'focus_events': [\n            {'event_description': 'Murder occurred', 'timestamp': '22:00', 'relative_time': 'late night'}\n        ],\n        'temporal_relationships': [\n            'Octavia\\'s patrol was ongoing at the time of the argument',\n            'The argument happened before the murder'\n        ],\n        'potential_inconsistencies': [\n            'Alibi claims presence elsewhere at 22:00 but was seen near scene'\n        ]\n    }",
+  "source_pattern": "Timeline Analysis",
+  "examples": [
+    "Check if the murder occurred at night based on Octavia's patrol",
+    "Find when Ernest was murdered",
+    "Check for any evidence about the timing of the murder relative to the argument and Elizabeth's alibi during the wrestling match",
+    "Analyze the timeline of events: when was the pickaxe purchased by Francis? When was Penelope seen with it? When was the murder?",
+    "Check the timeline of the murder and Alice's Tuesday night fight club routine"
+  ]
+}

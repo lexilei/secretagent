@@ -1,0 +1,24 @@
+{
+  "iteration": 2,
+  "n_ptools": 2,
+  "accuracy": 0.6133333333333333,
+  "n_correct": 46,
+  "n_total": 75,
+  "avg_cost": 0.02149805,
+  "avg_latency": 31.76888615290324,
+  "ptool_uses": 210,
+  "do_uses": 32,
+  "new_ptool": {
+    "id": "ptool_003",
+    "display_name": "ExamineEvidenceConnections",
+    "description": "Analyzes how specific pieces of evidence, objects, or locations connect to a suspect, alibi, or the crime scene.",
+    "source_pattern": "Examine Evidence Connections",
+    "examples": [
+      "CheckEvidenceLinkage[focus: Lawnmower as murder weapon]\nObservation 3",
+      "Determine if the murder weapon was the prop from Elizabeth's play or Freya's personal halberd",
+      "Check if there is any evidence that Aubrey was at the mosque or had access to the murder scene, and if the murder weapon was specifically from the museum or Garry's tools",
+      "CheckEvidenceLinkage[focus: Randy's revolver to the murder]\nObservation",
+      "** CheckEvidenceLinkage[focus: sawdust and taxidermy connection to Letti]\n**Observation 2:** The narrative directly links Letti to the peculiar crime scene details:\n*   Charlotte's body was \"filled wi"
+    ]
+  }
+}

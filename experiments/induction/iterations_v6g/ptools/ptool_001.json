@@ -1,0 +1,15 @@
+{
+  "id": "ptool_001",
+  "func_name": "analyze_alibi_consistency",
+  "display_name": "AnalyzeAlibiConsistency",
+  "short_desc": "Evaluates the consistency and reliability of alibis for suspects by comparing statements with evidence and timelines.",
+  "doc": "Analyzes alibi consistency for suspects by comparing their stated whereabouts with evidence, timelines, and witness accounts.\n\nExtracts information about suspect alibis, timelines of events, witness testimonies, and physical evidence.\nEvaluates whether alibis are supported or contradicted by available evidence.\n\nArgs:\n    narrative (str): The full murder mystery text\n    focus (str): Specific aspect to analyze (e.g., 'all suspects', 'suspect X', 'time window 8-9pm')\n\nReturns:\n    dict: A dictionary with suspect names as keys, each containing:\n        - has_alibi: bool (whether an alibi is claimed)\n        - alibi_strength: str ('strong', 'weak', 'contradicted', 'none')\n        - supporting_evidence: list[str] (evidence that supports the alibi)\n        - contradictions: list[str] (evidence that contradicts the alibi)\n        - time_gaps: list[str] (unaccounted time periods)\n        - reliability_score: int (0-100 based on evidence consistency)\n\nExample:\n    {\n        \"John\": {\n            \"has_alibi\": true,\n            \"alibi_strength\": \"weak\",\n            \"supporting_evidence\": [\"Witness saw John at cafe at 8:15pm\"],\n            \"contradictions\": [\"Security footage shows John near crime scene at 8:30pm\"],\n            \"time_gaps\": [\"8:20pm-8:40pm\"],\n            \"reliability_score\": 30\n        },\n        \"Mary\": {\n            \"has_alibi\": false,\n            \"alibi_strength\": \"none\",\n            \"supporting_evidence\": [],\n            \"contradictions\": [\"No alibi provided for murder timeframe\"],\n            \"time_gaps\": [\"entire murder window\"],\n            \"reliability_score\": 0\n        }\n    }",
+  "source_pattern": "Opportunity Analysis",
+  "examples": [
+    "Compare the alibis and opportunities for both suspects",
+    "Evaluate who had the best opportunity to administer the venom at the mosque",
+    "Do[Check the timing of the murder and whether Freya could have accessed the theater prop]\nObservation",
+    "Check if there is any evidence that Rosemary left the kitchen or if Harry was seen near the crime scene at the exact time",
+    "Compare the alibis and presence at the scene"
+  ]
+}

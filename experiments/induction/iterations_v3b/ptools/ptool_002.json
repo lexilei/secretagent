@@ -1,0 +1,15 @@
+{
+  "id": "ptool_002",
+  "func_name": "analyze_timeline",
+  "display_name": "TimelineAnalysis",
+  "short_desc": "Analyze event timelines and character alibis relative to the murder timeframe",
+  "doc": "\"\"\"\nAnalyze the timeline of events and character alibis in relation to the murder timeframe.\n\nExtracts and analyzes:\n1. The established time of death/murder timeframe from the narrative\n2. Character locations, activities, and alibis during this period\n3. Key events that occurred before, during, and after the murder\n4. Potential time gaps or inconsistencies in the timeline\n5. Opportunities for characters to have committed the crime\n\nStructure the response with:\n1. Murder Timeframe: Clearly state when the murder occurred\n2. Timeline of Events: Chronological list of relevant events with timestamps\n3. Character Alibis: Each character's claimed location/activity during critical periods\n4. Analysis: Identify inconsistencies, gaps, or suspicious timing patterns\n5. Conclusions: Which characters had opportunity based on timeline analysis\n\nPay special attention to:\n- Contradictions between stated alibis and other evidence\n- Unexplained time periods where characters were unaccounted for\n- Physical proximity to crime scene during murder timeframe\n- Time required to travel between locations mentioned\n- Any time-stamped evidence (phone calls, surveillance, witness sightings)\n\"\"\"",
+  "source_pattern": "Timeline Analysis",
+  "examples": [
+    "Clarify the timing of the murder: \"during office hours\" vs. Gloria's \"late practices\"",
+    "Check the timeline and alibis for Julia and Ronald",
+    "Do[Check the timing of the murder and whether Freya could have accessed the theater prop]\nObservation",
+    "Review the timeline and alibis for Ervin and Andrew",
+    "examine the timeline and alibis for the night of the murder"
+  ]
+}

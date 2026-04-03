@@ -1,0 +1,15 @@
+{
+  "id": "ptool_007",
+  "func_name": "specific_evidence_analysis",
+  "display_name": "SpecificEvidenceAnalysis",
+  "short_desc": "specific evidence analysis",
+  "doc": "Specific Evidence Analysis.\n\nAnalyze the narrative with the given focus.",
+  "source_pattern": "Specific Evidence Analysis",
+  "examples": [
+    "EvidenceAnalysis[missing sai]",
+    "EvidenceAnalysis[Octavia deleting social media apps]",
+    "EvidenceAnalysis[Addison's presence at campground]",
+    "EvidenceAnalysis[crowbar]",
+    "EvidenceAnalysis[Nicole's computer and grocery receipt]"
+  ]
+}

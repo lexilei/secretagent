@@ -1,0 +1,15 @@
+{
+  "id": "ptool_002",
+  "func_name": "summarize_evidence",
+  "display_name": "SummarizeEvidence",
+  "short_desc": "Extracts and summarizes all evidence related to a specific person or aspect from the mystery narrative.",
+  "doc": "Extracts and summarizes all evidence related to a specific person, relationship, or aspect from the murder mystery narrative.\n\nArgs:\n    narrative (str): The full text of the murder mystery narrative\n    focus (str): The specific person, relationship, or aspect to focus on (e.g., \"Chris\", \"Julia\", \"Elizabeth\", \"Gerald's alibi\")\n\nReturns:\n    dict: A structured summary containing:\n        {\n            \"focus\": \"[name/aspect from input]\",\n            \"relationships\": [list of relationships with other characters],\n            \"motive\": [summary of potential motives],\n            \"opportunity\": [summary of timing/alibi information],\n            \"contradictions\": [list of inconsistencies or suspicious behavior],\n            \"supporting_evidence\": [list of concrete evidence supporting involvement],\n            \"exonerating_evidence\": [list of evidence suggesting innocence]\n        }\n\nExample output:\n    {\n        \"focus\": \"Elizabeth\",\n        \"relationships\": [\"Married to Thomas\", \"Director of the play\", \"Had conflict with Eleanor\"],\n        \"motive\": \"Eleanor was having an affair with her husband and mocked her during a confrontation\",\n        \"opportunity\": \"Was present at the theater during the murder timeframe\",\n        \"contradictions\": [\"Changed story about whereabouts\", \"Denied argument but witnesses confirm\"],\n        \"supporting_evidence\": [\"Found with victim's personal item\", \"Had access to murder weapon\"],\n        \"exonerating_evidence\": [\"Security footage shows her in different location\"]\n    }\n\nFocus on extracting specific details from the narrative rather than making judgments. Include both incriminating and exonerating evidence. Pay special attention to relationships, timelines, alibis, and any concrete physical evidence mentioned.",
+  "source_pattern": "Evidence Summary & Extraction",
+  "examples": [
+    "SummarizeEvidence[Chris]\nObservation",
+    "SummarizeEvidence[Julia]\nObservation 1",
+    "SummarizeEvidence[Elizabeth]\nObservation 1: Elizabeth is the director of the play where Eleanor was murdered. She had a strong personal motive: Eleanor was having an affair with her husband and mocked",
+    "SummarizeEvidence[Elizabeth]\n\nObservation 1: Elizabeth is the director of the play. She had a personal motive: Eleanor was having an affair with her husband and mocked her during a confrontation. She ",
+    "Extract all evidence related to Gerald: his relationship with Jamal, his alibi, his actions, and any suspicious behavior"
+  ]
+}

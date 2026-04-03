@@ -1,0 +1,15 @@
+{
+  "id": "ptool_001",
+  "func_name": "verify_evidence_consistency",
+  "display_name": "VerifyEvidenceConsistency",
+  "short_desc": "Checks for physical evidence, alibis, or inconsistencies that link suspects to crime scenes or murder methods.",
+  "doc": "Analyzes the murder mystery narrative to identify and evaluate evidence consistency related to the specified focus.\n\nExtracts:\n- Physical evidence (fingerprints, DNA, objects, transfer evidence)\n- Direct witness observations of suspects at locations\n- Alibis and their verification\n- Suspect statements and behavioral inconsistencies\n- Evidence linking suspects to murder weapons/methods\n- Timeline contradictions\n\nFocus parameter guides specific analysis:\n- If focus mentions a suspect: check their connections to crime scene/weapon\n- If focus mentions a location: check who was present/evidence found there\n- If focus mentions an object: check who handled/touched/accessed it\n- If focus mentions alibis: verify consistency and supporting evidence\n\nResponse structure:\n1. Summary of relevant evidence found\n2. Analysis of consistency/inconsistencies\n3. Potential implications for each suspect\n4. Any missing evidence that would be crucial\n\nPay attention to:\n- Direct physical evidence placement\n- Witness reliability and corroboration\n- Timeline alignment/contradictions\n- Statements that conflict with physical evidence\n- Opportunities for evidence transfer\n- Unexplained behavior or suspicious actions",
+  "source_pattern": "Evidence Verification and Consistency",
+  "examples": [
+    "Check for any physical evidence linking either suspect to the crowbar or the crime scene",
+    "Check for any physical evidence or alibis that might rule out one suspect or point to the other",
+    "Check if there is any evidence that Mack was at the chalet or could have administered the venom remotely. Also, examine Taylor's behavior and statements for inconsistencies.",
+    "Check if there is any evidence directly placing Chris or Gloria in Murray's office or handling the poison on the day of the murder",
+    "Look for any forensic or physical evidence mentioned, like fingerprints or transfer of evidence, and consider Winston's observations"
+  ]
+}

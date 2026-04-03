@@ -1,0 +1,15 @@
+{
+  "id": "ptool_002",
+  "func_name": "summarize_suspect_evidence",
+  "display_name": "SummarizeSuspectEvidence",
+  "short_desc": "Extracts and summarizes evidence for a specific suspect including motive, opportunity, means, and suspicious behavior.",
+  "doc": "Extracts comprehensive evidence information about a specific suspect from the murder mystery narrative.\n\nFocuses on four key categories:\n1. Motive: Reasons why the suspect might want the victim dead (grudges, conflicts, financial gain)\n2. Opportunity: Evidence placing suspect near crime scene or confirming they could have committed the act\n3. Means: Access to murder weapon or required knowledge/skills\n4. Suspicious Behavior: Any unusual actions, lies, or peculiar behavior related to the crime\n\nParameters:\n    narrative (str): The full murder mystery text\n    focus (str): The specific suspect name to analyze (e.g., \"Clyde\", \"Paul\", \"Lillian\")\n\nReturns:\n    str: A structured summary organized by category with specific evidence points extracted from the narrative\n    \nNotes:\n    - Extract only information directly related to the specified suspect\n    - Include verbatim quotes from the narrative when possible\n    - Note any contradictions or alibis mentioned\n    - Pay special attention to timestamps, locations, and relationships mentioned\n    - Format response with clear headings for each category\n    - Return 'No evidence found' if nothing relevant appears in narrative",
+  "source_pattern": "Summarizing Suspect Information",
+  "examples": [
+    "Summarize evidence for Clyde: motive, opportunity, means, and any suspicious behavior]\nObservation 1: \n- **Motive**: Clyde was publicly humiliated by Faith at his promotion ceremony. He expressed a ch",
+    "Summarize evidence for Paul: motive, opportunity, means, and any suspicious behavior",
+    "Summarize evidence for Clyde: motive, opportunity, means, and any suspicious behavior",
+    "Summarize key evidence and relationships for each suspect",
+    "List all evidence for Lillian: her relationship to Jamal, motive, opportunity, and connection to the frog poison."
+  ]
+}

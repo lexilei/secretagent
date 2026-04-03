@@ -1,0 +1,15 @@
+{
+  "id": "ptool_002",
+  "func_name": "evidence_collection_organization",
+  "display_name": "EvidenceCollection&Organization",
+  "short_desc": "evidence collection & organization",
+  "doc": "Evidence Collection & Organization.\n\nAnalyze the narrative with the given focus.",
+  "source_pattern": "Evidence Collection & Organization",
+  "examples": [
+    "Re-read the narrative to find any clues about the time of the murder and any alibi details for Peyton and Isolde",
+    "List the motives, alibis, and evidence for Addison and Octavia",
+    "Do[List all evidence for Nicole and Isabelle separately]\nObservation",
+    "Find the exact quote about who was seen at the chalet]\nObservation 5: The narrative states: \"Other than Taylor, nobody else was seen at the chalet during the time of the incident.\" This is a direct ob",
+    "List the motives and opportunities for each suspect based on the narrative."
+  ]
+}

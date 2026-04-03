@@ -1,0 +1,48 @@
+{
+  "iteration_stats": [
+    {
+      "iteration": 0,
+      "n_ptools": 0,
+      "accuracy": 0.3333333333333333,
+      "n_correct": 1,
+      "n_total": 3,
+      "avg_cost": 0.022467083333333332,
+      "avg_latency": 76.25119765599568,
+      "ptool_uses": 0,
+      "do_uses": 9,
+      "max_step_hits": 1,
+      "neg1_answers": 1
+    }
+  ],
+  "ptools": [
+    {
+      "id": "ptool_001",
+      "func_name": "evaluate_suspect_mmo",
+      "display_name": "EvaluateSuspectMMO",
+      "short_desc": "Evaluate a suspect's motive, means, and opportunity based on the murder mystery narrative.",
+      "doc": "Analyzes the provided murder mystery narrative to evaluate a specific suspect's Motive, Means, and Opportunity (MMO).\n\nParameters:\n    narrative (str): The complete murder mystery text containing all evidence, statements, and clues\n    focus (str): The specific suspect to evaluate (e.g., 'Peyton', 'Nicole', 'Isabelle')\n\nReturns:\n    str: A structured analysis with three sections:\n    - MOTIVE: Evidence suggesting why the suspect might want to kill the victim\n    - MEANS: Evidence indicating the suspect's ability/access to commit the murder\n    - OPPORTUNITY: Evidence about the suspect's presence/accessibility at time/location\n\nFocus on:\n    - Extracting direct evidence from the narrative\n    - Identifying both supporting and contradicting evidence\n    - Noting specific timings, locations, skills, and relationships mentioned\n    - Being objective - report what the evidence shows, not conclusions\n    - Using direct quotes from the narrative when possible\n    - Separating confirmed facts from speculation\n    - Highlighting any gaps or inconsistencies in the evidence",
+      "source_pattern": "Evaluate Suspect Motive Means Opportunity",
+      "examples": [
+        "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+        "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+        "Do[Evaluate means, motive, and opportunity for Nicole and Isabelle based on the narrative]\n\nObservation 1: \n- **Nicole's Means**: There is no evidence Nicole owns a crossbow or has any skill in using "
+      ]
+    }
+  ],
+  "config": {
+    "n_cases": 3,
+    "n_iters": 1,
+    "model": "together_ai/deepseek-ai/DeepSeek-V3",
+    "seed": 42,
+    "min_count": 3,
+    "max_steps": 14,
+    "sim_threshold": 0.75,
+    "batch_size": 1,
+    "source": "actions",
+    "structured_output": false,
+    "output_dir": "iterations_v5_smoke",
+    "fixes": [
+      "F: ptool-specific focus args"
+    ]
+  }
+}

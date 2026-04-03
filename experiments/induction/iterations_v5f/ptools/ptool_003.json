@@ -1,0 +1,15 @@
+{
+  "id": "ptool_003",
+  "func_name": "summarize_evidence",
+  "display_name": "SummarizeEvidence",
+  "short_desc": "Extract and summarize all evidence related to a specific person, object, or event from the murder mystery narrative",
+  "doc": "Extracts and summarizes evidence related to a specific focus (person, object, or event) from the murder mystery narrative.\n\nParameters:\n    narrative (str): The complete text of the murder mystery case\n    focus (str): The specific entity to focus on (e.g., 'Clyde', 'the knife', 'insurance policy')\n\nReturns:\n    str: A structured summary of evidence organized into categories:\n        - Motive: Reasons why the focus might be involved\n        - Means: Capability/access to commit the crime\n        - Opportunity: Availability/timing evidence\n        - Physical Evidence: Direct physical proof or traces\n        - Behavioral Evidence: Suspicious actions or statements\n        - Alibi: Evidence suggesting innocence\n        - Relationships: Connections to other case elements\n\nKey guidelines:\n- Extract only factual evidence directly mentioned in the narrative\n- Include direct quotes where available (with page/observation numbers if present)\n- Note contradictions or inconsistencies in the evidence\n- Organize evidence into logical categories based on type\n- Be objective - present both incriminating and exculpatory evidence\n- Include specific details like timestamps, locations, and witness statements\n- Reference the source of each piece of evidence when possible",
+  "source_pattern": "Evidence Summarization",
+  "examples": [
+    "Extract and summarize all evidence related to Nicole from the narrative",
+    "** SummarizeSuspectEvidence[Clyde]\n\n**Observation 1:** \n- **Motive:** Clyde suffered public humiliation by Faith at his promotion ceremony and explicitly stated his intent for revenge (\"I intend to ge",
+    "SummarizeSuspectEvidence[Clyde]\n\nObservation 1: Clyde's evidence summary:\n- Motive: Suffered public humiliation by Faith at his promotion ceremony and explicitly stated his intent for revenge (\"I inte",
+    "SummarizeSuspectEvidence[Clyde]\nObservation 1: Clyde's evidence summary:\n- Motive: Suffered public humiliation by Faith at his promotion ceremony and explicitly stated his intent for revenge (\"I inten",
+    "Summarize key evidence for Andrew: motive (financial gain from insurance), means (access to explosives and bomb disposal training), opportunity (knew Otis's routine and when he was alone at the rink),"
+  ]
+}

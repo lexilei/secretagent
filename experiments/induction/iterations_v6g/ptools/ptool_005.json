@@ -1,0 +1,15 @@
+{
+  "id": "ptool_005",
+  "func_name": "evaluate_alibi",
+  "display_name": "EvaluateAlibi",
+  "short_desc": "Evaluates the consistency and reliability of a suspect's alibi against witness accounts and evidence",
+  "doc": "Evaluates the alibi of a specific person by examining their claimed whereabouts against witness testimony, physical evidence, and timeline consistency.\n\nArgs:\n    narrative (str): The full murder mystery text containing all facts, statements, and evidence\n    focus (str): The specific person whose alibi should be evaluated (e.g., \"Meredith\", \"Kinsley\")\n\nReturns:\n    dict: A structured evaluation with the following keys:\n        - has_alibi: bool - Whether the person has a verifiable alibi\n        - alibi_statement: str - The exact alibi claim from the narrative\n        - supporting_evidence: list[str] - Evidence/witnesses that support the alibi\n        - contradictions: list[str] - Evidence/witnesses that contradict the alibi\n        - timeline_conflict: bool - Whether the alibi conflicts with the murder timeline\n        - reliability_score: str - One of 'strong', 'weak', or 'contradicted'\n        - final_assessment: str - Brief summary of alibi reliability\n\nExample output:\n    {\n        \"has_alibi\": True,\n        \"alibi_statement\": \"Was in the rainforest observing animals\",\n        \"supporting_evidence\": [\"Rainforest access logs show entry at 2:00 PM\"],\n        \"contradictions\": [\"Jerry saw her near crime scene at 3:15 PM\"],\n        \"timeline_conflict\": True,\n        \"reliability_score\": \"contradicted\",\n        \"final_assessment\": \"Alibi is contradicted by witness testimony placing suspect near crime scene\"\n    }",
+  "source_pattern": "Evaluate Alibi",
+  "examples": [
+    "Evaluate Meredith's alibi consistency: Meredith claims she was in the rainforest observing animals but saw nothing unusual. However, Jerry saw her near the crime scene around the time of the murder, w",
+    "Evaluate Kinsley's alibi consistency: Kinsley states he was with his disciples and had a conversation with Frances. His disciples could potentially corroborate his presence, but there are no digital r",
+    "Examine Elizabeth's alibi: She claims to have been at home taking long showers (as evidenced by her damp phone), but we need to see if this alibi holds up against the timeline of the murder. The murde",
+    "Examine Freya's alibi: She claims she left the wrestling ring immediately after the argument with Eleanor and denies knowledge of the murder. However, multiple witnesses saw her at the wrestling match",
+    "Evaluate Justin's alibi: He claims he was watching the game during the murder and didn't leave. The narrative states he was with the crowd entering the rink and was present during the game. There's no"
+  ]
+}

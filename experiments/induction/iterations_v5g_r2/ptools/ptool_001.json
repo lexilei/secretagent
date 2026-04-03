@@ -1,0 +1,15 @@
+{
+  "id": "ptool_001",
+  "func_name": "analyze_opportunity",
+  "display_name": "AnalyzeOpportunity",
+  "short_desc": "Evaluates suspects' opportunities by examining alibis, timelines, and location access.",
+  "doc": "Analyzes opportunity for suspects in a murder mystery by examining alibis, timelines, and location access.\n\nExtracts information about:\n- Each suspect's whereabouts during the crime timeframe\n- Alibi verification (witnesses, evidence supporting alibi)\n- Access to crime scene location\n- Timeline contradictions or gaps\n- Physical/geographical constraints\n\nReturns:\n    dict: A structured analysis of opportunity for each suspect with keys:\n        - has_alibi: boolean indicating if suspect has a verifiable alibi\n        - alibi_details: string describing the alibi and its verification\n        - timeline_consistency: boolean indicating if timeline is consistent\n        - location_access: boolean indicating if suspect could access crime scene\n        - opportunity_score: integer from 0-10 (10 = high opportunity)\n        - contradictions: list of any timeline or location contradictions found\n\nExample output:\n    {\n        \"Nicole\": {\n            \"has_alibi\": false,\n            \"alibi_details\": \"Claimed to be at home alone, no witnesses\",\n            \"timeline_consistent\": true,\n            \"location_access\": true,\n            \"opportunity_score\": 8,\n            \"contradictions\": []\n        },\n        \"Isabelle\": {\n            \"has_alibi\": true,\n            \"alibi_details\": \"Verified at work with multiple coworkers\",\n            \"timeline_consistent\": false,\n            \"location_access\": false,\n            \"opportunity_score\": 2,\n            \"contradictions\": [\"Timecard shows left work 30 minutes early\"]\n        }\n    }",
+  "source_pattern": "Opportunity Analysis",
+  "examples": [
+    "Compare the alibis and opportunities for both suspects",
+    "Do[Evaluate means, motive, and opportunity for Nicole and Isabelle based on the narrative]\n\nObservation 1: \n- **Nicole's Means**: There is no evidence Nicole owns a crossbow or has any skill in using ",
+    "Do[Compare the motives and opportunities of Clyde and Paul based on the narrative]\nObservation 1",
+    "Check if there is any evidence that Mack was at the chalet or could have administered the venom remotely. Also, examine Taylor's behavior and statements for inconsistencies.",
+    "Review motives and opportunities for Chris and Gloria"
+  ]
+}

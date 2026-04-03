@@ -1,0 +1,5 @@
+# Actions, no structured output
+source: actions
+synthesis:
+  structured_output: false
+output_dir: results/actions_plain

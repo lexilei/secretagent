@@ -1,0 +1,15 @@
+{
+  "id": "ptool_004",
+  "func_name": "assess_mmo",
+  "display_name": "MMOAssessment",
+  "short_desc": "Evaluates a suspect's means, motive, and opportunity for committing the crime.",
+  "doc": "Analyzes the narrative to assess a specific suspect's Means (ability to commit the crime),\nMotive (reason to commit the crime), and Opportunity (chance to commit the crime).\n\nArgs:\n    narrative (str): The full murder mystery text containing all clues and statements.\n    focus (str): The name of the suspect to evaluate (e.g., \"Peyton\", \"Addison\").\n\nReturns:\n    dict: A structured assessment with three main keys:\n        - \"means\": {\n            \"assessment\": \"yes/no/unclear\",\n            \"supporting_evidence\": \"textual evidence from narrative\",\n            \"contradicting_evidence\": \"textual evidence from narrative\"\n          }\n        - \"motive\": {\n            \"assessment\": \"yes/no/unclear\",\n            \"supporting_evidence\": \"textual evidence from narrative\",\n            \"contradicting_evidence\": \"textual evidence from narrative\"\n          }\n        - \"opportunity\": {\n            \"assessment\": \"yes/no/unclear\",\n            \"supporting_evidence\": \"textual evidence from narrative\",\n            \"contradicting_evidence\": \"textual evidence from narrative\"\n          }\n        - \"overall_risk\": \"low/medium/high\"\n\nExample output:\n    {\n        \"means\": {\n            \"assessment\": \"yes\",\n            \"supporting_evidence\": \"Peyton is a trained surgeon with knowledge of anatomy\",\n            \"contradicting_evidence\": \"None\"\n        },\n        \"motive\": {\n            \"assessment\": \"yes\",\n            \"supporting_evidence\": \"Victim was blackmailing Peyton about medical malpractice\",\n            \"contradicting_evidence\": \"Peyton claimed they had reconciled\"\n        },\n        \"opportunity\": {\n            \"assessment\": \"unclear\",\n            \"supporting_evidence\": \"Peyton was seen near crime scene around time of murder\",\n            \"contradicting_evidence\": \"Peyton's alibi claims they were in surgery\"\n        },\n        \"overall_risk\": \"high\"\n    }\n\nNote: Pay close attention to direct evidence, alibis, relationships with victim,\nskills/abilities, and timeline inconsistencies when making assessments.",
+  "source_pattern": "Suspect MMO Assessment",
+  "examples": [
+    "MMOAssessment[Peyton]",
+    "MMOAssessment[Addison]",
+    "MMOAssessment[Octavia]",
+    "MMOAssessment[Nicole]",
+    "MMOAssessment[Isabelle]"
+  ]
+}

@@ -1,0 +1,5 @@
+# Actions + structured output
+source: actions
+synthesis:
+  structured_output: true
+output_dir: results/actions_structured

@@ -1,0 +1,15 @@
+{
+  "id": "ptool_004",
+  "func_name": "check_narrative_consistency",
+  "display_name": "CheckNarrativeConsistency",
+  "short_desc": "Analyzes the narrative for contradictions, inconsistencies, or conflicting evidence related to a specific focus.",
+  "doc": "This function examines the murder mystery narrative for logical inconsistencies, contradictions, or conflicting evidence related to a specific person, event, or piece of evidence.\n\nExtract and analyze:\n1. Timeline inconsistencies - conflicts in reported times or sequence of events\n2. Contradictory statements - differing accounts from witnesses or suspects\n3. Evidence conflicts - information that contradicts physical evidence or known facts\n4. Character behavior anomalies - actions that don't align with established patterns\n5. Unexplained gaps - missing information that creates logical inconsistencies\n\nStructure the response:\n- List each inconsistency found with specific quotes from the narrative\n- Explain why each item represents a contradiction or inconsistency\n- Note the source (who said/observed what and when)\n- Indicate potential significance for solving the mystery\n\nPay special attention to:\n- Exact wording and temporal references in statements\n- Changes in character accounts over time\n- Evidence that contradicts alibis or statements\n- Physical impossibilities based on the narrative timeline\n- Statements that directly conflict with established facts",
+  "source_pattern": "Consistency Checking",
+  "examples": [
+    "Look for inconsistencies or additional clues in the narrative",
+    "Examine the evidence for contradictions: For Penelope, the witness saw her with the pickaxe earlier in the day, but the murder weapon was found at the scene. For Francis, he purchased the pickaxe and ",
+    "Re-examine the narrative for any additional clues or inconsistencies that might indicate the murderer",
+    "Check for inconsistencies: Ruben's use of acetic acid vs. murder acid; Michael's directory at scene",
+    "Look for inconsistencies in Erika's and Mackenzie's statements"
+  ]
+}

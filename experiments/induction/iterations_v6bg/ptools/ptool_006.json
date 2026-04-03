@@ -1,0 +1,15 @@
+{
+  "id": "ptool_006",
+  "func_name": "analyze_evidence",
+  "display_name": "EvidenceAnalysis",
+  "short_desc": "Examines the narrative for specific evidence related to a focus area or individual.",
+  "doc": "Analyzes the murder mystery narrative for evidence related to a specific focus (suspect, location, object, etc.).\n\nArgs:\n    narrative (str): The full text of the murder mystery narrative.\n    focus (str): The specific aspect to focus on (e.g., suspect name, location, object).\n\nReturns:\n    dict: A dictionary with two keys:\n        - 'evidence_for': List of evidence supporting involvement/connection\n        - 'evidence_against': List of evidence contradicting involvement/connection\n        - 'neutral_observations': List of relevant but inconclusive observations\n    Each list contains strings with brief evidence descriptions and their narrative source.\n\nExample output:\n    {\n        'evidence_for': ['Seen near crime scene (paragraph 3)', 'Owns similar weapon (paragraph 5)'],\n        'evidence_against': ['Has alibi for time of death (paragraph 7)'],\n        'neutral_observations': ['Had motive but no direct evidence (paragraph 2)']\n    }\n\nPay attention to:\n- Direct quotes or observations mentioning the focus\n- Contextual clues that support or contradict involvement\n- Timeline consistency with the focus\n- Physical evidence connections\n- Witness statements about the focus",
+  "source_pattern": "Evidence Analysis",
+  "examples": [
+    "Check for any evidence placing Ronald at the mosque or linking the venom directly to the crime",
+    "Confirm if Timothy is shown with a nunchaku in the photos at the laser tag arena",
+    "List all evidence for Roxanne and Clyde based on the narrative",
+    "Check for any evidence directly linking Mackenzie to the axe or the murder weapon",
+    "Re-read the narrative to find exact references to the car where the body was found"
+  ]
+}

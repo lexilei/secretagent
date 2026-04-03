@@ -1,0 +1,15 @@
+{
+  "id": "ptool_001",
+  "func_name": "holistic_suspect_evaluation",
+  "display_name": "HolisticSuspectEvaluation",
+  "short_desc": "Evaluates suspects based on means, motive, opportunity, and evidence alignment with the crime scene.",
+  "doc": "Analyzes potential suspects in a murder mystery by examining three key criteria:\n\n1. MEANS: Assesses if the suspect had access to the murder weapon/tool and capability to commit the crime\n2. MOTIVE: Evaluates reasons why the suspect would want to harm the victim (financial gain, revenge, etc.)\n3. OPPORTUNITY: Determines if the suspect had the chance to commit the crime (alibi verification, timeline alignment)\n\nAdditionally evaluates how well the suspect's profile matches crime scene evidence and witness statements.\n\nParameters:\n    narrative (str): The full murder mystery text containing clues, evidence, and character information\n    focus (str): Specific evaluation focus (e.g., 'all suspects', 'Nicole and Isabelle', 'means only', 'opportunity comparison')\n\nReturns:\n    str: A structured evaluation including:\n    - Suspect-by-suspect breakdown of means, motive, and opportunity\n    - Assessment of evidence alignment with each suspect\n    - Comparative analysis when multiple suspects are evaluated\n    - Any contradictions or gaps in the evidence\n    - Final likelihood assessment for each suspect\n\nPay special attention to:\n- Timeline consistency with alibis\n- Physical capability to commit the crime\n- Psychological plausibility of motives\n- Direct vs circumstantial evidence\n- Witness reliability and corroboration",
+  "source_pattern": "Holistic Suspect Evaluation",
+  "examples": [
+    "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+    "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+    "Compare the alibis and opportunities for both suspects",
+    "Do[Evaluate means, motive, and opportunity for Nicole and Isabelle based on the narrative]\n\nObservation 1: \n- **Nicole's Means**: There is no evidence Nicole owns a crossbow or has any skill in using ",
+    "Do[Compare the motives and opportunities of Clyde and Paul based on the narrative]\nObservation 1"
+  ]
+}

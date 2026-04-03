@@ -1,0 +1,30 @@
+{
+  "iteration": 4,
+  "n_ptools": 4,
+  "accuracy": 0.6266666666666667,
+  "n_correct": 47,
+  "n_total": 75,
+  "avg_cost": 0.037277433333333325,
+  "avg_latency": 39.77654668807983,
+  "ptool_uses": 269,
+  "do_uses": 187,
+  "max_step_hits": 8,
+  "neg1_answers": 10,
+  "new_ptools": [
+    {
+      "id": "ptool_005",
+      "func_name": "timeline_analysis",
+      "display_name": "TimelineAnalysis",
+      "short_desc": "Analyze temporal events, alibis, and location evidence to establish sequences and timings in the mystery.",
+      "doc": "Extract and analyze timeline information from the murder mystery narrative.\n\nThis function focuses on identifying:\n- Specific timestamps or time periods mentioned (e.g., '2:15 PM', 'during dinner')\n- Temporal sequences and event ordering (e.g., 'after the argument', 'before the storm')\n- Character alibis and location confirmations at specific times\n- Duration of events or time gaps between events\n- Contradictions or inconsistencies in timeline accounts\n\nFocus parameter should specify what to analyze, such as:\n- A specific character's alibi ('alibi for Clyde')\n- Timing of a specific event ('murder time')\n- Sequence between events ('argument and murder timing')\n- Location confirmations during a time period ('who was in rainforest at noon')\n\nStructure the response with:\n1. Key timeline events in chronological order\n2. Character alibis and location confirmations\n3. Any temporal inconsistencies or gaps\n4. Conclusions about timing relationships\n\nPay special attention to:\n- Words indicating time (when, after, before, during, while, until)\n- Specific time references (clock times, events used as time markers)\n- Character movements between locations\n- Witness confirmations of presence/absence\n- Physical evidence with temporal implications (e.g., 'watch stopped at 9:32')",
+      "source_pattern": "Timeline Analysis",
+      "examples": [
+        "Check narrative for any timeline information or alibis for Clyde and Paul",
+        "Analyze the timeline of events and alibis for Chris and Gloria",
+        "Analyze timeline and location evidence: When was Frances murdered? Who was confirmed to be in the rainforest at that time?",
+        "Determine when exactly Eleanor was murdered relative to the argument and when Freya left",
+        "Re-examine the timeline: murder occurred during midday prayers when Gerald was confirmed present"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "ptool_003",
+  "func_name": "identify_motives",
+  "display_name": "IdentifyMotives",
+  "short_desc": "Extract and assess potential motives for specified characters based on the narrative.",
+  "doc": "Analyzes the provided narrative to identify and evaluate motives for the specified characters.\n\nArgs:\n    narrative (str): The full text of the murder mystery story.\n    focus (str): A string specifying which characters to analyze (e.g., 'Aubrey and Garry', 'all suspects', 'Gordon').\n\nReturns:\n    str: A structured response listing potential motives for each specified character, including:\n        - The character's name\n        - Type of motive (e.g., financial, revenge, personal conflict)\n        - Supporting evidence or reasoning from the narrative\n        - Strength/credibility assessment of the motive\n        \nPay special attention to:\n    - Direct statements about character motivations\n    - Financial arrangements or pressures\n    - Personal conflicts or grudges mentioned\n    - Hidden relationships or secrets\n    - Opportunities for gain from the victim's death\n    - Any expressed threats or negative sentiments\n    \nStructure the response with clear headings for each character and bullet points for motives.\nExample format:\n    [Character Name] Motives:\n    - [Motive type]: [Description] (Strength: [assessment])\n      Evidence: [specific text from narrative]\n    \nIf no clear motives are found for a character, state this explicitly.",
+  "source_pattern": "Motive Identification and Assessment",
+  "examples": [
+    "Identify motives for Aubrey and Garry based on the narrative",
+    "Do[Identify motives for Aubrey and Garry based on the narrative]\nObservation 1: Based on the narrative provided:\n- Aubrey has a financial motive: She has taken high-interest loans to keep the museum a",
+    "Identify motives for both suspects",
+    "Identify motives for both suspects based on the narrative",
+    "Identify motives for both suspects based on the narrative]\nObservation 1: Based solely on the narrative provided:\n\n**Gordon's Motive:** Gordon held a grudge against Harry because Harry's award-winning"
+  ]
+}

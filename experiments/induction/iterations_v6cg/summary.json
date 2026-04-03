@@ -1,0 +1,96 @@
+{
+  "iteration_stats": [
+    {
+      "iteration": 0,
+      "n_ptools": 0,
+      "accuracy": 0.68,
+      "n_correct": 51,
+      "n_total": 75,
+      "avg_cost": 0.0170471,
+      "avg_latency": 51.10246657053629,
+      "ptool_uses": 0,
+      "do_uses": 190,
+      "max_step_hits": 5,
+      "neg1_answers": 5,
+      "extracted_finishes": 0
+    },
+    {
+      "iteration": 1,
+      "n_ptools": 1,
+      "accuracy": 0.88,
+      "n_correct": 66,
+      "n_total": 75,
+      "avg_cost": 0.013798316666666664,
+      "avg_latency": 23.482818791071573,
+      "ptool_uses": 0,
+      "do_uses": 178,
+      "max_step_hits": 0,
+      "neg1_answers": 0,
+      "extracted_finishes": 2
+    },
+    {
+      "iteration": 2,
+      "n_ptools": 2,
+      "accuracy": 0.8,
+      "n_correct": 60,
+      "n_total": 75,
+      "avg_cost": 0.022059299999999997,
+      "avg_latency": 39.640431019465126,
+      "ptool_uses": 119,
+      "do_uses": 209,
+      "max_step_hits": 0,
+      "neg1_answers": 0,
+      "extracted_finishes": 2
+    }
+  ],
+  "ptools": [
+    {
+      "id": "ptool_001",
+      "func_name": "analyze_mom_evidence",
+      "display_name": "MOMAnalysis",
+      "short_desc": "Analyzes means, opportunity, and motive evidence for suspects in a murder mystery.",
+      "doc": "Evaluates the means, opportunity, and motive (MOM) for each suspect mentioned in the narrative.\n\nArgs:\n    narrative: The full murder mystery text containing evidence and character information\n    focus: Specific aspect to emphasize - either 'means', 'opportunity', 'motive', or 'all'\n\nReturns:\n    dict: A structured analysis with suspect names as keys, each containing:\n        {\n            \"means\": {\n                \"has_means\": bool,  # Whether suspect had access to murder weapon/method\n                \"evidence\": str,     # Specific evidence supporting means assessment\n                \"certainty\": str     # Level of certainty (definite, likely, possible, unlikely)\n            },\n            \"opportunity\": {\n                \"has_opportunity\": bool,  # Whether suspect was present/able to commit crime\n                \"alibi\": str,              # Suspect's alibi if available\n                \"evidence\": str,           # Specific evidence supporting opportunity assessment\n                \"certainty\": str           # Level of certainty\n            },\n            \"motive\": {\n                \"has_motive\": bool,    # Whether suspect had reason to commit murder\n                \"motive_type\": str,    # Type of motive (revenge, financial, protection, etc.)\n                \"evidence\": str,       # Specific evidence supporting motive assessment\n                \"certainty\": str       # Level of certainty\n            }\n        }\n\nExample output:\n    {\n        \"suspect_a\": {\n            \"means\": {\n                \"has_means\": true,\n                \"evidence\": \"Had access to crossbow through hunting club membership\",\n                \"certainty\": \"definite\"\n            },\n            \"opportunity\": {\n                \"has_opportunity\": false,\n                \"alibi\": \"Was at staff meeting during murder timeframe\",\n                \"evidence\": \"Security logs show suspect in different building\",\n                \"certainty\": \"definite\"\n            },\n            \"motive\": {\n                \"has_motive\": true,\n                \"motive_type\": \"financial\",\n                \"evidence\": \"Stood to inherit victim's business\",\n                \"certainty\": \"likely\"\n            }\n        }\n    }",
+      "source_pattern": "MOM Analysis",
+      "examples": [
+        "Thought 2: Both suspects had opportunity. Addison was present at the campground and had access to crowbars. Octavia was on patrol near the campground and had a motive to protect her secret. However, I",
+        "Thought 2: I need to evaluate the evidence for means, motive, and opportunity for both suspects. The murder was committed with a crossbow in the victim's kitchen. Let's assess who had the means (acces",
+        "Thought 1: I need to analyze the evidence against both suspects, Nicole and Isabelle, to determine who is the most likely murderer. The murder was committed with a crossbow in Wilhelmina's kitchen. I ",
+        "Thought 1: I need to determine who is the most likely murderer between Nicole and Isabelle. The murder was committed with a crossbow in Wilhelmina's kitchen. I should evaluate the evidence for means, ",
+        "Thought 2: Both suspects have the expertise to use snake venom as a weapon. Mack has a hobbyist's knowledge and keeps venomous snakes, while Taylor is a professional snake specialist. Both also have m"
+      ]
+    },
+    {
+      "id": "ptool_002",
+      "func_name": "evaluate_alibi_consistency",
+      "display_name": "EvaluateAlibiConsistency",
+      "short_desc": "Analyzes alibi evidence for consistency across witness statements and timeline events",
+      "doc": "Evaluates the consistency and reliability of alibis by examining witness statements, timeline events, and potential contradictions.\n\nArgs:\n    narrative (str): The full murder mystery text containing character statements and timeline details\n    focus (str): Specific suspect or timeframe to focus on (e.g., 'suspect_name', 'time_window')\n\nReturns:\n    dict: A structured analysis of alibi consistency with the following keys:\n        - alibi_strength: str (\"strong\", \"weak\", \"contradictory\", \"unverified\")\n        - supporting_witnesses: list[str] (names of witnesses supporting the alibi)\n        - contradicting_witnesses: list[str] (names of witnesses contradicting the alibi)\n        - timeline_conflicts: list[str] (specific time conflicts or gaps)\n        - confidence_score: int (0-100, indicating reliability)\n        - summary: str (brief assessment of overall alibi credibility)\n\nExample:\n    {\n        \"alibi_strength\": \"contradictory\",\n        \"supporting_witnesses\": [\"Sarah\", \"Mike\"],\n        \"contradicting_witnesses\": [\"John\"],\n        \"timeline_conflicts\": [\"15-minute gap between witness statements\"],\n        \"confidence_score\": 35,\n        \"summary\": \"Alibi has multiple witnesses but contains significant contradictions\"\n    }",
+      "source_pattern": "Evidence Evaluation",
+      "examples": [
+        "Thought 2: The MOMAnalysis shows both suspects had means and opportunity, but Gloria's motive is explicit (revenge for career sabotage), while Chris's motive is vague and inferred. However, I should l",
+        "Thought 3: Both suspects had opportunity during office hours, but Chris has a potential alibi with multiple witnesses placing him in the park. However, his disappearance into a wooded area creates unc",
+        "Thought 4: The narrative does not explicitly state the bleach bottle was the murder weapon, but it is heavily implied that bleach was used to poison Murray. Both suspects had access to bleach. However",
+        "Thought 3: Julia admits to being at the mosque with Kent on the day of the murder. This gives her the opportunity to administer the poison. Ronald's whereabouts are unknown, but there is no direct evi",
+        "Thought 1: I need to analyze the evidence for both suspects, Frederick and Jerome. The murder weapon is a sai, which is a specialized martial arts weapon. Jerome has a certificate of martial arts mast"
+      ]
+    }
+  ],
+  "config": {
+    "n_cases": 75,
+    "n_iters": 5,
+    "model": "together_ai/deepseek-ai/DeepSeek-V3",
+    "seed": 42,
+    "min_count": 3,
+    "max_steps": 14,
+    "sim_threshold": 0.75,
+    "batch_size": 1,
+    "source": "thoughts",
+    "structured_output": true,
+    "output_dir": "iterations_v6cg",
+    "fixes": [
+      "F: ptool-specific focus",
+      "H: LLM answer extraction",
+      "G: structured output"
+    ]
+  }
+}

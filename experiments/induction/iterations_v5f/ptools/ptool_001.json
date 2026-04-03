@@ -1,0 +1,15 @@
+{
+  "id": "ptool_001",
+  "func_name": "analyze_evidence_summary",
+  "display_name": "AnalyzeEvidenceSummary",
+  "short_desc": "Analyzes and summarizes evidence from the narrative related to a specific focus area or suspect.",
+  "doc": "Extracts and summarizes evidence from a murder mystery narrative based on a specific focus.\n\nParameters:\n    narrative (str): The full murder mystery text containing all case details\n    focus (str): What to analyze - can be a suspect name, evidence category ('motive', 'opportunity', 'means'), \n                physical evidence type, or specific object/relationship to examine\n\nReturns:\n    str: A structured summary of evidence organized by category with analysis of relevance and significance\n\nFocus Areas:\n- Suspect names: Extract all evidence related to a specific person (e.g., 'Peyton', 'Nicole')\n- Evidence categories: 'motive', 'opportunity', 'means', 'alibi', 'physical evidence'\n- Specific objects: 'crowbar', 'weapon', 'timeframe', 'location'\n- Relationships: 'conflicts', 'witnesses', 'testimony'\n\nExtraction Guidelines:\n1. Identify all references to the focus area throughout the narrative\n2. Categorize evidence into: motive, opportunity, means, physical evidence, alibi, testimony\n3. Note any contradictions or inconsistencies in the evidence\n4. Assess the strength/weakness of each piece of evidence\n5. Include relevant contextual details like timings, locations, and relationships\n6. Highlight any missing evidence or gaps in information\n\nResponse Structure:\n- Start with a clear heading identifying the focus\n- Organize by evidence categories with bullet points\n- Include both supporting and contradictory evidence\n- Note the evidentiary strength (strong/weak/inconclusive)\n- End with an overall assessment of the evidence quality\n\nExample output structure:\n\"\"\"\nEVIDENCE ANALYSIS: [Focus]\n\nMOTIVE:\n- [Evidence point 1] (strength: strong/weak)\n- [Evidence point 2] (strength: strong/weak)\n\nOPPORTUNITY:\n- [Time/location evidence] (consistency: confirmed/contradicted)\n\nPHYSICAL EVIDENCE:\n- [Forensic evidence] (connection: direct/indirect)\n\nOVERALL ASSESSMENT: [Summary of evidentiary strength]\n\"\"\"",
+  "source_pattern": "Evidence Analysis & Summarization",
+  "examples": [
+    "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+    "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+    "Check for any physical evidence linking either suspect to the crowbar or the crime scene",
+    "Summarize the evidence against Nicole and Isabelle based on the narrative",
+    "Do[Summarize the evidence against Nicole and Isabelle based on the narrative]\nObservation 1: Based on the narrative, the evidence is as follows:\n\n**Evidence against Nicole:**\n*   She was the last know"
+  ]
+}

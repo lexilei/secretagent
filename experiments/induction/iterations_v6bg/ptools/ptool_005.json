@@ -1,0 +1,15 @@
+{
+  "id": "ptool_005",
+  "func_name": "investigate_suspect_connections",
+  "display_name": "InvestigateSuspectConnections",
+  "short_desc": "Examines the narrative for connections, motives, opportunities, or access between a suspect and another person, location, or object.",
+  "doc": "Parses the narrative to find any direct or indirect connections related to the specified focus. The focus should be a string describing the specific relationship or attribute to investigate (e.g., 'connection between Penelope and Francis', 'motive Abigail had against Jacqueline', 'Gordon and the chalet', 'opportunity at laser tag arena', 'Lloyd access to shovel').\n\nReturns:\n    A dictionary with two keys:\n    - 'connections_found': A boolean indicating if any relevant connections were found.\n    - 'details': A list of strings, each describing a specific connection, motive, opportunity, or piece of evidence found in the narrative. If no connections are found, this list is empty.\n\nExample output:\n    {\n        'connections_found': True,\n        'details': ['Penelope was seen arguing with Francis at the party.', 'Francis owed Penelope a large sum of money.']\n    }",
+  "source_pattern": "Suspect Investigation",
+  "examples": [
+    "Check if there is any connection between Penelope and Francis, or if the narrative suggests only one meeting took place",
+    "Search the narrative for any motive Abigail might have had against Jacqueline, or any connection between Abigail and Veronica",
+    "Check if Gordon has any direct connection to the chalet or the crime scene beyond proximity",
+    "Check if either suspect had opportunity at the laser tag arena on the day of the murder",
+    "Check if Lloyd had access to the shovel or any connection to it"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "iteration": 1,
+  "n_ptools": 1,
+  "accuracy": 0.76,
+  "n_correct": 57,
+  "n_total": 75,
+  "avg_cost": 0.01627823333333333,
+  "avg_latency": 26.280531635284422,
+  "ptool_uses": 100,
+  "do_uses": 137,
+  "max_step_hits": 0,
+  "neg1_answers": 0,
+  "extracted_finishes": 2,
+  "new_ptools": [
+    {
+      "id": "ptool_002",
+      "func_name": "summarize_evidence",
+      "display_name": "SummarizeEvidence",
+      "short_desc": "Summarizes key evidence for specified suspects including motive, opportunity, weapon access, sightings, alibi, and relationship to victim.",
+      "doc": "Extracts and summarizes evidence for one or more suspects from the murder mystery narrative.\n\nFocus parameter should specify which suspect(s) to analyze. Can be a single name (e.g., 'Harper'), multiple names separated by commas (e.g., 'Addison, Octavia'), or 'each' to analyze all suspects mentioned in the narrative.\n\nReturns:\n    A dictionary where each key is a suspect name and the value is another dictionary with structured evidence:\n    {\n        'suspect_name': {\n            'motive': str (description of potential motive),\n            'opportunity': str (description of opportunity to commit crime),\n            'weapon_access': str (description of access to weapon/tool),\n            'sightings': list (locations/times suspect was seen),\n            'alibi': str (description of alibi if present),\n            'relationship': str (relationship to victim),\n            'contradictions': list (any inconsistencies in evidence)\n        }\n    }\n    \nExample output:\n    {\n        'Harper': {\n            'motive': 'Had financial disputes with victim',\n            'opportunity': 'Was alone in the study during the murder window',\n            'weapon_access': 'Had access to the letter opener used as weapon',\n            'sightings': ['Seen entering study at 9:15 PM', 'Leaving study at 9:45 PM'],\n            'alibi': 'Claims to be in the library, but no witnesses',\n            'relationship': 'Business partner',\n            'contradictions': ['Time of exit conflicts with butler testimony']\n        }\n    }",
+      "source_pattern": "Evidence Summarization",
+      "examples": [
+        "Summarize the key evidence for Peyton and Isolde",
+        "List the motives, opportunities, and evidence for Addison and Octavia",
+        "Summarize evidence for Harper: relationship, motive, access to weapon, sightings, and alibi",
+        "Summarize evidence for Lance: relationship, motive, access to weapon, sightings, and alibi",
+        "List the motives, opportunities, and evidence for each suspect based on the narrative."
+      ]
+    }
+  ]
+}

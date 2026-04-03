@@ -1,0 +1,15 @@
+{
+  "id": "ptool_002",
+  "func_name": "list_evidence_by_person",
+  "display_name": "ListEvidenceByPerson",
+  "short_desc": "Extract and organize all evidence, motives, alibis, and clues for specified individuals from the murder mystery narrative.",
+  "doc": "Extract and organize all evidence related to specific individuals from a murder mystery narrative.\n\nThis function parses the narrative to identify and categorize all relevant information about\nspecified persons of interest. It extracts:\n- Direct evidence linking individuals to the crime\n- Motives or reasons why someone might commit the murder\n- Alibis or accounts of their whereabouts during the crime\n- Suspicious behaviors or actions\n- Physical evidence associated with each person\n- Relationships with the victim and other characters\n- Any contradictory statements or inconsistencies\n\nFocus parameter format: A string containing one or more names separated by commas or 'and'\n(e.g., 'Nicole and Isabelle', 'Elizabeth, Freya', 'Justin, Frederick').\n\nResponse structure:\n- For each person mentioned in the focus parameter, create a separate section\n- Within each section, organize evidence by category (evidence, motives, alibis, etc.)\n- List each piece of evidence clearly and concisely\n- Include direct quotes from the narrative where appropriate\n- Note any conflicts or inconsistencies in the evidence\n- If no evidence exists for a category, state 'No [category] found'\n- End with a summary of the most significant findings for each person\n\nPay special attention to:\n- Character names (watch for variations or nicknames)\n- Time references and alibi verification\n- Evidence that contradicts other statements\n- Implied motives versus explicitly stated motives\n- Physical evidence descriptions and who had access",
+  "source_pattern": "Evidence Listing",
+  "examples": [
+    "List all evidence for Nicole and Isabelle separately",
+    "List all evidence and motives for Elizabeth and Freya",
+    "List all evidence related to Justin and Frederick, including motives, alibis, and physical evidence",
+    "List all evidence for Xochitl and Martin separately",
+    "List all evidence related to Xenia and Priscilla separately"
+  ]
+}

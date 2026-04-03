@@ -1,0 +1,22 @@
+model: together_ai/deepseek-ai/DeepSeek-V3
+n_iters: 5
+max_steps: 14
+min_count: 3
+batch_size: 1
+source: actions
+
+data:
+  mode: split
+
+similarity:
+  mode: combined    # docstring, functional, name, combined, or comma-separated
+  threshold: 0.75
+
+synthesis:
+  structured_output: false
+
+parsing:
+  mode: llm_extract  # regex or llm_extract
+
+output_dir: results/default
+eval_test: false

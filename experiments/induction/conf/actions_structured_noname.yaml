@@ -1,0 +1,7 @@
+# actions + structured, docstring+functional only (no name sim)
+source: actions
+synthesis:
+  structured_output: true
+similarity:
+  mode: docstring,functional
+output_dir: results/actions_structured_noname

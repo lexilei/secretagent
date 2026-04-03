@@ -1,0 +1,115 @@
+{
+  "iteration_stats": [
+    {
+      "iteration": 0,
+      "n_ptools": 0,
+      "accuracy": 0.68,
+      "n_correct": 51,
+      "n_total": 75,
+      "avg_cost": 0.0170471,
+      "avg_latency": 51.10246657053629,
+      "ptool_uses": 0,
+      "do_uses": 190,
+      "max_step_hits": 5,
+      "neg1_answers": 5
+    },
+    {
+      "iteration": 1,
+      "n_ptools": 1,
+      "accuracy": 0.7066666666666667,
+      "n_correct": 53,
+      "n_total": 75,
+      "avg_cost": 0.02179343333333333,
+      "avg_latency": 50.71880215326945,
+      "ptool_uses": 160,
+      "do_uses": 136,
+      "max_step_hits": 5,
+      "neg1_answers": 6
+    },
+    {
+      "iteration": 2,
+      "n_ptools": 2,
+      "accuracy": 0.6933333333333334,
+      "n_correct": 52,
+      "n_total": 75,
+      "avg_cost": 0.028468699999999996,
+      "avg_latency": 29.814291162490846,
+      "ptool_uses": 241,
+      "do_uses": 137,
+      "max_step_hits": 7,
+      "neg1_answers": 9
+    },
+    {
+      "iteration": 3,
+      "n_ptools": 3,
+      "accuracy": 0.5866666666666667,
+      "n_correct": 44,
+      "n_total": 75,
+      "avg_cost": 0.031569116666666674,
+      "avg_latency": 41.05309458414713,
+      "ptool_uses": 282,
+      "do_uses": 142,
+      "max_step_hits": 7,
+      "neg1_answers": 17
+    }
+  ],
+  "ptools": [
+    {
+      "id": "ptool_001",
+      "func_name": "evaluate_evidence",
+      "display_name": "EvaluateEvidence",
+      "short_desc": "Analyzes evidence related to a specific suspect or aspect of the case for consistency, contradictions, and connections.",
+      "doc": "\"\"\"\nAnalyzes evidence from the murder mystery narrative related to a specific focus area (suspect, alibi, weapon, etc.)\nfor consistency, contradictions, and connections to other elements of the case.\n\nArgs:\n    narrative (str): The full murder mystery text containing all evidence, statements, and clues.\n    focus (str): The specific aspect to evaluate - typically a suspect's name, an alibi, a piece of evidence,\n                 or a specific claim that needs verification.\n\nReturns:\n    str: A structured analysis including:\n         - All relevant evidence found related to the focus\n         - Assessment of consistency/inconsistency within the evidence\n         - Any contradictions with other known facts\n         - Connections to motives, opportunities, or means\n         - Notable gaps or missing information\n         - Overall reliability assessment\n\nPay special attention to:\n- Time-related evidence (alibis, timelines)\n- Statements that conflict with physical evidence\n- Motive, opportunity, and means triangulation\n- Changes in stories or conflicting witness accounts\n- Any forensic or physical evidence connections\n- Whether evidence directly implicates or clears the focus\n\"\"\"",
+      "source_pattern": "Evidence Evaluation",
+      "examples": [
+        "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+        "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+        "Check for any contradictions or inconsistencies in the evidence for Penelope and Francis",
+        "Re-read the narrative to confirm Travis's statement about being in the labyrinth with Isabella on the day she died",
+        "Look for any evidence linking the trap to a specific suspect or any inconsistencies in their stories"
+      ]
+    },
+    {
+      "id": "ptool_002",
+      "func_name": "list_evidence_by_person",
+      "display_name": "ListEvidenceByPerson",
+      "short_desc": "Extract and organize all evidence, motives, alibis, and clues for specified individuals from the murder mystery narrative.",
+      "doc": "Extract and organize all evidence related to specific individuals from a murder mystery narrative.\n\nThis function parses the narrative to identify and categorize all relevant information about\nspecified persons of interest. It extracts:\n- Direct evidence linking individuals to the crime\n- Motives or reasons why someone might commit the murder\n- Alibis or accounts of their whereabouts during the crime\n- Suspicious behaviors or actions\n- Physical evidence associated with each person\n- Relationships with the victim and other characters\n- Any contradictory statements or inconsistencies\n\nFocus parameter format: A string containing one or more names separated by commas or 'and'\n(e.g., 'Nicole and Isabelle', 'Elizabeth, Freya', 'Justin, Frederick').\n\nResponse structure:\n- For each person mentioned in the focus parameter, create a separate section\n- Within each section, organize evidence by category (evidence, motives, alibis, etc.)\n- List each piece of evidence clearly and concisely\n- Include direct quotes from the narrative where appropriate\n- Note any conflicts or inconsistencies in the evidence\n- If no evidence exists for a category, state 'No [category] found'\n- End with a summary of the most significant findings for each person\n\nPay special attention to:\n- Character names (watch for variations or nicknames)\n- Time references and alibi verification\n- Evidence that contradicts other statements\n- Implied motives versus explicitly stated motives\n- Physical evidence descriptions and who had access",
+      "source_pattern": "Evidence Listing",
+      "examples": [
+        "List all evidence for Nicole and Isabelle separately",
+        "List all evidence and motives for Elizabeth and Freya",
+        "List all evidence related to Justin and Frederick, including motives, alibis, and physical evidence",
+        "List all evidence for Xochitl and Martin separately",
+        "List all evidence related to Xenia and Priscilla separately"
+      ]
+    },
+    {
+      "id": "ptool_003",
+      "func_name": "consistency_and_contradiction_checking",
+      "display_name": "ConsistencyAndContradictionChecking",
+      "short_desc": "consistency and contradiction checking",
+      "doc": "Consistency and Contradiction Checking.\n\nAnalyze the narrative with the given focus.",
+      "source_pattern": "Consistency and Contradiction Checking",
+      "examples": [
+        "Check for contradictions or inconsistencies in Randy's and Isla's accounts",
+        "Check for any alibis or contradictions in the narrative for Letti and Deborah",
+        "Check for contradictions or alibis",
+        "Check for contradictions in statements: Lloyd said no one else was at the cabin besides him and Russell, but Naomi claims she was there alone all weekend and found the body. This means both cannot be ",
+        "Check for inconsistencies in alibis or statements"
+      ]
+    }
+  ],
+  "config": {
+    "n_cases": 75,
+    "n_iters": 5,
+    "model": "together_ai/deepseek-ai/DeepSeek-V3",
+    "seed": 42,
+    "min_count": 3,
+    "max_steps": 14,
+    "sim_threshold": 0.75,
+    "batch_size": 1,
+    "source": "actions",
+    "output_dir": "iterations_v3a"
+  }
+}

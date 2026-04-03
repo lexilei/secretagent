@@ -1,0 +1,14 @@
+{
+  "id": "ptool_003",
+  "func_name": "timeline_opportunity_analysis",
+  "display_name": "TimelineOpportunityAnalysis",
+  "short_desc": "Analyzes timelines, locations, and opportunity for suspects in relation to a specific event or person.",
+  "doc": "Analyzes the narrative to determine timeline, location, and opportunity information for suspects related to a specific focus.\n\nExtracts and examines:\n- Timelines: Specific dates, times, durations, and sequences of events\n- Locations: Where people were positioned and their movements\n- Alibis: Statements about whereabouts or activities\n- Opportunity: Gaps in timelines or access to victim/evidence\n- Contradictions: Inconsistencies in statements about timeline/location\n\nFocus parameter should specify:\n- A person (suspect, victim, witness)\n- An event/time period (murder night, specific date)\n- Location (crime scene, specific place)\n- Or combination (person + time + location)\n\nResponse structure:\n1. Timeline reconstruction for focus period\n2. Location/movement analysis for relevant individuals\n3. Opportunity assessment for each suspect\n4. Contradictions or gaps in alibis\n5. Key evidence supporting/refuting opportunity\n\nPay attention to:\n- Exact time mentions (specific hours, days, durations)\n- Location descriptions and proximity to crime scene\n- Witness statements about others' whereabouts\n- Physical evidence placing people at locations\n- Overlap between suspect/victim timelines\n- Time required to commit crime vs. alibi coverage",
+  "source_pattern": "Timeline & Opportunity Analysis",
+  "examples": [
+    "Check if Ronald was at the mosque or had opportunity to poison Kent",
+    "Check timeline and opportunity for both suspects on the day Isabella died",
+    "Check if the murder night was specifically Tuesday night",
+    "Check if Taylor was at Clyde's chalet on the day he died"
+  ]
+}

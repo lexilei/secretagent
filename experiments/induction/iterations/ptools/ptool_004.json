@@ -1,0 +1,13 @@
+{
+  "id": "ptool_004",
+  "display_name": "AnalyzeEvidenceConnections",
+  "description": "Examines how different pieces of evidence, suspects, or events connect to each other and the central case.",
+  "source_pattern": "Analyze Evidence Connections",
+  "examples": [
+    "CheckEvidenceLinkage[focus: Gloria and the murder]\nObservation 3",
+    "ExamineEvidenceConnections[focus: The meeting at the abandoned factory]\nObservation 5: Based on the narrative, the connections to the meeting at the abandoned factory are:\n- Kaylee's diary entry state",
+    "CheckEvidenceLinkage[focus: Mark's alibi and presence at crime scene]\nObservation",
+    "ExamineEvidenceConnections[focus: how Travis's ink or Russell's frogs connect to the crime scene and alibis]\nObservation 3",
+    "Check if there is any connection between Russell and Travis, or if Russell could have supplied the poison to Travis"
+  ]
+}

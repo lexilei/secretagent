@@ -1,0 +1,15 @@
+{
+  "id": "ptool_001",
+  "func_name": "evaluate_evidence",
+  "display_name": "EvaluateEvidence",
+  "short_desc": "Analyzes evidence related to a specific suspect or aspect of the case for consistency, contradictions, and connections.",
+  "doc": "\"\"\"\nAnalyzes evidence from the murder mystery narrative related to a specific focus area (suspect, alibi, weapon, etc.)\nfor consistency, contradictions, and connections to other elements of the case.\n\nArgs:\n    narrative (str): The full murder mystery text containing all evidence, statements, and clues.\n    focus (str): The specific aspect to evaluate - typically a suspect's name, an alibi, a piece of evidence,\n                 or a specific claim that needs verification.\n\nReturns:\n    str: A structured analysis including:\n         - All relevant evidence found related to the focus\n         - Assessment of consistency/inconsistency within the evidence\n         - Any contradictions with other known facts\n         - Connections to motives, opportunities, or means\n         - Notable gaps or missing information\n         - Overall reliability assessment\n\nPay special attention to:\n- Time-related evidence (alibis, timelines)\n- Statements that conflict with physical evidence\n- Motive, opportunity, and means triangulation\n- Changes in stories or conflicting witness accounts\n- Any forensic or physical evidence connections\n- Whether evidence directly implicates or clears the focus\n\"\"\"",
+  "source_pattern": "Evidence Evaluation",
+  "examples": [
+    "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+    "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+    "Check for any contradictions or inconsistencies in the evidence for Penelope and Francis",
+    "Re-read the narrative to confirm Travis's statement about being in the labyrinth with Isabella on the day she died",
+    "Look for any evidence linking the trap to a specific suspect or any inconsistencies in their stories"
+  ]
+}

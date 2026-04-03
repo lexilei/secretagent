@@ -1,0 +1,13 @@
+{
+  "id": "ptool_001",
+  "func_name": "assess_suspect_mmo",
+  "display_name": "AssessSuspectMMO",
+  "short_desc": "Evaluates a suspect's motive, means, and opportunity based on the narrative.",
+  "doc": "Analyzes the murder mystery narrative to assess a specific suspect's motive, means, and opportunity.\n\nArgs:\n    narrative (str): The full murder mystery text containing all evidence and character information.\n    focus (str): The specific suspect to evaluate (e.g., \"Peyton\", \"Nicole\").\n\nReturns:\n    dict: A structured assessment with three keys:\n        - \"motive\": {\n            \"assessment\": \"yes\", \"no\", or \"unclear\",\n            \"reasoning\": \"String explaining the motive assessment with evidence from narrative\"\n          }\n        - \"means\": {\n            \"assessment\": \"yes\", \"no\", or \"unclear\",\n            \"reasoning\": \"String explaining the means assessment with evidence from narrative\"\n          }\n        - \"opportunity\": {\n            \"assessment\": \"yes\", \"no\", or \"unclear\",\n            \"reasoning\": \"String explaining the opportunity assessment with evidence from narrative\"\n          }\n\nExample output:\n    {\n        \"motive\": {\n            \"assessment\": \"yes\",\n            \"reasoning\": \"Guy threatened to expose Peyton's secret about the financial fraud\"\n        },\n        \"means\": {\n            \"assessment\": \"unclear\",\n            \"reasoning\": \"No direct evidence of crossbow ownership or proficiency mentioned\"\n        },\n        \"opportunity\": {\n            \"assessment\": \"no\",\n            \"reasoning\": \"Peyton works daytime shifts and murder occurred at night when she was documented at work\"\n        }\n    }",
+  "source_pattern": "Assess Suspect Motive Means Opportunity",
+  "examples": [
+    "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+    "Review the evidence for Peyton: motive (Guy threatening to expose her secret), opportunity (she shops at the mall frequently, but the murder was at night and she works daytime shifts), and means (prof",
+    "Do[Evaluate means, motive, and opportunity for Nicole and Isabelle based on the narrative]\n\nObservation 1: \n- **Nicole's Means**: There is no evidence Nicole owns a crossbow or has any skill in using "
+  ]
+}

@@ -1,0 +1,7 @@
+# thoughts + structured, docstring+functional only (no name sim)
+source: thoughts
+synthesis:
+  structured_output: true
+similarity:
+  mode: docstring,functional
+output_dir: results/thoughts_structured_noname

@@ -1,0 +1,5 @@
+# Best config from v6: thoughts + structured output
+source: thoughts
+synthesis:
+  structured_output: true
+output_dir: results/thoughts_structured

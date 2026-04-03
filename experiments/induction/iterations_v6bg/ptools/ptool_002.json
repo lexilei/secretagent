@@ -1,0 +1,15 @@
+{
+  "id": "ptool_002",
+  "func_name": "investigate_weapon",
+  "display_name": "WeaponInvestigation",
+  "short_desc": "Analyze weapons in the crime scene and their connections to suspects",
+  "doc": "Investigates weapons mentioned in the murder mystery narrative to determine:\n- What weapons are present/relevant to the crime\n- Which suspects had access to each weapon\n- Who had the skill/ability to use each weapon effectively\n- Any evidence linking specific weapons to the crime scene\n- Contradictions in weapon-related evidence\n\nParameters:\n    narrative (str): The full murder mystery text\n    focus (str): Specific aspect to investigate (e.g., 'shotgun access', 'halberd skills', 'weapon transfer')\n\nReturns:\n    dict: A dictionary mapping each weapon to its investigation details with structure:\n    {\n        \"weapon_name\": {\n            \"type\": \"type_of_weapon\",\n            \"location_found\": \"where_weapon_was_discovered\",\n            \"murder_weapon\": true/false,\n            \"access_analysis\": {\n                \"suspect_name\": {\n                    \"had_access\": true/false,\n                    \"access_details\": \"how/why they had access\",\n                    \"skill_level\": \"expert/novice/none\",\n                    \"opportunity\": \"when/how could they access it\"\n                }\n            },\n            \"forensic_evidence\": [\"list\", \"of\", \"physical\", \"evidence\"],\n            \"contradictions\": [\"list\", \"of\", \"inconsistencies\"]\n        }\n    }\n\nExample output:\n    {\n        \"shotgun\": {\n            \"type\": \"firearm\",\n            \"location_found\": \"study desk\",\n            \"murder_weapon\": true,\n            \"access_analysis\": {\n                \"Colonel_Mustard\": {\n                    \"had_access\": true,\n                    \"access_details\": \"owned the shotgun, kept in study\",\n                    \"skill_level\": \"expert\",\n                    \"opportunity\": \"present in mansion all evening\"\n                },\n                \"Professor_Plum\": {\n                    \"had_access\": false,\n                    \"access_details\": \"never allowed in study\",\n                    \"skill_level\": \"none\",\n                    \"opportunity\": \"was in library all night\"\n                }\n            },\n            \"forensic_evidence\": [\"gunpowder residue on desk\", \"matching pellets in victim\"],\n            \"contradictions\": [\"shotgun recently cleaned despite regular use\"]\n        }\n    }",
+  "source_pattern": "Weapon Investigation",
+  "examples": [
+    "Focus on the murder weapon: who had access to a shotgun and the skill to use it?",
+    "Examine access to the halberd and opportunity for both suspects",
+    "Determine which halberd was used in the murder and if there is any evidence pointing to its origin",
+    "Do[Check the timing of the murder and whether Freya could have accessed the theater prop]\nObservation",
+    "Re-examine the evidence to see if the murder weapon was definitively the theater prop or if Freya's halberd could have been used"
+  ]
+}

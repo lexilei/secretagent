@@ -1,0 +1,15 @@
+{
+  "id": "ptool_004",
+  "func_name": "opportunity_presence_analysis",
+  "display_name": "OpportunityPresenceAnalysis",
+  "short_desc": "Analyzes suspects' presence at crime scenes and opportunities to commit the murder based on timeline and location evidence.",
+  "doc": "Analyzes the narrative to determine if suspects had the opportunity and presence required to commit the murder.\n\nExtracts and evaluates:\n- Timeline information: When the murder occurred and where suspects were at that time\n- Location access: Who could physically access the crime scene\n- Alibi verification: Evidence that places suspects at or away from the scene\n- Movement patterns: Suspects' activities before/during/after the murder\n- Physical evidence: Direct links to the crime scene (fingerprints, items, etc.)\n\nFocus parameter should specify:\n- A specific suspect or group of suspects\n- A specific location or time period\n- A particular aspect of opportunity to investigate\n\nResponse structure:\n1. Summary of crime timeline and location\n2. Analysis of each relevant suspect's opportunity/presence\n3. Evidence supporting or contradicting their involvement\n4. Assessment of physical/logistical feasibility\n5. Key contradictions or gaps in timeline/alibis\n\nPay attention to:\n- Specific timestamps and location references\n- Witness statements about whereabouts\n- Physical evidence placing suspects at scenes\n- Contradictions in alibis or timelines\n- Access requirements (keys, permissions, skills)",
+  "source_pattern": "Opportunity and Presence Analysis",
+  "examples": [
+    "Check if Gloria is present during office hours or only late at night",
+    "Check if Aubrey has any access to the mosque or the murder room",
+    "Check if Rosemary's threats were recent and if there's any evidence placing her near the crime scene",
+    "Check if there is any evidence that Marianne or Sidney had the opportunity to commit the murder in the remote corner of the rink",
+    "Check who was present at the laser tag arena during the murder and any direct evidence linking suspects to the scene"
+  ]
+}

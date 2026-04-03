@@ -1,0 +1,31 @@
+{
+  "iteration": 3,
+  "n_ptools": 3,
+  "accuracy": 0.8,
+  "n_correct": 60,
+  "n_total": 75,
+  "avg_cost": 0.02420963333333333,
+  "avg_latency": 23.196421025594077,
+  "ptool_uses": 257,
+  "do_uses": 122,
+  "max_step_hits": 0,
+  "neg1_answers": 0,
+  "extracted_finishes": 2,
+  "new_ptools": [
+    {
+      "id": "ptool_004",
+      "func_name": "check_character_consistency",
+      "display_name": "CheckCharacterConsistency",
+      "short_desc": "Analyzes a character's statements and actions for contradictions or inconsistencies within the narrative",
+      "doc": "Examines the narrative for contradictions, inconsistencies, or unexplained gaps in a character's account of events, actions, or statements.\n\nThis function focuses on identifying logical gaps, conflicting statements, or actions that don't align with\nestablished facts or timelines. It looks for discrepancies in what the character claims versus what evidence\nor other accounts suggest.\n\nArgs:\n    narrative (str): The full murder mystery text containing all clues, statements, and evidence\n    focus (str): The specific character to analyze for inconsistencies (e.g., \"Gordon\", \"Letti\")\n\nReturns:\n    dict: A structured analysis of inconsistencies with the following format:\n    {\n        \"character\": \"name_of_character\",\n        \"total_inconsistencies\": 3,\n        \"inconsistencies\": [\n            {\n                \"type\": \"contradiction/timeline_gap/behavior_anomaly\",\n                \"description\": \"Specific description of the inconsistency\",\n                \"evidence\": \"Text excerpt supporting the finding\",\n                \"significance\": \"Why this inconsistency matters\"\n            }\n        ],\n        \"overall_assessment\": \"Summary judgment of character's reliability\"\n    }\n\nExample output:\n    {\n        \"character\": \"Gordon\",\n        \"total_inconsistencies\": 2,\n        \"inconsistencies\": [\n            {\n                \"type\": \"contradiction\",\n                \"description\": \"Claimed to be in meeting but security logs show him entering building later\",\n                \"evidence\": \"Gordon stated: 'I was in my 2pm meeting' vs Security log: 'G. Smith entered at 2:15pm'\",\n                \"significance\": \"Creates opportunity for murder committed at 2:10pm\"\n            }\n        ],\n        \"overall_assessment\": \"Multiple contradictions in timeline suggest potential deception\"\n    }",
+      "source_pattern": "Unknown/Uncategorized",
+      "examples": [
+        "Analyze Gordon's motive, opportunity, weapon access, and alibi",
+        "Check if Letti has an alibi for the time of murder",
+        "Check if Letti's stun gun was found or if she still had it after the murder",
+        "Check the sequence of events: when Letti was present vs. Deborah",
+        "Check if Deborah has any connection to taxidermy or sawdust posing"
+      ]
+    }
+  ]
+}

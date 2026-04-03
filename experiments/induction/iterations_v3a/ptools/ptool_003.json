@@ -1,0 +1,15 @@
+{
+  "id": "ptool_003",
+  "func_name": "consistency_and_contradiction_checking",
+  "display_name": "ConsistencyAndContradictionChecking",
+  "short_desc": "consistency and contradiction checking",
+  "doc": "Consistency and Contradiction Checking.\n\nAnalyze the narrative with the given focus.",
+  "source_pattern": "Consistency and Contradiction Checking",
+  "examples": [
+    "Check for contradictions or inconsistencies in Randy's and Isla's accounts",
+    "Check for any alibis or contradictions in the narrative for Letti and Deborah",
+    "Check for contradictions or alibis",
+    "Check for contradictions in statements: Lloyd said no one else was at the cabin besides him and Russell, but Naomi claims she was there alone all weekend and found the body. This means both cannot be ",
+    "Check for inconsistencies in alibis or statements"
+  ]
+}
