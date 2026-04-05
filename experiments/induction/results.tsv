@@ -1,0 +1,4 @@
+experiment	commit	config	train_acc	val_acc	best_iter	n_ptools	status	notes
+baseline_actions_struct	(prior)	actions_structured_noname	82.7%	76.0%	1	1	done	existing refactored pipeline baseline
+baseline_thoughts_struct	(prior)	thoughts_structured_noname	74.7%	69.3%	1	1	done	existing refactored pipeline baseline
+exp0_rerun_baseline	fedb408	actions_structured_noname	74.7%	69.3%	0	0	done	early stop bug: selected iter0 (0 ptools). ptool at iter1 hurt (68%). high variance vs prior 82.7%

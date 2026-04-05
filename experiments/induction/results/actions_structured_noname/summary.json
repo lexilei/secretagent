@@ -1,0 +1,107 @@
+{
+  "iteration_stats": [
+    {
+      "iteration": 0,
+      "n_ptools": 0,
+      "train_acc": 0.7466666666666667,
+      "train_correct": 56,
+      "avg_cost": 0.014483499999999993,
+      "avg_latency": 23.42458370526632,
+      "ptool_uses": 0,
+      "do_uses": 185,
+      "neg1": 0,
+      "extracted": 0,
+      "avg_steps": 3.506666666666667
+    },
+    {
+      "iteration": 1,
+      "n_ptools": 1,
+      "train_acc": 0.68,
+      "train_correct": 51,
+      "avg_cost": 0.01359375,
+      "avg_latency": 28.38223949432373,
+      "ptool_uses": 146,
+      "do_uses": 66,
+      "neg1": 0,
+      "extracted": 5,
+      "avg_steps": 4.0
+    },
+    {
+      "iteration": 2,
+      "n_ptools": 2,
+      "train_acc": 0.7466666666666667,
+      "train_correct": 56,
+      "avg_cost": 0.02060253333333333,
+      "avg_latency": 35.82770805676778,
+      "ptool_uses": 246,
+      "do_uses": 48,
+      "neg1": 2,
+      "extracted": 27,
+      "avg_steps": 5.1066666666666665
+    }
+  ],
+  "ptools": [
+    {
+      "id": "ptool_001",
+      "func_name": "summarize_evidence",
+      "display_name": "SummarizeEvidence",
+      "short_desc": "Summarize evidence, motives, and alibis for specified suspects based on the narrative.",
+      "doc": "Analyzes the provided murder mystery narrative to summarize evidence against specified suspects.\n\nThis function extracts and organizes information about the named suspects, focusing on:\n- Potential motives for the crime\n- Alibi information and its reliability\n- Contradictions in their statements\n- Physical or circumstantial evidence mentioned\n- Any suspicious behavior described\n\nArgs:\n    narrative (str): The full text of the murder mystery narrative\n    focus (str): Comma-separated list of suspect names to analyze (e.g., \"Peyton,Isolde\")\n\nReturns:\n    dict: A structured summary organized by suspect with the following format:\n    {\n        \"suspect_name\": {\n            \"motives\": [\"list\", \"of\", \"potential\", \"motives\"],\n            \"alibi\": \"description of alibi if provided\",\n            \"alibi_strength\": \"strong/weak/none\" (based on verification),\n            \"contradictions\": [\"list\", \"of\", \"statement\", \"contradictions\"],\n            \"physical_evidence\": [\"list\", \"of\", \"evidence\", \"items\"],\n            \"suspicious_behavior\": [\"list\", \"of\", \"suspicious\", \"actions\"]\n        },\n        ...\n    }\n    \n    Example:\n    {\n        \"Peyton\": {\n            \"motives\": [\"Financial debt to victim\", \"Recent argument\"],\n            \"alibi\": \"Was at the library according to security logs\",\n            \"alibi_strength\": \"strong\",\n            \"contradictions\": [\"Claimed to be home alone but seen downtown\"],\n            \"physical_evidence\": [\"Fingerprints on glass\"],\n            \"suspicious_behavior\": [\"Left party early\", \"Nervous during questioning\"]\n        },\n        \"Isolde\": {\n            \"motives\": [],\n            \"alibi\": \"With friends at cinema\",\n            \"alibi_strength\": \"weak\",\n            \"contradictions\": [],\n            \"physical_evidence\": [],\n            \"suspicious_behavior\": [\"Avoided eye contact with detective\"]\n        }\n    }",
+      "source_pattern": "Summarize Evidence",
+      "examples": [
+        "Summarize evidence against Peyton and Isolde",
+        "Summarize evidence against Nicole and Isabelle based on the narrative",
+        "Summarize evidence against Clyde and Paul based on the narrative",
+        "Summarize key points about Mack and Taylor, their motives, alibis, and evidence",
+        "Summarize evidence against Meredith and Kinsley"
+      ]
+    },
+    {
+      "id": "ptool_002",
+      "func_name": "profile_suspect",
+      "display_name": "ProfileSuspect",
+      "short_desc": "Extract key evidence about a suspect's relationship, motive, access, and alibi from the narrative.",
+      "doc": "Analyzes the provided narrative to extract and structure evidence related to a specific suspect.\n\nThis function searches for information about the suspect's relationship to the victim, potential motives,\naccess to weapons or means of committing the crime, and details about their alibi or whereabouts at the\ntime of the crime. The output is structured to highlight these key investigative categories.\n\nArgs:\n    narrative (str): The full text of the murder mystery story or case details.\n    focus (str): The name of the suspect to profile.\n\nReturns:\n    str: A JSON-formatted string with keys 'relationship_to_victim', 'motive', 'access_to_weapon_means',\n        and 'alibi_whereabouts'. Each key maps to a string containing the relevant evidence extracted\n        from the narrative. If no information is found for a category, its value should be 'None found'.\n\nExample output format:\n    {\n        \"relationship_to_victim\": \"Suspect is the victim's business partner.\",\n        \"motive\": \"Suspect stood to gain financially from victim's death.\",\n        \"access_to_weapon_means\": \"Suspect had access to the murder weapon in the shed.\",\n        \"alibi_whereabouts\": \"Suspect claims to have been at a conference, but no one can verify.\"\n    }",
+      "source_pattern": "Profile Suspects",
+      "examples": [
+        "Extract key evidence for Harper: relationship to victim, motive, access to weapon, alibi/whereabouts",
+        "Extract key evidence for Lance: relationship to victim, motive, access to weapon, alibi/whereabouts",
+        "Extract Xochitl's motive, alibi, and connection to the corkscrew from the narrative",
+        "Extract key evidence for Larry: Larry is a war veteran with military experience, including flamethrowers. He has a flamethrower openly at his camp. He is Savannah's political rival, has invested heavi",
+        "Extract key evidence for Sophia: Sophia is a journalist with a reputation for truthfulness. She had access to a flamethrower from a military exhibition. Her job was at risk, and Savannah threatened to"
+      ]
+    }
+  ],
+  "best_train_iter": 0,
+  "best_train_acc": 0.7466666666666667,
+  "best_ptools": [],
+  "config": {
+    "model": "together_ai/deepseek-ai/DeepSeek-V3",
+    "n_iters": 5,
+    "max_steps": 14,
+    "min_count": 3,
+    "batch_size": 1,
+    "source": "actions",
+    "data": {
+      "mode": "split"
+    },
+    "similarity": {
+      "mode": "docstring,functional",
+      "threshold": 0.75
+    },
+    "synthesis": {
+      "structured_output": true
+    },
+    "parsing": {
+      "mode": "llm_extract"
+    },
+    "output_dir": "results/actions_structured_noname",
+    "eval_test": false
+  },
+  "val": {
+    "accuracy": 0.6933333333333334,
+    "correct": 52,
+    "total": 75,
+    "neg1": 0
+  }
+}

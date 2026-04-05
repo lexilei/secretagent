@@ -1,0 +1,1 @@
+["I need to analyze the evidence against both suspects. Let me start by profiling Mack to understand his motives, access, and alibi.\n\nAction 1: ProfileSuspect[Mack]", {"input_tokens": 2269, "output_tokens": 38, "latency": 0.8579530715942383, "cost": 0.00288375}]

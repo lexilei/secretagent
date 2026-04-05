@@ -1,0 +1,11 @@
+# H1+H2: Impact ranking on failure traces
+source: actions
+filter_mode: incorrect_only
+rank_by: impact
+n_iters: 3
+max_ptools: 2
+synthesis:
+  structured_output: true
+similarity:
+  mode: docstring,functional
+output_dir: results/exp3_impact_failures

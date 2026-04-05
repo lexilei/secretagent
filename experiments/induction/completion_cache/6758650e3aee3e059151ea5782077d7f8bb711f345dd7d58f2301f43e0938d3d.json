@@ -1,0 +1,1 @@
+["I need to summarize the evidence specifically for Rosemary. The previous action didn't provide a focused summary. Let me try again with a more specific request.\n\nAction 2: SummarizeEvidence[Rosemary]", {"input_tokens": 2162, "output_tokens": 45, "latency": 1.0208818912506104, "cost": 0.00275875}]

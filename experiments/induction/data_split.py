@@ -1,6 +1,7 @@
 """Pre-split MUSR murder mysteries into train/val/test.
 
-Split: 75 train / 75 val / 100 test (no shuffle, sequential).
+Split: shuffle once with seed=42, then 75 train / 75 val / 100 test.
+The split is fixed — all experiments use the same shuffled split.
 
 Usage:
     uv run python experiments/induction/data_split.py
@@ -8,6 +9,7 @@ Usage:
 
 import ast
 import json
+import random
 from pathlib import Path
 
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -31,6 +33,8 @@ def main():
             'choices': choices,
             'expected': ex['answer_index'],
         })
+
+    random.Random(42).shuffle(cases)
 
     train = cases[:75]
     val = cases[75:150]

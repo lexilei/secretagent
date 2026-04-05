@@ -127,13 +127,15 @@ def run(config_file: Path = typer.Argument(..., help='YAML config file')):
             break
 
         # Analyze patterns from train traces
-        print(f'\n  [INDUCE] Analyzing {cfg.source}...')
-        items = extract_items(traces, cfg.source)
+        filter_mode = cfg.get('filter_mode', 'all')
+        rank_by = cfg.get('rank_by', 'frequency')
+        print(f'\n  [INDUCE] Analyzing {cfg.source} (filter={filter_mode}, rank={rank_by})...')
+        items = extract_items(traces, cfg.source, filter_mode=filter_mode)
         print(f'  Found {len(items)} {cfg.source}')
         if not items:
             break
 
-        categories = categorize_items(items, cfg.source, cfg.model)
+        categories = categorize_items(items, cfg.source, cfg.model, rank_by=rank_by)
         print(f'  Top patterns:')
         for cat, count, _ in categories[:8]:
             print(f'    {count:3d}x  {cat}')

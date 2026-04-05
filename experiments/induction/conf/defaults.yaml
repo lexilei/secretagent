@@ -5,6 +5,8 @@ min_count: 3
 batch_size: 1
 max_ptools: 10
 source: actions
+filter_mode: all      # all, correct_only, incorrect_only
+rank_by: frequency    # frequency or impact
 
 data:
   mode: split

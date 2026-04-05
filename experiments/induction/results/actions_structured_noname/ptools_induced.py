@@ -4,44 +4,76 @@ from secretagent.core import interface
 
 @interface
 def summarize_evidence(narrative: str, focus: str) -> str:
-    """Analyzes the murder mystery narrative to extract and summarize evidence pertaining to specific individuals.
+    """Analyzes the provided murder mystery narrative to summarize evidence against specified suspects.
     
-    This function examines the provided narrative text to identify all evidence (including motives, opportunities,
-    alibis, suspicious behaviors, and contradictions) related to the individuals specified in the focus parameter.
-    The evidence is categorized and presented in a structured format for clear reasoning analysis.
+    This function extracts and organizes information about the named suspects, focusing on:
+    - Potential motives for the crime
+    - Alibi information and its reliability
+    - Contradictions in their statements
+    - Physical or circumstantial evidence mentioned
+    - Any suspicious behavior described
     
     Args:
-        narrative (str): The complete murder mystery story containing characters, events, and clues.
-        focus (str): A comma-separated list of names to focus on (e.g., "Harry, Rosemary" or "Amelia").
+        narrative (str): The full text of the murder mystery narrative
+        focus (str): Comma-separated list of suspect names to analyze (e.g., "Peyton,Isolde")
     
     Returns:
-        dict: A structured summary of evidence for each specified individual. The output format is:
+        dict: A structured summary organized by suspect with the following format:
         {
             "suspect_name": {
-                "motives": [list of strings describing potential motives],
-                "opportunities": [list of strings describing potential opportunities],
-                "alibis": [list of strings describing alibi claims or evidence],
-                "contradictions": [list of strings describing inconsistencies in their story],
-                "supporting_evidence": [list of strings describing other relevant clues]
+                "motives": ["list", "of", "potential", "motives"],
+                "alibi": "description of alibi if provided",
+                "alibi_strength": "strong/weak/none" (based on verification),
+                "contradictions": ["list", "of", "statement", "contradictions"],
+                "physical_evidence": ["list", "of", "evidence", "items"],
+                "suspicious_behavior": ["list", "of", "suspicious", "actions"]
             },
             ...
         }
         
-        Example output:
+        Example:
         {
-            "Harry": {
-                "motives": ["Had financial disputes with victim"],
-                "opportunities": ["Was seen near crime scene around time of murder"],
-                "alibis": ["Claims to be at home alone"],
-                "contradictions": ["Security footage shows him leaving his apartment"],
-                "supporting_evidence": ["Fingerprints found on weapon"]
+            "Peyton": {
+                "motives": ["Financial debt to victim", "Recent argument"],
+                "alibi": "Was at the library according to security logs",
+                "alibi_strength": "strong",
+                "contradictions": ["Claimed to be home alone but seen downtown"],
+                "physical_evidence": ["Fingerprints on glass"],
+                "suspicious_behavior": ["Left party early", "Nervous during questioning"]
             },
-            "Rosemary": {
+            "Isolde": {
                 "motives": [],
-                "opportunities": ["Was in the building at time of murder"],
-                "alibis": ["Says she was in meeting with colleagues"],
-                "contradictions": ["Colleagues say meeting ended earlier"],
-                "supporting_evidence": ["Fibers matching her coat found at scene"]
+                "alibi": "With friends at cinema",
+                "alibi_strength": "weak",
+                "contradictions": [],
+                "physical_evidence": [],
+                "suspicious_behavior": ["Avoided eye contact with detective"]
             }
+        }
+    """
+
+@interface
+def profile_suspect(narrative: str, focus: str) -> str:
+    """Analyzes the provided narrative to extract and structure evidence related to a specific suspect.
+    
+    This function searches for information about the suspect's relationship to the victim, potential motives,
+    access to weapons or means of committing the crime, and details about their alibi or whereabouts at the
+    time of the crime. The output is structured to highlight these key investigative categories.
+    
+    Args:
+        narrative (str): The full text of the murder mystery story or case details.
+        focus (str): The name of the suspect to profile.
+    
+    Returns:
+        str: A JSON-formatted string with keys 'relationship_to_victim', 'motive', 'access_to_weapon_means',
+            and 'alibi_whereabouts'. Each key maps to a string containing the relevant evidence extracted
+            from the narrative. If no information is found for a category, its value should be 'None found'.
+    
+    Example output format:
+        {
+            "relationship_to_victim": "Suspect is the victim's business partner.",
+            "motive": "Suspect stood to gain financially from victim's death.",
+            "access_to_weapon_means": "Suspect had access to the murder weapon in the shed.",
+            "alibi_whereabouts": "Suspect claims to have been at a conference, but no one can verify."
         }
     """

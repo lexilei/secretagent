@@ -7,24 +7,36 @@ from collections import Counter
 from secretagent.llm_util import llm as llm_cached
 
 
-def extract_items(traces: list[dict], source: str) -> list[dict]:
-    """Extract free-form items from traces. source='actions' or 'thoughts'."""
+def extract_items(traces: list[dict], source: str,
+                  filter_mode: str = 'all') -> list[dict]:
+    """Extract free-form items from traces.
+
+    source: 'actions' or 'thoughts'
+    filter_mode: 'all' (default), 'correct_only', 'incorrect_only'
+    """
     items = []
     for t in traces:
+        if filter_mode == 'correct_only' and not t.get('correct'):
+            continue
+        if filter_mode == 'incorrect_only' and t.get('correct'):
+            continue
         for s in t['steps']:
             if source == 'actions':
                 if s.get('action_type') == 'do' and s.get('action_arg', '').strip():
                     items.append(dict(case=t['case_name'], step=s['step'],
-                                      text=s['action_arg'].strip()))
+                                      text=s['action_arg'].strip(),
+                                      correct=t.get('correct', False)))
             elif source == 'thoughts':
                 if s.get('thought', '').strip() and s.get('action_type') != 'finish':
                     items.append(dict(case=t['case_name'], step=s['step'],
-                                      text=s['thought'].strip()))
+                                      text=s['thought'].strip(),
+                                      correct=t.get('correct', False)))
     return items
 
 
 def categorize_items(items: list[dict], source: str, model: str,
-                     batch_size: int = 30) -> list[tuple[str, int, list]]:
+                     batch_size: int = 30,
+                     rank_by: str = 'frequency') -> list[tuple[str, int, list]]:
     """Categorize items via LLM + merge synonyms."""
     if not items:
         return []
@@ -116,4 +128,18 @@ Output a JSON object mapping each original category to its canonical group name.
     for cat, count in merged.most_common():
         examples = [a for a in items if a.get('merged_category', a['category']) == cat]
         result.append((cat, count, examples))
+
+    if rank_by == 'impact' and any(item.get('correct') is not None for item in items):
+        # Rank by success correlation: patterns that appear more in correct traces
+        def impact_score(cat_tuple):
+            cat, count, examples = cat_tuple
+            if count < 2:
+                return -1  # too few to judge
+            n_correct = sum(1 for e in examples if e.get('correct'))
+            success_rate = n_correct / count
+            # Score = success_rate * log(count) — balance impact with frequency
+            import math
+            return success_rate * math.log(count + 1)
+        result.sort(key=impact_score, reverse=True)
+
     return result
