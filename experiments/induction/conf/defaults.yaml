@@ -3,6 +3,7 @@ n_iters: 5
 max_steps: 14
 min_count: 3
 batch_size: 1
+max_ptools: 10
 source: actions
 
 data:

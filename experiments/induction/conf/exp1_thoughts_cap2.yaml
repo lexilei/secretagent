@@ -1,0 +1,9 @@
+# Experiment 1: thoughts + max 2 ptools + 3 iters
+source: thoughts
+n_iters: 3
+max_ptools: 2
+synthesis:
+  structured_output: true
+similarity:
+  mode: docstring,functional
+output_dir: results/exp1_thoughts_cap2

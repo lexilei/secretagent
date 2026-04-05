@@ -155,6 +155,14 @@ def run(config_file: Path = typer.Argument(..., help='YAML config file')):
             print('  No new orthogonal ptools found. Converged!')
             break
 
+        # Cap total ptools
+        max_ptools = cfg.get('max_ptools', 10)
+        remaining_slots = max_ptools - len(ptools)
+        if remaining_slots <= 0:
+            print(f'  Max ptools ({max_ptools}) reached. Stopping induction.')
+            break
+        new_ptools = new_ptools[:remaining_slots]
+
         for p in new_ptools:
             save_ptool(p, ptools_dir)
             ptools.append(p)
