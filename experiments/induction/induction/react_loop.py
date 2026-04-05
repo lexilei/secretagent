@@ -1,7 +1,10 @@
 """ReAct execution engine with configurable parsing."""
 
+import hashlib
+import json
 import re
 import time
+from pathlib import Path
 
 from litellm import completion, completion_cost
 from secretagent import config
@@ -10,6 +13,10 @@ from secretagent.llm_util import llm as llm_cached
 from .ptool_registry import find_induced_ptool
 from .parsing import parse_action, extract_answer_index
 from .io import format_ptool_actions_for_prompt
+
+# Persistent completion cache (shared across experiments)
+_COMPLETION_CACHE_DIR = Path(__file__).parent.parent / 'completion_cache'
+_COMPLETION_MEM_CACHE: dict[str, tuple[str, dict]] = {}
 
 
 FEW_SHOT = """\
@@ -34,6 +41,18 @@ Action 3: Finish[1]
 
 
 def _llm_with_stop(prompt: str, model: str, stop: list[str]) -> tuple[str, dict]:
+    # Check persistent cache (temperature=0, deterministic)
+    cache_key = hashlib.sha256(
+        f"{prompt}|||{model}|||{stop}".encode()).hexdigest()
+    if cache_key in _COMPLETION_MEM_CACHE:
+        return _COMPLETION_MEM_CACHE[cache_key]
+    cache_file = _COMPLETION_CACHE_DIR / f"{cache_key}.json"
+    if cache_file.exists():
+        cached = json.loads(cache_file.read_text())
+        result = (cached[0], cached[1])
+        _COMPLETION_MEM_CACHE[cache_key] = result
+        return result
+
     messages = [dict(role='user', content=prompt)]
     timeout = config.get('llm.timeout', 300)
     start_time = time.time()
@@ -47,11 +66,18 @@ def _llm_with_stop(prompt: str, model: str, stop: list[str]) -> tuple[str, dict]
         cost = completion_cost(completion_response=response)
     except Exception:
         cost = 0.0
-    return text, dict(
+    stats = dict(
         input_tokens=response.usage.prompt_tokens,
         output_tokens=response.usage.completion_tokens,
         latency=latency, cost=cost,
     )
+
+    # Persist to cache
+    _COMPLETION_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    cache_file.write_text(json.dumps([text, stats]))
+    _COMPLETION_MEM_CACHE[cache_key] = (text, stats)
+
+    return text, stats
 
 
 def _execute_do_action(action_arg: str, narrative: str, model: str) -> tuple[str, dict]:

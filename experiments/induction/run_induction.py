@@ -55,6 +55,10 @@ def run(config_file: Path = typer.Argument(..., help='YAML config file')):
 
     ptools: list[dict] = []
     iteration_stats = []
+    ptool_snapshots: list[list[dict]] = []  # ptools at each iteration
+    best_train_acc = 0.0
+    best_train_iter = 0
+    no_improve_count = 0
 
     print(f'Iterative Ptool Induction')
     print(f'  Config: {config_file}')
@@ -105,6 +109,20 @@ def run(config_file: Path = typer.Argument(..., help='YAML config file')):
         print(f'  [TRAIN] Accuracy: {n_correct}/{len(traces)} ({accuracy:.1%})')
         print(f'  [TRAIN] Steps: {avg_steps:.1f}  |  Cost: ${avg_cost:.4f}  |  Ptool: {ptool_uses}  |  Do: {do_uses}  |  -1: {neg1}  |  Extr: {extracted}')
 
+        # Track best iteration
+        ptool_snapshots.append(list(ptools))
+        if accuracy > best_train_acc:
+            best_train_acc = accuracy
+            best_train_iter = iteration
+            no_improve_count = 0
+        else:
+            no_improve_count += 1
+
+        # Early stopping: 2 consecutive iterations without improvement
+        if no_improve_count >= 2 and iteration > 0:
+            print(f'  Early stopping: no improvement for {no_improve_count} iterations')
+            break
+
         # Analyze patterns from train traces
         print(f'\n  [INDUCE] Analyzing {cfg.source}...')
         items = extract_items(traces, cfg.source)
@@ -144,13 +162,14 @@ def run(config_file: Path = typer.Argument(..., help='YAML config file')):
         with open(iter_path / 'meta.json', 'w') as f:
             json.dump(meta, f, indent=2, default=str)
 
-    # === Validation (after convergence) ===
+    # === Validation: use ptools from best training iteration ===
     if val_cases:
+        val_ptools = ptool_snapshots[best_train_iter] if ptool_snapshots else []
         print(f'\n{"="*60}')
-        print(f'VALIDATION ({len(val_cases)} cases, {len(ptools)} ptools)')
+        print(f'VALIDATION ({len(val_cases)} cases, {len(val_ptools)} ptools from best iter {best_train_iter}, train={best_train_acc:.1%})')
         print(f'{"="*60}')
         val_traces = run_all_cases(
-            val_cases, ptools, cfg.model, cfg.max_steps,
+            val_cases, val_ptools, cfg.model, cfg.max_steps,
             parsing_mode=cfg.parsing.mode,
         )
 
@@ -200,16 +219,23 @@ def run(config_file: Path = typer.Argument(..., help='YAML config file')):
               f'{s["ptool_uses"]:>4} {s["do_uses"]:>4} '
               f'{s["avg_steps"]:>4.1f} ${s["avg_cost"]:.3f}')
 
-    if val_cases:
-        print(f'\nVal: {val_correct}/{len(val_traces)}={val_acc:.1%}')
+    print(f'\nBest train iter: {best_train_iter} ({best_train_acc:.1%}, {len(ptool_snapshots[best_train_iter]) if ptool_snapshots else 0} ptools)')
 
-    print(f'\nPtools:')
-    for p in ptools:
+    if val_cases:
+        print(f'val_acc: {val_acc:.1%}')
+        print(f'Val: {val_correct}/{len(val_traces)}={val_acc:.1%}')
+
+    print(f'\nPtools (best iter {best_train_iter}):')
+    best_pt = ptool_snapshots[best_train_iter] if ptool_snapshots else []
+    for p in best_pt:
         print(f'  {p["id"]}: {p["func_name"]}(narrative, focus) — {p["short_desc"]}')
 
     summary = {
         'iteration_stats': iteration_stats,
         'ptools': ptools,
+        'best_train_iter': best_train_iter,
+        'best_train_acc': best_train_acc,
+        'best_ptools': ptool_snapshots[best_train_iter] if ptool_snapshots else [],
         'config': OmegaConf.to_container(cfg, resolve=True),
     }
     if val_cases:
