@@ -10,7 +10,8 @@ from .similarity import compute_similarity
 
 def synthesize_ptool(pattern_name: str, examples: list[dict],
                      model: str, ptool_id: str,
-                     structured_output: bool = False) -> dict:
+                     structured_output: bool = False,
+                     benchmark: str = 'murder') -> dict:
     """Synthesize a real @interface ptool from a pattern and examples."""
     examples_text = ''
     for ex in examples[:5]:
@@ -27,7 +28,14 @@ The output format MUST be different from other tools. Include the output format 
     else:
         output_instruction = ""
 
-    prompt = f"""You are designing a reusable reasoning tool (Python function) for solving murder mystery puzzles.
+    _task_desc = {
+        'murder': 'solving murder mystery puzzles',
+        'object': 'tracking object placements in narratives',
+        'team': 'solving team allocation problems',
+        'true_detective': 'solving mystery reasoning puzzles',
+    }
+    task = _task_desc.get(benchmark, 'solving reasoning puzzles')
+    prompt = f"""You are designing a reusable reasoning tool (Python function) for {task}.
 
 The tool captures this frequently used reasoning action: "{pattern_name}"
 
@@ -104,7 +112,8 @@ def select_and_synthesize(categories: list[tuple[str, int, list]],
                           sim_mode: str,
                           min_count: int,
                           next_id: int,
-                          structured_output: bool) -> list[dict]:
+                          structured_output: bool,
+                          benchmark: str = 'murder') -> list[dict]:
     """Select top patterns, synthesize ptools, filter by similarity."""
     new_ptools = []
     all_ptools = list(existing_ptools)
@@ -122,7 +131,8 @@ def select_and_synthesize(categories: list[tuple[str, int, list]],
 
         ptool_id = f'ptool_{next_id + len(new_ptools):03d}'
         candidate = synthesize_ptool(cat, examples, model, ptool_id,
-                                      structured_output=structured_output)
+                                      structured_output=structured_output,
+                                      benchmark=benchmark)
 
         sim, detail = compute_similarity(candidate, all_ptools, sim_mode)
         detail_str = ', '.join(f'{k}={v:.2f}' for k, v in detail.items())

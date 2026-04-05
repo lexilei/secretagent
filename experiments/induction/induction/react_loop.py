@@ -19,7 +19,7 @@ _COMPLETION_CACHE_DIR = Path(__file__).parent.parent / 'completion_cache'
 _COMPLETION_MEM_CACHE: dict[str, tuple[str, dict]] = {}
 
 
-FEW_SHOT = """\
+FEW_SHOT_MURDER = """\
 Question: In a small town, a baker named Tom was found dead in his shop. \
 The suspects are: Alice (his business partner), Bob (a disgruntled employee), \
 and Carol (his ex-wife). Alice claims she was at home all evening. Bob says he \
@@ -38,6 +38,47 @@ Thought 3: Bob's alibi is contradicted by a witness. He had access to shop knive
 Action 3: Finish[1]
 
 """
+
+# Generic few-shot that works for any narrative reasoning task
+FEW_SHOT_GENERIC = """\
+Question: A company has three departments. The memo says Department A handles all client requests. \
+Department B processes internal reports. Department C manages both external partnerships and budget review. \
+A new project requires external partnership management. \
+The choices are: (0) Department A, (1) Department B, (2) Department C.
+Thought 1: I need to identify which department handles external partnerships.
+Action 1: Do[identify what each department is responsible for, focusing on external partnerships]
+Observation 1: Department A handles client requests. Department B processes internal reports. Department C manages external partnerships and budget review.
+Thought 2: Department C manages external partnerships. The project requires external partnership management. Department C is the answer.
+Action 2: Finish[2]
+
+"""
+
+# Map benchmark to task description and few-shot
+_BENCHMARK_CONFIG = {
+    'murder': {
+        'task': 'Solve a murder mystery question',
+        'few_shot': FEW_SHOT_MURDER,
+        'env_role': 'a careful reader assisting a detective',
+    },
+    'object': {
+        'task': 'Solve an object placement reasoning question',
+        'few_shot': FEW_SHOT_GENERIC,
+        'env_role': 'a careful reader tracking object locations',
+    },
+    'team': {
+        'task': 'Solve a team allocation reasoning question',
+        'few_shot': FEW_SHOT_GENERIC,
+        'env_role': 'a careful reader analyzing team assignments',
+    },
+    'true_detective': {
+        'task': 'Solve a mystery reasoning question',
+        'few_shot': FEW_SHOT_MURDER,
+        'env_role': 'a careful reader assisting a detective',
+    },
+}
+
+# Default for backward compat
+FEW_SHOT = FEW_SHOT_MURDER
 
 
 def _llm_with_stop(prompt: str, model: str, stop: list[str]) -> tuple[str, dict]:
@@ -80,9 +121,11 @@ def _llm_with_stop(prompt: str, model: str, stop: list[str]) -> tuple[str, dict]
     return text, stats
 
 
-def _execute_do_action(action_arg: str, narrative: str, model: str) -> tuple[str, dict]:
+def _execute_do_action(action_arg: str, narrative: str, model: str,
+                       benchmark: str = 'murder') -> tuple[str, dict]:
+    bcfg = _BENCHMARK_CONFIG.get(benchmark, _BENCHMARK_CONFIG['murder'])
     env_prompt = (
-        f"You are a careful reader assisting a detective. Read the narrative below "
+        f"You are {bcfg['env_role']}. Read the narrative below "
         f"and respond to this request:\n\n"
         f"Request: {action_arg}\n\n"
         f"Narrative:\n{narrative}\n\n"
@@ -105,9 +148,11 @@ def _execute_ptool(iface, narrative: str, focus: str) -> tuple[str, dict]:
     return text, {'latency': latency}
 
 
-def _make_system_prompt(ptools: list[dict], parsing_mode: str) -> str:
+def _make_system_prompt(ptools: list[dict], parsing_mode: str,
+                        benchmark: str = 'murder') -> str:
+    bcfg = _BENCHMARK_CONFIG.get(benchmark, _BENCHMARK_CONFIG['murder'])
     base = (
-        "Solve a murder mystery question with interleaving Thought, Action, Observation steps. "
+        f"{bcfg['task']} with interleaving Thought, Action, Observation steps. "
         "Thought can reason about the current situation. Action can be:\n"
         "(1) Do[description], which performs any reasoning step you describe — "
         "the system will read the narrative and return the relevant information. "
@@ -137,11 +182,13 @@ def _make_system_prompt(ptools: list[dict], parsing_mode: str) -> str:
 def run_react_on_case(narrative: str, question: str, choices: list,
                       ptools: list[dict], model: str,
                       max_steps: int = 14,
-                      parsing_mode: str = 'llm_extract') -> dict:
-    system = _make_system_prompt(ptools, parsing_mode)
+                      parsing_mode: str = 'llm_extract',
+                      benchmark: str = 'murder') -> dict:
+    system = _make_system_prompt(ptools, parsing_mode, benchmark=benchmark)
+    bcfg = _BENCHMARK_CONFIG.get(benchmark, _BENCHMARK_CONFIG['murder'])
     choices_str = ', '.join(f'({i}) {c}' for i, c in enumerate(choices))
     prompt = (
-        system + FEW_SHOT
+        system + bcfg['few_shot']
         + f'Question: {narrative}\n{question}\nThe choices are: {choices_str}.\n'
     )
     steps = []
@@ -214,7 +261,7 @@ def run_react_on_case(narrative: str, question: str, choices: list,
                 observation=observation, ptool_used=ptool_id or ptool_iface.name,
             ))
         elif action_name_lower == 'do' and action_arg:
-            observation, env_stats = _execute_do_action(action_arg, narrative, model)
+            observation, env_stats = _execute_do_action(action_arg, narrative, model, benchmark=benchmark)
             accum(env_stats)
             steps.append(dict(
                 step=i, thought=thought, action=action_str,
@@ -222,7 +269,7 @@ def run_react_on_case(narrative: str, question: str, choices: list,
                 observation=observation, ptool_used=None,
             ))
         elif action_str:
-            observation, env_stats = _execute_do_action(action_str, narrative, model)
+            observation, env_stats = _execute_do_action(action_str, narrative, model, benchmark=benchmark)
             accum(env_stats)
             steps.append(dict(
                 step=i, thought=thought, action=action_str,
@@ -257,7 +304,8 @@ def run_react_on_case(narrative: str, question: str, choices: list,
 
 def run_all_cases(cases: list[dict], ptools: list[dict],
                   model: str, max_steps: int,
-                  parsing_mode: str = 'llm_extract') -> list[dict]:
+                  parsing_mode: str = 'llm_extract',
+                  benchmark: str = 'murder') -> list[dict]:
     """Run ReAct on all cases with retry + delay."""
     results = []
     max_retries = 3
@@ -269,7 +317,7 @@ def run_all_cases(cases: list[dict], ptools: list[dict],
                 result = run_react_on_case(
                     case['narrative'], case['question'], case['choices'],
                     ptools, model, max_steps=max_steps,
-                    parsing_mode=parsing_mode)
+                    parsing_mode=parsing_mode, benchmark=benchmark)
                 break
             except Exception as ex:
                 if attempt < max_retries - 1:

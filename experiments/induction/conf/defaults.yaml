@@ -7,6 +7,7 @@ source: actions
 
 data:
   mode: split
+  benchmark: murder
 
 similarity:
   mode: combined    # docstring, functional, name, combined, or comma-separated

@@ -52,6 +52,7 @@ def run(config_file: Path = typer.Argument(..., help='YAML config file')):
     data = load_cases(OmegaConf.to_container(cfg, resolve=True))
     train_cases = data['train']
     val_cases = data.get('val')
+    benchmark = cfg.get('data', {}).get('benchmark', 'murder')
 
     ptools: list[dict] = []
     iteration_stats = []
@@ -81,6 +82,7 @@ def run(config_file: Path = typer.Argument(..., help='YAML config file')):
         traces = run_all_cases(
             train_cases, ptools, cfg.model, cfg.max_steps,
             parsing_mode=cfg.parsing.mode,
+            benchmark=benchmark,
         )
 
         with open(iter_path / 'train_traces.json', 'w') as f:
@@ -109,17 +111,18 @@ def run(config_file: Path = typer.Argument(..., help='YAML config file')):
         print(f'  [TRAIN] Accuracy: {n_correct}/{len(traces)} ({accuracy:.1%})')
         print(f'  [TRAIN] Steps: {avg_steps:.1f}  |  Cost: ${avg_cost:.4f}  |  Ptool: {ptool_uses}  |  Do: {do_uses}  |  -1: {neg1}  |  Extr: {extracted}')
 
-        # Track best iteration
+        # Track best iteration (must beat baseline iter 0 to count)
         ptool_snapshots.append(list(ptools))
-        if accuracy > best_train_acc:
+        if accuracy >= best_train_acc:
             best_train_acc = accuracy
             best_train_iter = iteration
             no_improve_count = 0
         else:
             no_improve_count += 1
 
-        # Early stopping: 2 consecutive iterations without improvement
-        if no_improve_count >= 2 and iteration > 0:
+        # Early stopping: stop if accuracy drops below baseline for 2 straight
+        # Only start checking after iter 1 (need at least one ptool to evaluate)
+        if no_improve_count >= 2 and iteration >= 2:
             print(f'  Early stopping: no improvement for {no_improve_count} iterations')
             break
 
@@ -145,6 +148,7 @@ def run(config_file: Path = typer.Argument(..., help='YAML config file')):
             min_count=cfg.min_count,
             next_id=len(ptools) + 1,
             structured_output=cfg.synthesis.structured_output,
+            benchmark=benchmark,
         )
 
         if not new_ptools:
@@ -171,6 +175,7 @@ def run(config_file: Path = typer.Argument(..., help='YAML config file')):
         val_traces = run_all_cases(
             val_cases, val_ptools, cfg.model, cfg.max_steps,
             parsing_mode=cfg.parsing.mode,
+            benchmark=benchmark,
         )
 
         val_path = out_dir / 'val'
@@ -198,6 +203,7 @@ def run(config_file: Path = typer.Argument(..., help='YAML config file')):
         test_traces = run_all_cases(
             test_cases, ptools, cfg.model, cfg.max_steps,
             parsing_mode=cfg.parsing.mode,
+            benchmark=benchmark,
         )
         test_path = out_dir / 'test'
         test_path.mkdir(parents=True, exist_ok=True)
