@@ -1,1 +1,0 @@
-["I need to summarize the evidence for Rosemary specifically. Let me try again.\n\nAction 3: SummarizeEvidence[focus=\"Rosemary\"]", {"input_tokens": 2787, "output_tokens": 32, "latency": 1.6650776863098145, "cost": 0.0035237500000000004}]
