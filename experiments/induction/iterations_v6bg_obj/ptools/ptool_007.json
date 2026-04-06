@@ -1,0 +1,15 @@
+{
+  "id": "ptool_007",
+  "func_name": "trace_object_movements",
+  "display_name": "TraceObjectMovements",
+  "short_desc": "Trace the chronological movement history of a specific object including witnesses and locations.",
+  "doc": "Traces the complete movement history of a specific object throughout the narrative, capturing each transfer event chronologically.\n\nExtracts:\n- Initial location of the object (from explicit statements)\n- All movement events involving the object\n- Actor performing each movement\n- Source and destination locations\n- Characters present and absent during each movement\n\nParameters:\n    narrative (str): The full narrative text describing characters, object movements, and presence/absence\n    focus (str): The specific object to trace movements for (e.g., \"helmets\", \"necklace\")\n\nReturns:\n    str: A formatted string showing chronological movement history with witnesses\n    \n    Format:\n    Initial location: [location] ([evidence statement])\n    Movement [number]: [actor] moves [object] from [source] to [destination] ([evidence text])\n      Present: [comma-separated list of present characters]\n      Absent: [comma-separated list of absent characters]\n    \n    Example output:\n    Initial location: storage closet (\"The helmets were in the storage closet\")\n    Movement 1: Lisa moves helmets from storage closet to bench (\"Lisa moves the helmets\")\n      Present: Anna, Ben\n      Absent: Cora",
+  "source_pattern": "Trace Object Movement",
+  "examples": [
+    "TraceObjectMovements[helmets]\nObservation 1: \nInitial location: storage closet (as stated: \"The helmets were in the storage closet\")\nMovement 1: Lisa moves helmets from storage closet to bench (\"Lisa ",
+    "TraceObjectMovements[helmets]\nObservation 1: \nInitial location: storage closet (\"The helmets were in the storage closet\")\nMovement 1: Lisa moves helmets from storage closet to bench (\"Lisa moves the h",
+    "TraceObjectMovements[helmets]\nObservation 1: \nInitial location: storage closet (\"The helmets were in the storage closet\")\nMovement 1: Lisa moves helmets from storage closet to bench (\"Lisa moves the h",
+    "TraceObjectMovements[helmets]\nObservation 1: \nInitial location: storage closet (\"The helmets were in the storage closet\")\nMovement 1: Lisa moves helmets from storage closet to bench (\"Lisa moves the h",
+    "TraceObjectMovements[helmets]\nObservation 1: \nInitial location: storage closet (\"The helmets were in the storage closet\")\nMovement 1: Lisa moves helmets from storage closet to bench (\"Lisa moves the h"
+  ]
+}

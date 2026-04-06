@@ -1,0 +1,14 @@
+{
+  "id": "ptool_003",
+  "func_name": "verify_witness_presence",
+  "display_name": "VerifyWitnessPresence",
+  "short_desc": "Checks if specific characters were present during object movements and extracts detailed witness information.",
+  "doc": "Analyzes a narrative to determine which characters witnessed specific object movements and what they observed.\n\nExtracts all object movement events from the narrative, identifies who was present/absent for each movement,\nand provides detailed witness information including what each character saw and when.\n\nArgs:\n    narrative (str): The full narrative text describing characters, objects, movements, and presence/absence.\n    focus (str): Specific aspect to focus on (e.g., 'Fred witnessing bow movements', 'vase movement witnesses').\n\nReturns:\n    dict: A structured dictionary containing:\n        - 'movements': List of movement events with details\n        - 'witness_analysis': Per-character breakdown of what they witnessed\n        - 'focus_verification': Specific analysis related to the focus parameter\n\n    Example output format:\n    {\n        \"movements\": [\n            {\n                \"object\": \"vase\",\n                \"from_location\": \"counter\",\n                \"to_location\": \"display_window\",\n                \"actor\": \"Clara\",\n                \"time\": \"afternoon\",\n                \"present\": [\"Clara\", \"Ben\"],\n                \"absent\": [\"Anna\"],\n                \"description\": \"Clara moved the vase from counter to display window\"\n            }\n        ],\n        \"witness_analysis\": {\n            \"Clara\": {\n                \"witnessed_movements\": [\"vase moved from counter to display window\"],\n                \"knowledge_level\": \"full\"\n            },\n            \"Ben\": {\n                \"witnessed_movements\": [\"vase moved from counter to display window\"],\n                \"knowledge_level\": \"partial\"\n            },\n            \"Anna\": {\n                \"witnessed_movements\": [],\n                \"knowledge_level\": \"none\"\n            }\n        },\n        \"focus_verification\": {\n            \"focus\": \"Clara witnessing vase movement\",\n            \"result\": \"confirmed\",\n            \"evidence\": \"Narrative states Clara moved the vase and was present during the movement\"\n        }\n    }",
+  "source_pattern": "Verify Witness Presence",
+  "examples": [
+    "Confirm Lisa's presence during the mat movements",
+    "Review the narrative for any direct mention of Fred observing the bow or its movements",
+    "Confirm Clara's presence during the vase movement to the display window.",
+    "Check if Mary ever saw the album on the record player or if she witnessed its movement."
+  ]
+}

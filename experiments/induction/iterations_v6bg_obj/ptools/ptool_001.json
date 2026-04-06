@@ -1,0 +1,15 @@
+{
+  "id": "ptool_001",
+  "func_name": "trace_object_movements",
+  "display_name": "TraceObjectMovements",
+  "short_desc": "Extract chronological history of object movements with witnesses and non-witnesses for each event.",
+  "doc": "Extracts all movements of a specific object from the narrative and identifies who was present/absent for each movement.\n\nParameters:\n    narrative (str): The full narrative text describing characters, object movements, and presence/absence\n    focus (str): The specific object to trace movements for (e.g., 'helmet', 'coin', 'laptop')\n\nReturns:\n    list: A chronological list of dictionaries representing each movement event, with keys:\n        - step: Integer sequence number (1-indexed)\n        - actor: Who performed the movement\n        - object: The object moved (should match focus parameter)\n        - from_location: Starting location\n        - to_location: Destination location\n        - present: List of characters who witnessed this movement\n        - absent: List of characters who did not witness this movement\n        - description: Text description of the movement event\n\nExample output:\n    [\n        {\n            \"step\": 1,\n            \"actor\": \"Ben\",\n            \"object\": \"helmet\",\n            \"from_location\": \"pantry\",\n            \"to_location\": \"counter\",\n            \"present\": [\"Anna\", \"Ben\"],\n            \"absent\": [\"Cora\"],\n            \"description\": \"Ben moved the helmet from pantry to counter\"\n        },\n        {\n            \"step\": 2,\n            \"actor\": \"Anna\",\n            \"object\": \"helmet\",\n            \"from_location\": \"counter\",\n            \"to_location\": \"cabinet\",\n            \"present\": [\"Anna\", \"Cora\"],\n            \"absent\": [\"Ben\"],\n            \"description\": \"Anna moved the helmet from counter to cabinet\"\n        }\n    ]\n\nNote: Focuses exclusively on movement events (not placements, discoveries, or other actions).\nIdentifies witnesses based on explicit presence/absence information in the narrative.",
+  "source_pattern": "Trace Object Movement History",
+  "examples": [
+    "Find all movements of the helmets and who was present for each movement",
+    "Identify all movements of the ancient coin and who was present for each movement.",
+    "Confirm if the coin is moved after being placed in the inspection area.",
+    "Identify all movements of the laptop and who witnessed them, especially Steve's perspective.",
+    "Identify all movements of the iPhone and who was present or absent for each movement."
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "iteration": 2,
+  "n_ptools": 6,
+  "accuracy": 0.68,
+  "n_correct": 51,
+  "n_total": 75,
+  "avg_cost": 0.02768151666666666,
+  "avg_latency": 42.03644717852274,
+  "ptool_uses": 208,
+  "do_uses": 166,
+  "max_step_hits": 7,
+  "neg1_answers": 8,
+  "extracted_finishes": 39,
+  "new_ptools": [
+    {
+      "id": "ptool_007",
+      "func_name": "trace_object_movements",
+      "display_name": "TraceObjectMovements",
+      "short_desc": "Trace the chronological movement history of a specific object including witnesses and locations.",
+      "doc": "Traces the complete movement history of a specific object throughout the narrative, capturing each transfer event chronologically.\n\nExtracts:\n- Initial location of the object (from explicit statements)\n- All movement events involving the object\n- Actor performing each movement\n- Source and destination locations\n- Characters present and absent during each movement\n\nParameters:\n    narrative (str): The full narrative text describing characters, object movements, and presence/absence\n    focus (str): The specific object to trace movements for (e.g., \"helmets\", \"necklace\")\n\nReturns:\n    str: A formatted string showing chronological movement history with witnesses\n    \n    Format:\n    Initial location: [location] ([evidence statement])\n    Movement [number]: [actor] moves [object] from [source] to [destination] ([evidence text])\n      Present: [comma-separated list of present characters]\n      Absent: [comma-separated list of absent characters]\n    \n    Example output:\n    Initial location: storage closet (\"The helmets were in the storage closet\")\n    Movement 1: Lisa moves helmets from storage closet to bench (\"Lisa moves the helmets\")\n      Present: Anna, Ben\n      Absent: Cora",
+      "source_pattern": "Trace Object Movement",
+      "examples": [
+        "TraceObjectMovements[helmets]\nObservation 1: \nInitial location: storage closet (as stated: \"The helmets were in the storage closet\")\nMovement 1: Lisa moves helmets from storage closet to bench (\"Lisa ",
+        "TraceObjectMovements[helmets]\nObservation 1: \nInitial location: storage closet (\"The helmets were in the storage closet\")\nMovement 1: Lisa moves helmets from storage closet to bench (\"Lisa moves the h",
+        "TraceObjectMovements[helmets]\nObservation 1: \nInitial location: storage closet (\"The helmets were in the storage closet\")\nMovement 1: Lisa moves helmets from storage closet to bench (\"Lisa moves the h",
+        "TraceObjectMovements[helmets]\nObservation 1: \nInitial location: storage closet (\"The helmets were in the storage closet\")\nMovement 1: Lisa moves helmets from storage closet to bench (\"Lisa moves the h",
+        "TraceObjectMovements[helmets]\nObservation 1: \nInitial location: storage closet (\"The helmets were in the storage closet\")\nMovement 1: Lisa moves helmets from storage closet to bench (\"Lisa moves the h"
+      ]
+    },
+    {
+      "id": "ptool_008",
+      "func_name": "finalize_solution",
+      "display_name": "FinalizeSolution",
+      "short_desc": "Identifies the final location of a specific object based on the complete movement history.",
+      "doc": "Determines the final location of a target object by analyzing the complete chronological history of movements in the narrative. This tool focuses solely on the object's true physical location, ignoring character beliefs or presence/absence. It traces the object's path through all movement events to identify where it was last placed.\n\nArgs:\n    narrative (str): The full narrative text describing characters, object movements, and presence/absence.\n    focus (str): The specific object whose final location is to be determined (e.g., 'violin', 'bow').\n\nReturns:\n    str: The final location of the object. Format: \"{object_name} is in {final_location}\".\n    \n    Example output: \"violin is in music stand\"\n    \n    If the object was never moved or its final location cannot be determined from the narrative, returns \"{object_name} location unknown\".",
+      "source_pattern": "Finalize Solution",
+      "examples": [
+        "Finish[2] (warming oven)",
+        "Finish[2] (study desk)",
+        "Finish[2] (top shelf)",
+        "Finish[4] (since \"violin\" is choice index 4)\n\nThe choices are: (0) class drawer, (1) instrument case, (2) music stand, (3) piano bench, (4) violin. Evelyn last saw the bow being moved to the violin, s",
+        "Finish[1] (green room)"
+      ]
+    },
+    {
+      "id": "ptool_009",
+      "func_name": "verify_presence_awareness",
+      "display_name": "VerifyPresenceAwareness",
+      "short_desc": "Analyzes character presence and awareness during specific object movements or events.",
+      "doc": "Verifies which characters were present or absent during specific object movements or events, and determines what each character could have witnessed.\n\nThis function extracts information about character presence/absence during object movements\nand determines what each character would be aware of based on what they witnessed directly.\n\nArgs:\n    narrative (str): The full narrative text describing characters, objects, movements,\n                    and who was present/absent for each event.\n    focus (str): The specific focus of inquiry - can be:\n                - A character name (e.g., \"Rachel\") - checks their presence/awareness\n                - An object (e.g., \"chips\") - checks who witnessed its movements\n                - A specific movement (e.g., \"moving the chips to dining table\")\n\nReturns:\n    dict: A structured presence matrix with the following format:\n    {\n        \"focus\": \"[the original focus parameter]\",\n        \"movements\": [\n            {\n                \"step\": 1,\n                \"object\": \"chips\",\n                \"from\": \"counter\",\n                \"to\": \"dining table\",\n                \"actor\": \"Sam\",\n                \"present\": [\"Rachel\", \"Sam\"],\n                \"absent\": [\"Amy\"],\n                \"witnessed_by\": [\"Rachel\", \"Sam\"]\n            },\n            # ... additional movements\n        ],\n        \"character_awareness\": {\n            \"Rachel\": {\n                \"witnessed_movements\": [1],  # step numbers\n                \"aware_of_objects\": [\"chips\"],\n                \"last_known_locations\": {\"chips\": \"dining table\"}\n            },\n            \"Amy\": {\n                \"witnessed_movements\": [],\n                \"aware_of_objects\": [],\n                \"last_known_locations\": {}\n            }\n        }\n    }\n\nExample output for focus=\"chips\":\n    {\n        \"focus\": \"chips\",\n        \"movements\": [\n            {\n                \"step\": 1,\n                \"object\": \"chips\",\n                \"from\": \"counter\",\n                \"to\": \"dining table\",\n                \"actor\": \"Sam\",\n                \"present\": [\"Rachel\", \"Sam\"],\n                \"absent\": [\"Amy\"],\n                \"witnessed_by\": [\"Rachel\", \"Sam\"]\n            }\n        ],\n        \"character_awareness\": {\n            \"Rachel\": {\n                \"witnessed_movements\": [1],\n                \"aware_of_objects\": [\"chips\"],\n                \"last_known_locations\": {\"chips\": \"dining table\"}\n            },\n            \"Amy\": {\n                \"witnessed_movements\": [],\n                \"aware_of_objects\": [],\n                \"last_known_locations\": {}\n            },\n            \"Sam\": {\n                \"witnessed_movements\": [1],\n                \"aware_of_objects\": [\"chips\"],\n                \"last_known_locations\": {\"chips\": \"dining table\"}\n            }\n        }\n    }",
+      "source_pattern": "Verify Presence/Awareness",
+      "examples": [
+        "Check if Rachel was present and witnessed Sam moving the chips to the dining table",
+        "VerifyWitnessPresence[Amy] for each movement of the laptop.",
+        "Do[Check if Alan was in the apartment and witnessed the album movement]\nObservation",
+        "VerifyPresenceDuringAction[oxygen tank movements]\nObservation",
+        "Check what Brian was doing when Mabel moved the painting to the main gallery"
+      ]
+    }
+  ]
+}

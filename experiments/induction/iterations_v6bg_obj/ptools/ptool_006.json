@@ -1,0 +1,14 @@
+{
+  "id": "ptool_006",
+  "func_name": "extract_movements_and_presence",
+  "display_name": "ExtractMovementsAndPresence",
+  "short_desc": "Extract all movements of a specified object and who was present/absent for each movement.",
+  "doc": "Extracts all movements of a specified object from the narrative and records who was present and absent for each movement event.\n\nArgs:\n    narrative (str): The full narrative text describing characters, object movements, and presence/absence.\n    focus (str): The specific object to focus on (e.g., 'rare press album', 'pen', 'chisel box').\n\nReturns:\n    list: A chronological list of dictionaries, each representing a movement event for the specified object. Each dictionary has the following structure:\n        {\n            \"step\": int,           # The chronological step number (starting at 1)\n            \"from\": str,           # The location the object was moved from\n            \"to\": str,             # The location the object was moved to\n            \"actor\": str,          # The character who performed the movement\n            \"present\": list[str],  # List of characters present during the movement\n            \"absent\": list[str]    # List of characters absent during the movement\n        }\n\n    Example:\n        [\n            {\n                \"step\": 1,\n                \"from\": \"pantry\",\n                \"to\": \"counter\",\n                \"actor\": \"Ben\",\n                \"present\": [\"Anna\", \"Ben\"],\n                \"absent\": [\"Cora\"]\n            },\n            {\n                \"step\": 2,\n                \"from\": \"counter\",\n                \"to\": \"drawer\",\n                \"actor\": \"Anna\",\n                \"present\": [\"Anna\", \"Cora\"],\n                \"absent\": [\"Ben\"]\n            }\n        ]\n\nNotes:\n    - Only extracts movements related to the specified focus object\n    - Maintains chronological order of events as they appear in the narrative\n    - Records all characters mentioned in the narrative (even if not involved in specific movement)\n    - Focuses on factual event information (who was present/absent) rather than character beliefs",
+  "source_pattern": "Extract Event Information",
+  "examples": [
+    "Extract all movements of the rare press album and who was present",
+    "Extract all movements of the pen and determine who was present for each movement",
+    "Extract all movements of the chisel box and who was present for each movement based on the narrative.",
+    "Read the narrative to find who was present when Louis moved the album"
+  ]
+}

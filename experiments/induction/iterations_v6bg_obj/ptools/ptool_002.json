@@ -1,0 +1,14 @@
+{
+  "id": "ptool_002",
+  "func_name": "verify_presence_during_action",
+  "display_name": "VerifyPresenceDuringAction",
+  "short_desc": "Identifies who was present/absent during specific object movements or actions in a narrative.",
+  "doc": "Parses a narrative to extract object movement events and identifies which characters were present or absent during each movement. Focuses on a specific aspect (character, object, or movement) as specified. Returns a chronological list of relevant movements with detailed witness information.\n\nArgs:\n    narrative (str): The full narrative text describing characters, object movements, and presence/absence.\n    focus (str): The specific aspect to focus on (e.g., 'Lisa', 'helmets', 'Ricky moves notebook').\n\nReturns:\n    list: A chronological list of dictionaries for each relevant movement event. Each dictionary contains:\n        - 'step': Event number (int)\n        - 'action': Description of the action (str)\n        - 'actor': Character performing the action (str)\n        - 'present': List of characters explicitly stated as present (list)\n        - 'absent': List of characters explicitly stated as absent (list)\n        - 'focus_involved': How the focus relates to this event (str)\n        - 'focus_present': Whether the focus character was present (bool or None for object/action focus)\n\nExample:\n    [\n        {\n            'step': 1,\n            'action': 'moved the helmets to the storage closet',\n            'actor': 'Ellie',\n            'present': ['Lisa', 'Ellie'],\n            'absent': ['Ricky'],\n            'focus_involved': 'Lisa is focus character',\n            'focus_present': True\n        }\n    ]",
+  "source_pattern": "Verify Presence During Action",
+  "examples": [
+    "Confirm that Lisa was present when Ellie moved the helmets back to the storage closet",
+    "Check who is present when Ricky moves the notebook to the piano",
+    "Confirm Alice's presence during the toolbox movement and any other relevant events.",
+    "Confirm whether Adam witnessed Teddy putting the map back in the backpack."
+  ]
+}

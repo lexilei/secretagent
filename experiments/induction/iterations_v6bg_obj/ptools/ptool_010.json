@@ -1,0 +1,15 @@
+{
+  "id": "ptool_010",
+  "func_name": "verify_presence_during_events",
+  "display_name": "VerifyPresenceDuringEvents",
+  "short_desc": "Checks which characters were present or absent during specific object movement events to determine awareness.",
+  "doc": "Analyzes a narrative to identify all object movement events and determine which characters were present or absent during each event. This is crucial for tracking character awareness of object locations based on what they witnessed.\n\nArgs:\n    narrative (str): The full narrative text describing characters, objects, movements, and presence/absence information.\n    focus (str): Specifies the target of the verification. This could be:\n                - A specific character (e.g., 'Lisa'): Returns all events where this character was present/absent\n                - A specific object (e.g., 'water bottle'): Returns all movement events for this object\n                - A specific movement (e.g., 'from pantry to counter'): Returns presence info for this specific event\n\nReturns:\n    A chronological list of movement events with detailed presence information. Each event is represented as a dictionary with:\n        - 'step': Integer representing the chronological order\n        - 'actor': Character who performed the movement\n        - 'object': Object being moved\n        - 'from': Starting location\n        - 'to': Destination location\n        - 'present': List of characters explicitly mentioned as present during this event\n        - 'absent': List of characters explicitly mentioned as absent during this event\n        - 'unknown': List of characters whose presence/absence is not specified\n\n    Example output:\n    [\n        {\n            'step': 1,\n            'actor': 'Ben',\n            'object': 'rare press album',\n            'from': 'living room',\n            'to': 'bedroom',\n            'present': ['Ben', 'Anna'],\n            'absent': ['Cora'],\n            'unknown': ['David']\n        },\n        {\n            'step': 2,\n            'actor': 'Anna',\n            'object': 'water bottle',\n            'from': 'counter',\n            'to': 'backpack',\n            'present': ['Anna'],\n            'absent': ['Ben', 'Cora'],\n            'unknown': ['David']\n        }\n    ]\n\nNote: Characters not explicitly mentioned as present or absent in the context of a specific event should be listed as 'unknown' rather than assumed absent.",
+  "source_pattern": "Verify Character Awareness",
+  "examples": [
+    "Check narrative for Lisa's awareness of water bottle movement",
+    "VerifyPresenceDuringAction[map]\nObservation",
+    "Check if Amy ever directly saw the laptop at a specific location",
+    "VerifyPresenceDuringAction[rare press album movements]\nObservation 2",
+    "VerifyPresenceDuringAction[food provisions movement to galley]\nObservation 2"
+  ]
+}

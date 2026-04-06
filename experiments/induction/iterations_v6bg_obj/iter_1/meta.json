@@ -1,0 +1,60 @@
+{
+  "iteration": 1,
+  "n_ptools": 3,
+  "accuracy": 0.6933333333333334,
+  "n_correct": 52,
+  "n_total": 75,
+  "avg_cost": 0.01564946666666667,
+  "avg_latency": 23.301450023651125,
+  "ptool_uses": 191,
+  "do_uses": 64,
+  "max_step_hits": 0,
+  "neg1_answers": 0,
+  "extracted_finishes": 49,
+  "new_ptools": [
+    {
+      "id": "ptool_004",
+      "func_name": "trace_object_history",
+      "display_name": "TraceObjectHistory",
+      "short_desc": "Trace all movements of a specific object and who witnessed each movement",
+      "doc": "Trace the complete movement history of a specific object throughout the narrative, including who was present or absent for each movement event.\n\nExtracts:\n- Initial location and awareness state\n- All subsequent movements with timestamps/sequence\n- Actor performing each movement\n- Characters present/witnessing each movement\n- Characters absent/missed each movement\n- Any discoveries or revelations about the object\n\nReturns:\n    str: A formatted chronological timeline showing object movements and witness information\n\nFormat:\nInitial location: [location] (known to: [witnesses])\n[Step/Time] [Actor] moved [object] from [from_location] to [to_location]\n  Witnessed by: [present_characters]\n  Not present: [absent_characters]\n[Additional movements...]\n[Discovery events...]\n\nExample output:\nInitial location: pantry (known to: Anna, Ben, Cora)\n[Step 1] Ben moved notebook from pantry to counter\n  Witnessed by: Anna, Ben\n  Not present: Cora\n[Step 2] Anna moved notebook from counter to drawer\n  Witnessed by: Anna, Cora\n  Not present: Ben\n[Discovery] Cora found notebook in drawer (Step 3)",
+      "source_pattern": "Trace Object History",
+      "examples": [
+        "Extract all movements of the ancient coin and who witnessed each movement",
+        "TraceObjectMovements[notebook]\nObservation",
+        "TraceObjectMovements[gradebook]\nObservation 1: Based on the narrative, the gradebook movements are:\n- Initially, the gradebook is on the teacher's desk (Madison's desk). All characters are aware of th",
+        "TraceObjectMovements[gradebook]\nObservation 1: Based on the narrative, the gradebook movements are:\n- Initially, the gradebook is on Madison's desk (the teacher's desk). All characters (Madison, Alex,",
+        "TraceObjectMovements[gradebook]\nObservation 1: The tool trace_object_movements(narrative, \"gradebook\") returns:\n- Initial location: Madison's desk (known to all).\n- Movement 1: Moved to storage cupboa"
+      ]
+    },
+    {
+      "id": "ptool_005",
+      "func_name": "verify_witness_presence",
+      "display_name": "VerifyWitnessPresence",
+      "short_desc": "Check if a specific character was present during a particular object movement event",
+      "doc": "Verifies whether a target character was present during a specific object movement event and returns detailed witness information.\n\nThis function analyzes the narrative to determine:\n- The specific movement event being referenced\n- Which characters were present/absent during that movement\n- Whether the target character witnessed the movement\n\nParameters:\n    narrative (str): The full text containing character movements, presence/absence information\n    focus (str): The specific focus query (e.g., \"Rita during taco shells movement\", \"Peter during bow movement\")\n\nReturns:\n    dict: A structured response containing:\n        - target_character: The character being checked\n        - movement_description: Description of the movement event\n        - was_present: Boolean indicating if target witnessed the movement\n        - all_present: List of all characters present during the movement\n        - all_absent: List of all characters absent during the movement\n        - evidence: The specific text from the narrative that supports the determination\n\nExample output:\n    {\n        \"target_character\": \"Rita\",\n        \"movement_description\": \"George moved taco shells to front counter\",\n        \"was_present\": true,\n        \"all_present\": [\"George\", \"Rita\", \"Anna\"],\n        \"all_absent\": [\"Ben\", \"Cora\"],\n        \"evidence\": \"When George moved the taco shells to the front counter, Rita, Anna and George were present\"\n    }",
+      "source_pattern": "Verify Witness Status",
+      "examples": [
+        "Check if Rita was present when George moved the taco shells to the front counter",
+        "VerifyWitnessPresence[lens movements]\nObservation",
+        "VerifyWitnessPresence[Laura during logbook movements]\nObservation",
+        "Confirm Peter's presence during the bow movement",
+        "Check if Lisa was present during Frank's movement of the yoga mat"
+      ]
+    },
+    {
+      "id": "ptool_006",
+      "func_name": "extract_movements_and_presence",
+      "display_name": "ExtractMovementsAndPresence",
+      "short_desc": "Extract all movements of a specified object and who was present/absent for each movement.",
+      "doc": "Extracts all movements of a specified object from the narrative and records who was present and absent for each movement event.\n\nArgs:\n    narrative (str): The full narrative text describing characters, object movements, and presence/absence.\n    focus (str): The specific object to focus on (e.g., 'rare press album', 'pen', 'chisel box').\n\nReturns:\n    list: A chronological list of dictionaries, each representing a movement event for the specified object. Each dictionary has the following structure:\n        {\n            \"step\": int,           # The chronological step number (starting at 1)\n            \"from\": str,           # The location the object was moved from\n            \"to\": str,             # The location the object was moved to\n            \"actor\": str,          # The character who performed the movement\n            \"present\": list[str],  # List of characters present during the movement\n            \"absent\": list[str]    # List of characters absent during the movement\n        }\n\n    Example:\n        [\n            {\n                \"step\": 1,\n                \"from\": \"pantry\",\n                \"to\": \"counter\",\n                \"actor\": \"Ben\",\n                \"present\": [\"Anna\", \"Ben\"],\n                \"absent\": [\"Cora\"]\n            },\n            {\n                \"step\": 2,\n                \"from\": \"counter\",\n                \"to\": \"drawer\",\n                \"actor\": \"Anna\",\n                \"present\": [\"Anna\", \"Cora\"],\n                \"absent\": [\"Ben\"]\n            }\n        ]\n\nNotes:\n    - Only extracts movements related to the specified focus object\n    - Maintains chronological order of events as they appear in the narrative\n    - Records all characters mentioned in the narrative (even if not involved in specific movement)\n    - Focuses on factual event information (who was present/absent) rather than character beliefs",
+      "source_pattern": "Extract Event Information",
+      "examples": [
+        "Extract all movements of the rare press album and who was present",
+        "Extract all movements of the pen and determine who was present for each movement",
+        "Extract all movements of the chisel box and who was present for each movement based on the narrative.",
+        "Read the narrative to find who was present when Louis moved the album"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "ptool_004",
+  "func_name": "trace_object_history",
+  "display_name": "TraceObjectHistory",
+  "short_desc": "Trace all movements of a specific object and who witnessed each movement",
+  "doc": "Trace the complete movement history of a specific object throughout the narrative, including who was present or absent for each movement event.\n\nExtracts:\n- Initial location and awareness state\n- All subsequent movements with timestamps/sequence\n- Actor performing each movement\n- Characters present/witnessing each movement\n- Characters absent/missed each movement\n- Any discoveries or revelations about the object\n\nReturns:\n    str: A formatted chronological timeline showing object movements and witness information\n\nFormat:\nInitial location: [location] (known to: [witnesses])\n[Step/Time] [Actor] moved [object] from [from_location] to [to_location]\n  Witnessed by: [present_characters]\n  Not present: [absent_characters]\n[Additional movements...]\n[Discovery events...]\n\nExample output:\nInitial location: pantry (known to: Anna, Ben, Cora)\n[Step 1] Ben moved notebook from pantry to counter\n  Witnessed by: Anna, Ben\n  Not present: Cora\n[Step 2] Anna moved notebook from counter to drawer\n  Witnessed by: Anna, Cora\n  Not present: Ben\n[Discovery] Cora found notebook in drawer (Step 3)",
+  "source_pattern": "Trace Object History",
+  "examples": [
+    "Extract all movements of the ancient coin and who witnessed each movement",
+    "TraceObjectMovements[notebook]\nObservation",
+    "TraceObjectMovements[gradebook]\nObservation 1: Based on the narrative, the gradebook movements are:\n- Initially, the gradebook is on the teacher's desk (Madison's desk). All characters are aware of th",
+    "TraceObjectMovements[gradebook]\nObservation 1: Based on the narrative, the gradebook movements are:\n- Initially, the gradebook is on Madison's desk (the teacher's desk). All characters (Madison, Alex,",
+    "TraceObjectMovements[gradebook]\nObservation 1: The tool trace_object_movements(narrative, \"gradebook\") returns:\n- Initial location: Madison's desk (known to all).\n- Movement 1: Moved to storage cupboa"
+  ]
+}

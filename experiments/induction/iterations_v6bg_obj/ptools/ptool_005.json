@@ -1,0 +1,15 @@
+{
+  "id": "ptool_005",
+  "func_name": "verify_witness_presence",
+  "display_name": "VerifyWitnessPresence",
+  "short_desc": "Check if a specific character was present during a particular object movement event",
+  "doc": "Verifies whether a target character was present during a specific object movement event and returns detailed witness information.\n\nThis function analyzes the narrative to determine:\n- The specific movement event being referenced\n- Which characters were present/absent during that movement\n- Whether the target character witnessed the movement\n\nParameters:\n    narrative (str): The full text containing character movements, presence/absence information\n    focus (str): The specific focus query (e.g., \"Rita during taco shells movement\", \"Peter during bow movement\")\n\nReturns:\n    dict: A structured response containing:\n        - target_character: The character being checked\n        - movement_description: Description of the movement event\n        - was_present: Boolean indicating if target witnessed the movement\n        - all_present: List of all characters present during the movement\n        - all_absent: List of all characters absent during the movement\n        - evidence: The specific text from the narrative that supports the determination\n\nExample output:\n    {\n        \"target_character\": \"Rita\",\n        \"movement_description\": \"George moved taco shells to front counter\",\n        \"was_present\": true,\n        \"all_present\": [\"George\", \"Rita\", \"Anna\"],\n        \"all_absent\": [\"Ben\", \"Cora\"],\n        \"evidence\": \"When George moved the taco shells to the front counter, Rita, Anna and George were present\"\n    }",
+  "source_pattern": "Verify Witness Status",
+  "examples": [
+    "Check if Rita was present when George moved the taco shells to the front counter",
+    "VerifyWitnessPresence[lens movements]\nObservation",
+    "VerifyWitnessPresence[Laura during logbook movements]\nObservation",
+    "Confirm Peter's presence during the bow movement",
+    "Check if Lisa was present during Frank's movement of the yoga mat"
+  ]
+}
