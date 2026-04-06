@@ -1,0 +1,15 @@
+{
+  "id": "ptool_002",
+  "func_name": "construct_movement_timeline",
+  "display_name": "ConstructMovementTimeline",
+  "short_desc": "Creates a chronological timeline of object movements with witness presence/absence information.",
+  "doc": "Constructs a detailed chronological timeline of all movements related to a specified focus object from the narrative.\n\nExtracts each movement event including:\n- Step number (chronological order)\n- Object being moved\n- From location\n- To location\n- Character performing the movement\n- Characters present/witnessing the movement\n- Characters absent/not witnessing the movement\n\nThis timeline helps track what each character witnessed regarding the object's movements, which is crucial for determining their beliefs about the object's location (theory of mind).\n\nArgs:\n    narrative (str): The full narrative text describing characters, object movements, and presence/absence.\n    focus (str): The specific object to track movements for (e.g., 'ancient coin', 'laptop').\n\nReturns:\n    str: A JSON-formatted string representing a chronological list of movement events with witness information.\n    \n    Example output format:\n    [\n        {\n            \"step\": 1,\n            \"object\": \"ancient coin\",\n            \"from\": \"pantry\",\n            \"to\": \"counter\",\n            \"actor\": \"Ben\",\n            \"present\": [\"Anna\", \"Ben\"],\n            \"absent\": [\"Cora\"]\n        },\n        {\n            \"step\": 2,\n            \"object\": \"ancient coin\",\n            \"from\": \"counter\",\n            \"to\": \"drawer\",\n            \"actor\": \"Anna\",\n            \"present\": [\"Anna\"],\n            \"absent\": [\"Ben\", \"Cora\"]\n        }\n    ]",
+  "source_pattern": "Timeline Construction",
+  "examples": [
+    "Thought 1: I need to track the movements of the ancient coin and determine what Martha witnessed to understand her belief about its location. The narrative is complex, so I should extract a timeline o",
+    "Thought 1: The narrative is complex and mentions multiple objects and movements. I need to focus specifically on the ancient coin and track its movements to determine Martha's belief about its locatio",
+    "Thought 1: I need to track the movements of the laptop and determine what Steve witnessed or directly discovered. The narrative is complex, so I should extract a timeline of laptop movements with witn",
+    "Thought 1: I need to track the movements of the iPhone and determine Emily's belief about its location. Emily's belief updates only when she witnesses a movement or directly sees the object at a new l",
+    "Thought 1: I need to track the movements of the flight manual and determine which characters witnessed each movement. Richard's belief about the flight manual's location will update only if he witness"
+  ]
+}

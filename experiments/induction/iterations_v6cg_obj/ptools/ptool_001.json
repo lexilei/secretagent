@@ -1,0 +1,15 @@
+{
+  "id": "ptool_001",
+  "func_name": "extract_movement_timeline",
+  "display_name": "ExtractMovementTimeline",
+  "short_desc": "Extracts a chronological timeline of object movements with witness information from the narrative.",
+  "doc": "Parses the narrative to extract all object movements in chronological order, including details about each movement and who was present/absent.\n\nArgs:\n    narrative (str): The full narrative text describing characters, object movements, and presence/absence\n    focus (str): Specific aspect to focus on (e.g., target object like 'ancient coin' or 'helmets')\n\nReturns:\n    list: A chronological list of dictionaries representing each movement event\n    \n    Format:\n    [\n        {\n            \"step\": 1,\n            \"object\": \"object_name\",\n            \"from\": \"previous_location\",\n            \"to\": \"new_location\",\n            \"actor\": \"character_who_performed_movement\",\n            \"present\": [\"character1\", \"character2\", ...],\n            \"absent\": [\"character3\", \"character4\", ...]\n        },\n        ...\n    ]\n    \n    Example:\n    [\n        {\n            \"step\": 1,\n            \"object\": \"helmet\",\n            \"from\": \"storage_closet\",\n            \"to\": \"bench\",\n            \"actor\": \"Lisa\",\n            \"present\": [\"Lisa\", \"Ellie\"],\n            \"absent\": []\n        },\n        {\n            \"step\": 2,\n            \"object\": \"helmet\",\n            \"from\": \"bench\",\n            \"to\": \"display_case\",\n            \"actor\": \"Ellie\",\n            \"present\": [\"Ellie\"],\n            \"absent\": [\"Lisa\"]\n        }\n    ]\n    \n    Notes:\n    - Focus on movements of the specified object (if provided) or all relevant object movements\n    - Extract presence/absence information from narrative descriptions\n    - Maintain strict chronological order of events\n    - Record locations exactly as described in the narrative",
+  "source_pattern": "Initialization and Uncertainty Handling",
+  "examples": [
+    "Thought 1: I need to track the movements of the helmets and what Lisa witnessed. The helmets start in the storage closet. Lisa moves them to the bench while Ellie is present (but Ellie is cleaning, no",
+    "Thought 2: Now, I need to determine what Lisa witnessed. Lisa performed the first movement herself, so she knows she moved the helmets to the bench. For the second movement, the narrative states that ",
+    "Thought 1: I need to track the movements of the ancient coin and determine what Martha witnessed or directly discovered. The narrative is long and repetitive, so I should focus on the key events invol",
+    "Thought 2: The question is about Martha's belief regarding the ancient coin. Martha discovered the coin in the earth initially. Then, Tom passed the coin to the inspection area. Martha was present and",
+    "Thought 3: Martha discovered the coin in the earth initially, so she knows it was there. However, she witnessed Tom moving the coin to the inspection area (since she was assisting him at the time and "
+  ]
+}
