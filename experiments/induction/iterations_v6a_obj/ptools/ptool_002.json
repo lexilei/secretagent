@@ -1,0 +1,15 @@
+{
+  "id": "ptool_002",
+  "func_name": "verify_witness_credibility",
+  "display_name": "VerifyWitnessCredibility",
+  "short_desc": "Verify if a specific character witnessed a particular object movement event",
+  "doc": "Analyzes the narrative to determine if a specific character was present during a particular object movement event.\n\nThis function examines the narrative text to identify:\n- Object movement events (who moved what object, from where to where, and when)\n- Character presence/absence during each event (who was present when each movement occurred)\n- Character beliefs based on what they witnessed (not based on the object's true location)\n\nParameters:\n    narrative (str): The full narrative text describing characters, object movements, and presence/absence\n    focus (str): The specific focus query in the format 'character_witnessed character_moving object from_location to_location'\n\nReturns:\n    str: A structured response indicating:\n        - Whether the witness was present during the movement\n        - What specific events the witness observed\n        - How this affects the witness's knowledge/beliefs about the object location\n        - Any relevant quotes from the narrative supporting the analysis\n\nNote: Focuses on what characters actually witnessed, not on the object's true current location.\nTheory-of-mind perspective: A character's belief depends only on what they directly observed.",
+  "source_pattern": "Verify Witness Credibility",
+  "examples": [
+    "Confirm Martha's presence during Tom's movement of the coin to the inspection area",
+    "Check if Ellie witnessed John moving the bicycle to the driveway",
+    "Check Alan's presence during each lamp movement",
+    "Do[Check who was present when Ricky moved the notebook to the piano]\nObservation 3: The text states: \"Ricky, with his weathered notebook... gently places it onto the piano. An air of creativity and an",
+    "Check if Susan witnessed George moving the chisel box back to storage"
+  ]
+}

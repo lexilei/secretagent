@@ -1,0 +1,96 @@
+{
+  "iteration_stats": [
+    {
+      "iteration": 0,
+      "n_ptools": 0,
+      "accuracy": 0.7333333333333333,
+      "n_correct": 55,
+      "n_total": 75,
+      "avg_cost": 0.006733300000000001,
+      "avg_latency": 19.501326449712117,
+      "ptool_uses": 0,
+      "do_uses": 63,
+      "max_step_hits": 0,
+      "neg1_answers": 0,
+      "extracted_finishes": 37
+    },
+    {
+      "iteration": 1,
+      "n_ptools": 1,
+      "accuracy": 0.6666666666666666,
+      "n_correct": 50,
+      "n_total": 75,
+      "avg_cost": 0.018746966666666663,
+      "avg_latency": 28.18027323404948,
+      "ptool_uses": 143,
+      "do_uses": 127,
+      "max_step_hits": 2,
+      "neg1_answers": 5,
+      "extracted_finishes": 46
+    },
+    {
+      "iteration": 2,
+      "n_ptools": 2,
+      "accuracy": 0.5333333333333333,
+      "n_correct": 40,
+      "n_total": 75,
+      "avg_cost": 0.021546016666666674,
+      "avg_latency": 27.75635233561198,
+      "ptool_uses": 171,
+      "do_uses": 139,
+      "max_step_hits": 6,
+      "neg1_answers": 10,
+      "extracted_finishes": 43
+    }
+  ],
+  "ptools": [
+    {
+      "id": "ptool_001",
+      "func_name": "trace_object_movements",
+      "display_name": "TraceObjectMovements",
+      "short_desc": "Extract all movements of a specific object and who was present/absent for each movement event.",
+      "doc": "Extracts and traces all movements of a specified object from a narrative, including:\n- Each movement event (who moved the object, from where to where, when)\n- All characters present during each movement\n- All characters absent during each movement\n- Characters' perspectives and what they witnessed\n\nFocuses on theory-of-mind reasoning: tracks what each character knows based on what\nthey witnessed, not the object's actual location. This is crucial for determining\ncharacter beliefs and knowledge states.\n\nInputs:\n- narrative: Full text containing object movements and character presence/absence\n- focus: The specific object to trace movements for (e.g., 'helmet', 'ancient coin', 'laptop')\n\nOutput format:\nReturns a structured summary with:\n1. All movement events in chronological order\n2. For each movement: mover, origin, destination, time/context\n3. Present characters (who witnessed the movement)\n4. Absent characters (who didn't witness the movement)\n5. Notes on character perspectives and knowledge implications",
+      "source_pattern": "Movement History Tracing",
+      "examples": [
+        "Find all movements of the helmets and who was present for each movement",
+        "Identify all movements of the ancient coin and who was present for each movement.",
+        "Identify all movements of the laptop and who witnessed them, especially Steve's perspective.",
+        "Identify all movements of the iPhone and who was present or absent for each movement.",
+        "Identify all movements of the flight manual and who was present for each movement from the narrative."
+      ]
+    },
+    {
+      "id": "ptool_002",
+      "func_name": "verify_witness_credibility",
+      "display_name": "VerifyWitnessCredibility",
+      "short_desc": "Verify if a specific character witnessed a particular object movement event",
+      "doc": "Analyzes the narrative to determine if a specific character was present during a particular object movement event.\n\nThis function examines the narrative text to identify:\n- Object movement events (who moved what object, from where to where, and when)\n- Character presence/absence during each event (who was present when each movement occurred)\n- Character beliefs based on what they witnessed (not based on the object's true location)\n\nParameters:\n    narrative (str): The full narrative text describing characters, object movements, and presence/absence\n    focus (str): The specific focus query in the format 'character_witnessed character_moving object from_location to_location'\n\nReturns:\n    str: A structured response indicating:\n        - Whether the witness was present during the movement\n        - What specific events the witness observed\n        - How this affects the witness's knowledge/beliefs about the object location\n        - Any relevant quotes from the narrative supporting the analysis\n\nNote: Focuses on what characters actually witnessed, not on the object's true current location.\nTheory-of-mind perspective: A character's belief depends only on what they directly observed.",
+      "source_pattern": "Verify Witness Credibility",
+      "examples": [
+        "Confirm Martha's presence during Tom's movement of the coin to the inspection area",
+        "Check if Ellie witnessed John moving the bicycle to the driveway",
+        "Check Alan's presence during each lamp movement",
+        "Do[Check who was present when Ricky moved the notebook to the piano]\nObservation 3: The text states: \"Ricky, with his weathered notebook... gently places it onto the piano. An air of creativity and an",
+        "Check if Susan witnessed George moving the chisel box back to storage"
+      ]
+    }
+  ],
+  "config": {
+    "n_cases": 75,
+    "n_iters": 5,
+    "model": "together_ai/deepseek-ai/DeepSeek-V3",
+    "seed": 42,
+    "min_count": 3,
+    "max_steps": 14,
+    "sim_threshold": 0.75,
+    "batch_size": 1,
+    "source": "actions",
+    "structured_output": false,
+    "output_dir": "iterations_v6a_obj",
+    "fixes": [
+      "F: ptool-specific focus",
+      "H: LLM answer extraction"
+    ],
+    "task": "object_placement"
+  }
+}

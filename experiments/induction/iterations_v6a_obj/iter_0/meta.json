@@ -1,0 +1,31 @@
+{
+  "iteration": 0,
+  "n_ptools": 0,
+  "accuracy": 0.7333333333333333,
+  "n_correct": 55,
+  "n_total": 75,
+  "avg_cost": 0.006733300000000001,
+  "avg_latency": 19.501326449712117,
+  "ptool_uses": 0,
+  "do_uses": 63,
+  "max_step_hits": 0,
+  "neg1_answers": 0,
+  "extracted_finishes": 37,
+  "new_ptools": [
+    {
+      "id": "ptool_001",
+      "func_name": "trace_object_movements",
+      "display_name": "TraceObjectMovements",
+      "short_desc": "Extract all movements of a specific object and who was present/absent for each movement event.",
+      "doc": "Extracts and traces all movements of a specified object from a narrative, including:\n- Each movement event (who moved the object, from where to where, when)\n- All characters present during each movement\n- All characters absent during each movement\n- Characters' perspectives and what they witnessed\n\nFocuses on theory-of-mind reasoning: tracks what each character knows based on what\nthey witnessed, not the object's actual location. This is crucial for determining\ncharacter beliefs and knowledge states.\n\nInputs:\n- narrative: Full text containing object movements and character presence/absence\n- focus: The specific object to trace movements for (e.g., 'helmet', 'ancient coin', 'laptop')\n\nOutput format:\nReturns a structured summary with:\n1. All movement events in chronological order\n2. For each movement: mover, origin, destination, time/context\n3. Present characters (who witnessed the movement)\n4. Absent characters (who didn't witness the movement)\n5. Notes on character perspectives and knowledge implications",
+      "source_pattern": "Movement History Tracing",
+      "examples": [
+        "Find all movements of the helmets and who was present for each movement",
+        "Identify all movements of the ancient coin and who was present for each movement.",
+        "Identify all movements of the laptop and who witnessed them, especially Steve's perspective.",
+        "Identify all movements of the iPhone and who was present or absent for each movement.",
+        "Identify all movements of the flight manual and who was present for each movement from the narrative."
+      ]
+    }
+  ]
+}
