@@ -1,0 +1,83 @@
+{
+  "iteration_stats": [
+    {
+      "iteration": 0,
+      "n_ptools": 0,
+      "accuracy": 0.8,
+      "n_correct": 8,
+      "n_total": 10,
+      "avg_cost": 0.00621625,
+      "avg_latency": 10.151139163970948,
+      "ptool_uses": 0,
+      "do_uses": 7,
+      "max_step_hits": 0,
+      "neg1_answers": 0,
+      "extracted_finishes": 4
+    },
+    {
+      "iteration": 1,
+      "n_ptools": 1,
+      "accuracy": 0.5,
+      "n_correct": 5,
+      "n_total": 10,
+      "avg_cost": 0.016070124999999998,
+      "avg_latency": 63.68371205329895,
+      "ptool_uses": 14,
+      "do_uses": 17,
+      "max_step_hits": 0,
+      "neg1_answers": 0,
+      "extracted_finishes": 10
+    }
+  ],
+  "ptools": [
+    {
+      "id": "ptool_001",
+      "func_name": "track_object_movement",
+      "display_name": "TrackObjectMovement",
+      "short_desc": "Creates a chronological timeline of object movements with witness information and character presence/absence.",
+      "doc": "Parses a narrative to extract all object movement events and constructs a chronological timeline.\n\nExtracts:\n- Each movement event (step number, from_location, to_location, actor)\n- Characters present during each movement\n- Characters absent during each movement\n- Timestamps or temporal indicators when available\n\nFocuses on the specified target (character, object, or movement type) to filter relevant events.\n\nReturns:\nA chronological list of movement events with detailed witness information.\nFormat:\n[\n  {\n    \"step\": 1,\n    \"timestamp\": \"10:00 AM\" (if specified, else null),\n    \"actor\": \"CharacterName\",\n    \"object\": \"ObjectName\",\n    \"from_location\": \"PreviousLocation\",\n    \"to_location\": \"NewLocation\",\n    \"present\": [\"Character1\", \"Character2\", ...],\n    \"absent\": [\"Character3\", \"Character4\", ...],\n    \"description\": \"Brief description of the event\"\n  },\n  ...\n]\n\nExample output:\n[\n  {\n    \"step\": 1,\n    \"timestamp\": \"9:00 AM\",\n    \"actor\": \"Lisa\",\n    \"object\": \"helmet\",\n    \"from_location\": \"storage closet\",\n    \"to_location\": \"bench\",\n    \"present\": [\"Lisa\", \"Tom\"],\n    \"absent\": [\"Anna\"],\n    \"description\": \"Lisa moved the helmet from storage to bench\"\n  },\n  {\n    \"step\": 2,\n    \"timestamp\": null,\n    \"actor\": \"Tom\",\n    \"object\": \"helmet\",\n    \"from_location\": \"bench\",\n    \"to_location\": \"counter\",\n    \"present\": [\"Tom\"],\n    \"absent\": [\"Lisa\", \"Anna\"],\n    \"description\": \"Tom moved the helmet while alone\"\n  }\n]",
+      "source_pattern": "Tracking Object Movement",
+      "examples": [
+        "Thought 1: I need to track the movements of the helmets and determine what Lisa witnessed or knew at each point. The initial location of the helmets is the storage closet. Lisa moves them to the bench",
+        "Thought 1: I need to track the movements of the ancient coin and determine what Martha witnessed or directly discovered about its location. The narrative is complex, so I'll focus on the key events in",
+        "Thought 1: I need to track the laptop's movements and who was present for each movement. The narrative is long, so I'll focus on key events involving the laptop.",
+        "Thought 1: I need to track the movements of the iPhone and determine what Emily witnessed or directly discovered. The iPhone starts on the kitchen table. Then, Sophia moves it to the living room's cof",
+        "Thought 1: I need to track the movements of the flight manual and determine what Richard witnessed or directly discovered. The narrative is complex, so I'll break it down step by step."
+      ]
+    },
+    {
+      "id": "ptool_002",
+      "func_name": "track_object_movement_timeline",
+      "display_name": "TrackObjectMovementTimeline",
+      "short_desc": "Constructs a chronological timeline of movements for a specific object, detailing actors, locations, and witness presence.",
+      "doc": "Constructs a chronological timeline of all movements for a specified object from the narrative.\n\nThis function parses the narrative text to identify all events where the focus object is moved.\nFor each movement event, it extracts:\n- The step number (chronological order)\n- The actor who performed the movement\n- The starting location\n- The ending location\n- Characters present during the event\n- Characters absent during the event\n\nThe output is structured as a list of dictionaries, providing a complete history of the object's\ntravels and who was present to witness each move. This is particularly useful for tracking\nhow different characters' knowledge about the object's location is formed based on what\nthey have witnessed directly.\n\nArgs:\n    narrative (str): The full narrative text describing events, object movements, and character presence.\n    focus (str): The specific object to track movements for (e.g., 'helmet', 'ancient coin').\n\nReturns:\n    list: A chronological list of dictionaries representing each movement event.\n           Each dictionary has the following keys:\n           - 'step': (int) The chronological order of the movement\n           - 'from': (str) The starting location\n           - 'to': (str) The ending location\n           - 'actor': (str) The character who moved the object\n           - 'present': (list) Characters present during this movement\n           - 'absent': (list) Characters absent during this movement\n\nExample:\n    [\n        {\n            'step': 1,\n            'from': 'storage closet',\n            'to': 'bench',\n            'actor': 'Lisa',\n            'present': ['Lisa', 'Anna'],\n            'absent': ['Ellie', 'Ben']\n        },\n        {\n            'step': 2,\n            'from': 'bench',\n            'to': 'counter',\n            'actor': 'Ellie',\n            'present': ['Ellie', 'Ben'],\n            'absent': ['Lisa', 'Anna']\n        }\n    ]",
+      "source_pattern": "Track Object Movement",
+      "examples": [
+        "Thought 1: I need to track the movements of the helmets and determine what Lisa witnessed or didn't witness. The narrative describes several events involving the helmets and other characters. Let me s",
+        "Thought 2: I need to track the movements of the helmets specifically. The narrative mentions that the helmets start in the storage closet, then Lisa moves them to the bench, and later Ellie moves them",
+        "Thought 1: I need to track the movements of the helmets and determine what Lisa witnessed or didn't witness. The narrative describes several events involving the helmets and other characters. Let me s",
+        "Thought 1: I need to track the movements of the helmets and determine what Lisa witnessed or didn't witness. The narrative describes several events involving the helmets and other characters. Let me s",
+        "Thought 1: I need to track the movements of the ancient coin and determine which movements Martha witnessed. The narrative describes multiple events, but I should focus on the coin's movements and who"
+      ]
+    }
+  ],
+  "config": {
+    "n_cases": 10,
+    "n_iters": 2,
+    "model": "together_ai/deepseek-ai/DeepSeek-V3",
+    "seed": 42,
+    "min_count": 3,
+    "max_steps": 14,
+    "sim_threshold": 0.75,
+    "batch_size": 1,
+    "source": "thoughts",
+    "structured_output": true,
+    "output_dir": "iterations_v6cg_obj_smoke",
+    "fixes": [
+      "F: ptool-specific focus",
+      "H: LLM answer extraction",
+      "G: structured output"
+    ],
+    "task": "object_placement"
+  }
+}

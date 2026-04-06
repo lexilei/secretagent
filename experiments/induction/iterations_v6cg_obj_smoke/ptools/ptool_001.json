@@ -1,0 +1,15 @@
+{
+  "id": "ptool_001",
+  "func_name": "track_object_movement",
+  "display_name": "TrackObjectMovement",
+  "short_desc": "Creates a chronological timeline of object movements with witness information and character presence/absence.",
+  "doc": "Parses a narrative to extract all object movement events and constructs a chronological timeline.\n\nExtracts:\n- Each movement event (step number, from_location, to_location, actor)\n- Characters present during each movement\n- Characters absent during each movement\n- Timestamps or temporal indicators when available\n\nFocuses on the specified target (character, object, or movement type) to filter relevant events.\n\nReturns:\nA chronological list of movement events with detailed witness information.\nFormat:\n[\n  {\n    \"step\": 1,\n    \"timestamp\": \"10:00 AM\" (if specified, else null),\n    \"actor\": \"CharacterName\",\n    \"object\": \"ObjectName\",\n    \"from_location\": \"PreviousLocation\",\n    \"to_location\": \"NewLocation\",\n    \"present\": [\"Character1\", \"Character2\", ...],\n    \"absent\": [\"Character3\", \"Character4\", ...],\n    \"description\": \"Brief description of the event\"\n  },\n  ...\n]\n\nExample output:\n[\n  {\n    \"step\": 1,\n    \"timestamp\": \"9:00 AM\",\n    \"actor\": \"Lisa\",\n    \"object\": \"helmet\",\n    \"from_location\": \"storage closet\",\n    \"to_location\": \"bench\",\n    \"present\": [\"Lisa\", \"Tom\"],\n    \"absent\": [\"Anna\"],\n    \"description\": \"Lisa moved the helmet from storage to bench\"\n  },\n  {\n    \"step\": 2,\n    \"timestamp\": null,\n    \"actor\": \"Tom\",\n    \"object\": \"helmet\",\n    \"from_location\": \"bench\",\n    \"to_location\": \"counter\",\n    \"present\": [\"Tom\"],\n    \"absent\": [\"Lisa\", \"Anna\"],\n    \"description\": \"Tom moved the helmet while alone\"\n  }\n]",
+  "source_pattern": "Tracking Object Movement",
+  "examples": [
+    "Thought 1: I need to track the movements of the helmets and determine what Lisa witnessed or knew at each point. The initial location of the helmets is the storage closet. Lisa moves them to the bench",
+    "Thought 1: I need to track the movements of the ancient coin and determine what Martha witnessed or directly discovered about its location. The narrative is complex, so I'll focus on the key events in",
+    "Thought 1: I need to track the laptop's movements and who was present for each movement. The narrative is long, so I'll focus on key events involving the laptop.",
+    "Thought 1: I need to track the movements of the iPhone and determine what Emily witnessed or directly discovered. The iPhone starts on the kitchen table. Then, Sophia moves it to the living room's cof",
+    "Thought 1: I need to track the movements of the flight manual and determine what Richard witnessed or directly discovered. The narrative is complex, so I'll break it down step by step."
+  ]
+}
