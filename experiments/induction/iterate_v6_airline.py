@@ -110,35 +110,10 @@ SYSTEM_PROMPT_INTRO = (
     "==========================================\n"
 )
 
-FEW_SHOT_AIR = """\
-Here are some examples. Keep each Thought brief (1-3 sentences). Always emit an Action on every step.
-
-Task: Sarah is a Basic Economy Class passenger flying from Dallas to Chicago with the following items:
-1. A backpack: 18 x 12 x 8 inches, 5 lbs;
-2. A luggage box: 28 x 18 x 12 inches, 40 lbs;
-
-Sarah's flight ticket is $250.
-
-Thought 1: Route Dallas-Chicago is within U.S. Class is Basic Economy. Item 1 is a personal item (within 18x14x8 limit) so free. Item 2 is a checked bag.
-Action 1: Do[Compute the checked bag fee for Item 2 (28x18x12 inches, 40 lbs) for a Basic Economy passenger flying within the U.S. Include oversize/overweight checks.]
-Observation 1: Bag 2 dimensions sum: 28+18+12=58 inches (under 62, no oversize). Weight 40 lbs (under 50, no overweight). Base fee 1st checked bag, Basic Economy, within U.S. = $40. Total bag fee = $40.
-Thought 2: Ticket $250 + bag $40 = $290.
-Action 2: Finish[290]
-
-Task: Tom is a Main Cabin Class passenger flying from New York to London with the following items:
-1. A backpack: 17 x 13 x 7 inches, 6 lbs;
-2. A luggage box: 27 x 19 x 11 inches, 48 lbs;
-3. A luggage box: 30 x 20 x 13 inches, 55 lbs;
-
-Tom's flight ticket is $600.
-
-Thought 1: Route NYC-London is between Europe and U.S. Class Main Cabin. Item 1 is personal (free). Items 2 and 3 are checked.
-Action 1: Do[For Main Cabin passenger between Europe and U.S., compute base fees for the 1st and 2nd checked bags, and check oversize/overweight surcharges for bags weighing 48 lbs (27x19x11) and 55 lbs (30x20x13).]
-Observation 1: Main Cabin Europe<->U.S.: 1st checked = $75, 2nd checked = $100. Bag 2: 27+19+11=57 inches (no oversize), 48 lbs (no overweight). Bag 3: 30+20+13=63 inches (over 62, oversize $150 to Europe), 55 lbs (50-70, overweight $100). Per-bag surcharge is max(oversize, overweight): bag 2 = $0, bag 3 = max($150, $100) = $150.
-Thought 2: Total = $600 ticket + $75 + $100 (base) + $0 + $150 (surcharges) = $925.
-Action 2: Finish[925]
-
-"""
+FEW_SHOT_AIR = ""  # No few-shot. Removed because the 2-shot examples ending in
+# Finish[X] caused DeepSeek-V3 to treat each ReAct step as a fresh few-shot
+# completion, regenerating "Thought 1:" instead of continuing from "Thought N:".
+# The system prompt's FORMAT RULES section is the only guidance the agent gets.
 
 ENV_PROMPT_TEMPLATE = (
     "You are a careful reasoner assisting with an airline baggage fee "
@@ -240,16 +215,32 @@ def _execute_do_action_air(action_arg: str, narrative: str, model: str) -> tuple
 def _llm_with_stop_air(prompt: str, model: str, stop: list[str]) -> tuple[str, dict]:
     """Override of iterate_v3._llm_with_stop with larger max_tokens.
 
-    Airline reasoning involves long bag breakdowns; the default 512-token cap
-    truncates Thoughts mid-sentence and the agent fails to emit an Action.
+    Airline reasoning involves long bag breakdowns. The default 512-token cap
+    in iterate_v3 truncates Thoughts mid-sentence and the agent fails to emit
+    an Action. William's working rulearena conf.yaml uses max_tokens=8192;
+    we match that here.
+
+    Also passes additional stop tokens — DeepSeek-V3 on the long airline
+    prompt likes to hallucinate full continuation traces ("...Action 2:
+    Finish[X]"), so we add `\\nThought ` and `\\nTask:` as extra stops to
+    prevent multi-turn hallucination from one LLM call.
     """
     from litellm import completion, completion_cost
+    # Add general stop tokens to prevent the model from rolling forward into
+    # observations within a single LLM call. The original `\nObservation N:`
+    # stop only catches the next turn boundary if the model uses the EXACT
+    # step number AND prefixes with a newline. We add `Observation ` (no
+    # leading newline) so it fires even when the model puts Observation on
+    # the same line as the Action with whitespace separator.
+    extended_stop = list(stop) + ['Observation 1:', 'Observation 2:', 'Observation 3:',
+                                   'Observation 4:', 'Observation 5:', 'Observation:',
+                                   '\nTask:']
     messages = [dict(role='user', content=prompt)]
     timeout = config.get('llm.timeout', 300)
     start_time = time.time()
     response = completion(
-        model=model, messages=messages, stop=stop,
-        max_tokens=2048, timeout=timeout, temperature=0,
+        model=model, messages=messages, stop=extended_stop,
+        max_tokens=8192, timeout=timeout, temperature=0,
     )
     latency = time.time() - start_time
     text = response.choices[0].message.content or ''
@@ -263,6 +254,45 @@ def _llm_with_stop_air(prompt: str, model: str, stop: list[str]) -> tuple[str, d
         latency=latency, cost=cost,
     )
     return text, stats
+
+
+def _clean_response_air(response: str, step_num: int) -> str:
+    """Clean the LLM response: strip leading "Thought N:" echo and truncate
+    at the first hallucinated next-step boundary.
+
+    Two distinct issues this fixes:
+    1. The model echoes the prompt-injected "Thought N:" header as the first
+       line of its output. Without stripping, the recorded thought starts
+       with "Thought 1:" and prompt history doubles up.
+    2. The model hallucinates a complete continuation trace
+       ("Thought 1: ... Action 1: Do[X] ... Observation 1: <fake> ...
+       Thought 2: ... Action 2: Finish[185]") because the few-shot ends in
+       Finish, training it to produce complete Q->A->Finish patterns. We
+       truncate at the first newline that starts a new step header that
+       isn't valid (Thought N+1 within step N's response, or any second
+       Action N: line).
+    """
+    response = response.strip()
+    # Strip leading "Thought N:" or "Thought:" prefix
+    m = re.match(r'Thought(?:\s*\d+)?\s*:\s*', response)
+    if m:
+        response = response[m.end():].lstrip()
+    # Find the first Action (with or without number) in the response
+    first_action = re.search(r'Action(?:\s*\d+)?\s*:', response)
+    if first_action:
+        # Look for any next-step boundary AFTER the Action line
+        # (Observation, Thought 2, Action 2, Task:)
+        after = response[first_action.end():]
+        # Find earliest of: \nObservation, \nThought N, \nAction N, \nTask:
+        boundary_re = re.compile(
+            r'\n(?:Observation(?:\s*\d+)?\s*:|Thought(?:\s*\d+)?\s*:|Action(?:\s*\d+)?\s*:|Task\s*:)'
+        )
+        m2 = boundary_re.search(after)
+        if m2:
+            # truncate the response at this boundary
+            cutoff = first_action.end() + m2.start()
+            response = response[:cutoff].rstrip()
+    return response
 
 
 def _make_system_prompt_air(ptools: list[dict]) -> str:
@@ -292,7 +322,6 @@ def _make_system_prompt_air(ptools: list[dict]) -> str:
             'The integer is the TOTAL COST in dollars (no $, no commas, '
             'just digits, e.g. Finish[2741]).\n'
         )
-    base += 'Here are some examples.\n'
     return base
 
 
@@ -376,8 +405,10 @@ def run_react_on_case_air(narrative: str, question: str, choices: list,
         response, stats = _llm_with_stop_air(llm_input, model, stop=stop)
         accum(stats)
 
-        response = response.strip()
-        action_match = re.search(r'Action\s*\d+\s*:\s*(.+)', response, re.DOTALL)
+        # Strip leading "Thought N:" prefix if model echoed it
+        response = _clean_response_air(response, i)
+        # Accept both "Action 1:" and "Action:" (digit optional for free-form models)
+        action_match = re.search(r'Action(?:\s*\d+)?\s*:\s*(.+)', response, re.DOTALL)
         if action_match:
             thought = response[:action_match.start()].strip()
             action_str = action_match.group(1).strip()
