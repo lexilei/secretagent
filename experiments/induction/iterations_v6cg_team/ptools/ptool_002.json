@@ -1,0 +1,13 @@
+{
+  "id": "ptool_002",
+  "func_name": "task_interpretation",
+  "display_name": "TaskInterpretation",
+  "short_desc": "task interpretation",
+  "doc": "Task Interpretation.\n\nAnalyze the narrative with the given focus.",
+  "source_pattern": "Task Interpretation",
+  "examples": [
+    "Thought 7: I need to reassess. The narrative implies that there are two tasks: operating the register (which likely requires one person) and brewing coffee (which likely requires two people, given the",
+    "Thought 8: I need to consider the possibility that the server infrastructure management might be handled by one person, but the choices all show two people. However, the narrative might imply that bot",
+    "I need to extract the constraints from the narrative for each person and each role. The roles are Data Collection, Data Analysis, and Research Writing, but the choices only show assignments for Data C"
+  ]
+}

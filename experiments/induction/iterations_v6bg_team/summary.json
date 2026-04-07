@@ -1,0 +1,68 @@
+{
+  "iteration_stats": [
+    {
+      "iteration": 0,
+      "n_ptools": 0,
+      "accuracy": 0.8333333333333334,
+      "n_correct": 25,
+      "n_total": 30,
+      "avg_cost": 0.02206183333333333,
+      "avg_latency": 47.850250617663065,
+      "ptool_uses": 0,
+      "do_uses": 28,
+      "max_step_hits": 1,
+      "neg1_answers": 1,
+      "extracted_finishes": 21
+    },
+    {
+      "iteration": 1,
+      "n_ptools": 1,
+      "accuracy": 0.8,
+      "n_correct": 24,
+      "n_total": 30,
+      "avg_cost": 0.013432333333333334,
+      "avg_latency": 32.93333251476288,
+      "ptool_uses": 34,
+      "do_uses": 19,
+      "max_step_hits": 0,
+      "neg1_answers": 0,
+      "extracted_finishes": 21
+    }
+  ],
+  "ptools": [
+    {
+      "id": "ptool_001",
+      "func_name": "extract_constraints",
+      "display_name": "ExtractConstraints",
+      "short_desc": "Extract constraints, disqualifiers, and interpersonal dynamics from a narrative for team allocation.",
+      "doc": "Extracts constraints, disqualifiers, and interpersonal dynamics from a narrative for team allocation.\n\nThis function parses the provided narrative to identify hard constraints (which disqualify a person from a role),\nsoft constraints (preferences or weaknesses), and interpersonal issues (conflicts or synergies between people).\nThe focus parameter allows filtering for a specific aspect, such as a target person, role, constraint type, or pair of people.\n\nArgs:\n    narrative (str): The full narrative text describing people, their attributes, and the roles.\n    focus (str): The specific aspect to focus on (e.g., 'chef', 'Sam', 'interpersonal', 'disqualifiers').\n\nReturns:\n    list: A list of dictionaries, each representing a constraint or dynamic. Each dictionary has keys:\n          - 'type': The constraint type (e.g., 'disqualifier', 'preference', 'interpersonal').\n          - 'person': The person to whom the constraint applies (or 'pair' for interpersonal).\n          - 'applies_to': The role or person the constraint relates to.\n          - 'polarity': 'positive' (e.g., skill, preference) or 'negative' (e.g., weakness, conflict).\n          - 'quote': The exact text from the narrative supporting this constraint.\n\n    Example:\n        [\n            {\n                \"type\": \"disqualifier\",\n                \"person\": \"Alex\",\n                \"applies_to\": \"zookeeper\",\n                \"polarity\": \"negative\",\n                \"quote\": \"Alex is afraid of animals.\"\n            },\n            {\n                \"type\": \"preference\",\n                \"person\": \"Mia\",\n                \"applies_to\": \"gardener\",\n                \"polarity\": \"positive\",\n                \"quote\": \"Mia loves plants and has a green thumb.\"\n            },\n            {\n                \"type\": \"interpersonal\",\n                \"person\": \"pair\",\n                \"applies_to\": \"Alex-Mia\",\n                \"polarity\": \"negative\",\n                \"quote\": \"Alex and Mia had a recent disagreement.\"\n            }\n        ]\n\nNote:\n    - Hard disqualifiers (e.g., 'afraid of animals' for a zookeeper role) should be flagged with type 'disqualifier'.\n    - Pay attention to words like 'cannot', 'refuses', 'afraid of', 'allergic to', which indicate hard constraints.\n    - For interpersonal constraints, 'person' is 'pair', and 'applies_to' should list the two people involved.\n    - The 'focus' parameter narrows down the extraction; if focus is 'chef', only constraints related to the chef role are returned.\n    - If no focus is specified, all constraints are returned.",
+      "source_pattern": "Extract Information",
+      "examples": [
+        "List each person's strengths, weaknesses, and constraints relevant to chef and server roles, including interpersonal issues",
+        "List each person's skills, experiences, and constraints relevant to the two negotiation tasks, and note any interpersonal issues.",
+        "Do[List each person's skills, experiences, and constraints relevant to the two negotiation tasks, and note any interpersonal issues.]\n\nObservation 1: Based on the narrative provided, here is the relev",
+        "List each person's attributes relevant to bouquet making and plant care, and note any interpersonal constraints.",
+        "Extract key attributes for each person regarding Photography and Event Planning roles"
+      ]
+    }
+  ],
+  "config": {
+    "n_cases": 30,
+    "n_iters": 5,
+    "model": "together_ai/deepseek-ai/DeepSeek-V3",
+    "seed": 42,
+    "min_count": 3,
+    "max_steps": 14,
+    "sim_threshold": 0.75,
+    "batch_size": 3,
+    "source": "actions",
+    "structured_output": true,
+    "output_dir": "iterations_v6bg_team",
+    "fixes": [
+      "F: ptool-specific focus",
+      "H: LLM answer extraction",
+      "G: structured output"
+    ],
+    "task": "team_allocation"
+  }
+}

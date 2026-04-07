@@ -1,0 +1,15 @@
+{
+  "id": "ptool_004",
+  "func_name": "extract_free_slots",
+  "display_name": "ExtractFreeSlots",
+  "short_desc": "Extracts free time slots for a specific participant within a given time window that meet a minimum duration requirement.",
+  "doc": "Extracts free time slots for a specific participant by analyzing their busy periods, work hours, and any specified constraints.\n\nArgs:\n    narrative (str): The full task description containing participant names, day, work hours, meeting duration, and each participant's busy intervals.\n    focus (str): A string specifying the target participant, the time window (e.g., 'before 13:00'), and the minimum slot duration (e.g., 'at least 30 minutes').\n\nReturns:\n    list: A list of dictionaries representing free time slots that meet the criteria. Each dictionary has the format:\n        {\n            'day': str,           # The day of the week (e.g., 'Monday')\n            'start': str,         # Start time in HH:MM format\n            'end': str,           # End time in HH:MM format\n            'duration_minutes': int  # Duration of the free slot in minutes\n        }\n    Example: [{'day': 'Monday', 'start': '10:30', 'end': '11:00', 'duration_minutes': 30}]\n\nNotes:\n    - Extracts the target participant, day, work hours, and minimum duration from the 'focus' string.\n    - Parses the 'narrative' to find the participant's busy intervals.\n    - All times are converted to minutes from midnight for calculation.\n    - Free slots are calculated within the work hour boundaries.\n    - Only returns slots with a duration >= the specified minimum.",
+  "source_pattern": "Extract Free Periods/Slots",
+  "examples": [
+    "List Randy's busy periods and identify free slots before 13:00 that are at least 30 minutes long, considering Evelyn's availability and preference.",
+    "Identify Randy's free periods before 13:00 that are at least 30 minutes long, considering Evelyn's availability and preference.]\nObservation 1: Randy's busy periods: 9:00-10:30, 11:00-15:30, 16:00-17:",
+    "Extract Randy's free periods before 13:00 from his busy intervals]\nObservation 1: Randy's busy periods are 9:00-10:30, 11:00-15:30, and 16:00-17:00. This leaves free periods: 10:30-11:00 (30 minutes) ",
+    "Extract Randy's free periods before 13:00 from his busy intervals]\nObservation 1: Randy's busy periods are 9:00-10:30, 11:00-15:30, and 16:00-17:00. This leaves free periods: 10:30-11:00 (30 minutes) ",
+    "Extract Randy's free periods before 13:00 from his busy intervals]\nObservation 1: Randy's busy periods are 9:00-10:30, 11:00-15:30, and 16:00-17:00. This leaves free periods: 10:30-11:00 (30 minutes) "
+  ]
+}

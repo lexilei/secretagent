@@ -1,0 +1,68 @@
+{
+  "iteration_stats": [
+    {
+      "iteration": 0,
+      "n_ptools": 0,
+      "accuracy": 0.7666666666666667,
+      "n_correct": 23,
+      "n_total": 30,
+      "avg_cost": 0.008804833333333335,
+      "avg_latency": 20.427017982800802,
+      "ptool_uses": 0,
+      "do_uses": 51,
+      "max_step_hits": 0,
+      "neg1_answers": 0,
+      "extracted_finishes": 11
+    },
+    {
+      "iteration": 1,
+      "n_ptools": 1,
+      "accuracy": 0.8666666666666667,
+      "n_correct": 26,
+      "n_total": 30,
+      "avg_cost": 0.02442316666666667,
+      "avg_latency": 45.32773228486379,
+      "ptool_uses": 43,
+      "do_uses": 75,
+      "max_step_hits": 0,
+      "neg1_answers": 0,
+      "extracted_finishes": 20
+    }
+  ],
+  "ptools": [
+    {
+      "id": "ptool_001",
+      "func_name": "analyze_availability",
+      "display_name": "AnalyzeAvailability",
+      "short_desc": "Analyze participant availability by extracting and structuring busy intervals from the scheduling narrative.",
+      "doc": "Extracts and structures participant busy intervals from a calendar scheduling narrative.\n\nParses the narrative to identify all participants, their scheduled busy time intervals,\nwork hour boundaries, and any scheduling constraints. Returns a structured overview\nof availability information for further scheduling analysis.\n\nArgs:\n    narrative: The full task description containing meeting details, attendees,\n               work hours, meeting duration, and each participant's busy intervals\n    focus: Specific aspect to focus on (e.g., particular participant, day, or constraint)\n\nReturns:\n    dict: Structured availability analysis with keys:\n        - 'participants': List of all participant names\n        - 'work_hours': Dict with 'start' and 'end' times (e.g., {'start': '09:00', 'end': '17:00'})\n        - 'meeting_duration': Duration in minutes\n        - 'days_considered': List of days mentioned for scheduling\n        - 'busy_intervals': Dict keyed by participant with their busy time intervals\n          (e.g., {'Kathleen': [{'day': 'Thursday', 'start': '10:00', 'end': '11:00'}], ...})\n        - 'constraints': List of any special constraints mentioned\n        - 'focus_analysis': Additional analysis specific to the focus parameter\n\nExample:\n    {\n        'participants': ['Kathleen', 'Christian'],\n        'work_hours': {'start': '09:00', 'end': '17:00'},\n        'meeting_duration': 30,\n        'days_considered': ['Thursday'],\n        'busy_intervals': {\n            'Kathleen': [{'day': 'Thursday', 'start': '10:00', 'end': '11:00'}],\n            'Christian': [{'day': 'Thursday', 'start': '14:00', 'end': '15:30'}]\n        },\n        'constraints': [],\n        'focus_analysis': 'Analyzed Kathleen\\'s Thursday availability'\n    }\n",
+      "source_pattern": "Availability Analysis",
+      "examples": [
+        "Thought 2: I need to confirm the free slots on Thursday by combining both calendars. Kathleen is free except for the blocked times, and Christian is free except for their blocked times. The meeting is",
+        "Thought 2: Now, I need to find the union of all these busy intervals to determine when at least one person is busy. Since Anthony and Teresa are free all day, they don't add any busy intervals. So, th",
+        "Thought 1: I need to schedule a 30-minute meeting for seven people on Monday between 9:00 and 17:00. I should first list all busy intervals for each participant and then find the union of these interv",
+        "Thought 1: I need to find a half-hour slot for Jesse and Lawrence on either Monday or Tuesday between 9:00 and 17:00. Lawrence cannot meet on Tuesday after 16:30. First, I should list all busy interva",
+        "Thought 1: I need to find a half-hour slot for Jesse and Lawrence on either Monday or Tuesday between 9:00 and 17:00. Lawrence cannot meet on Tuesday after 16:30. First, I should list all busy interva"
+      ]
+    }
+  ],
+  "config": {
+    "n_cases": 30,
+    "n_iters": 5,
+    "model": "together_ai/deepseek-ai/DeepSeek-V3",
+    "seed": 42,
+    "min_count": 3,
+    "max_steps": 14,
+    "sim_threshold": 0.75,
+    "batch_size": 1,
+    "source": "thoughts",
+    "structured_output": true,
+    "output_dir": "iterations_v6cg_calendar",
+    "fixes": [
+      "F: ptool-specific focus",
+      "H: LLM answer extraction",
+      "G: structured output"
+    ],
+    "task": "calendar_scheduling"
+  }
+}

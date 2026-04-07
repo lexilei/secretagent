@@ -1,0 +1,13 @@
+{
+  "id": "ptool_002",
+  "func_name": "check_specific_time_availability",
+  "display_name": "CheckSpecificTimeAvailability",
+  "short_desc": "Evaluates whether a specific time slot is available for all required participants based on their busy intervals.",
+  "doc": "Evaluates whether a specific time slot is available for scheduling a meeting by checking against participants' busy intervals and work hour constraints.\n\nExtracts from the narrative:\n- Meeting attendees\n- Target day and specific time window to check\n- Meeting duration\n- Each participant's busy intervals\n- Work hour boundaries (if specified)\n\nParameters:\n    narrative (str): Full task description containing participants, day, time window, duration, and busy intervals\n    focus (str): Specific time slot to evaluate (e.g., \"Tuesday 12:00-12:30\")\n\nReturns:\n    dict: A boolean judgment with detailed reasoning about slot availability\n    \n    Example output format:\n    {\n        \"slot_works\": false,\n        \"violations\": [\n            {\n                \"participant\": \"Daniel\",\n                \"conflict\": \"Busy during 11:00-12:00\"\n            },\n            {\n                \"participant\": \"Bradley\", \n                \"conflict\": \"Outside work hours (ends at 17:00)\"\n            }\n        ],\n        \"reasoning\": \"The slot conflicts with Daniel's schedule and extends beyond Bradley's work hours\"\n    }\n\nNotes:\n- Converts all times to minutes-from-midnight for precise comparison\n- Checks if the entire meeting duration fits within the specified time window\n- Verifies the slot is within work hours (if provided)\n- Identifies all participants with conflicting appointments\n- Returns detailed information about why a slot doesn't work if unavailable",
+  "source_pattern": "Evaluate Specific Time Availability",
+  "examples": [
+    "Check Tuesday after 12:00 for both Daniel and Bradley for a 30-minute free slot between 12:00 and 17:00.",
+    "Do[Check Tuesday after 12:00 for both Daniel and Bradley for a 30-minute free slot between 12:00 and 17:00.]\n\nObservation 1: On Tuesday, Daniel is busy during 11:00-12:00, 13:00-13:30, 15:30-16:00, 16",
+    "Check Wednesday for Diana and Rachel to see if there is an earlier common free 1-hour slot than Tuesday's 12:30-13:00"
+  ]
+}
