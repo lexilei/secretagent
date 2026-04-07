@@ -76,17 +76,17 @@ _AIRLINE_TASK_DOC = (
 # Interface definition: airline cost task
 # ═══════════════════════════════════════════════════════════════
 
-@interface
-def compute_airline_total_cost(narrative: str) -> int:
-    ...
+def _airline_stub(narrative: str) -> int: ...
+_airline_stub.__name__ = 'compute_airline_total_cost'
+_airline_stub.__qualname__ = 'compute_airline_total_cost'
+_airline_stub.__doc__ = _AIRLINE_TASK_DOC
+_airline_stub.__annotations__ = {'narrative': str, 'return': int}
+_airline_stub.__module__ = __name__
 
-
-# Re-attach the long docstring (the @interface decorator preserves __doc__,
-# but we want to set it dynamically based on the loaded rules file).
-compute_airline_total_cost.__doc__ = _AIRLINE_TASK_DOC
-
-# Bind to ReAct factory with no tools initially. For induction iterations,
-# rebind with tools=[induced_ptool_1, induced_ptool_2, ...].
+# Apply the @interface decorator manually so the long doc is captured at
+# decoration time (Interface.doc is set from func.__doc__ inside the
+# decorator and is NOT a live property).
+compute_airline_total_cost = interface(_airline_stub)
 compute_airline_total_cost.implement_via('react', max_steps=14, tools=[])
 
 
@@ -325,7 +325,7 @@ def baseline(
 ):
     """Run baseline ReAct (no tools) on rulearena airline using ReActFactory."""
     config.configure(cfg={
-        'llm': {'model': model, 'timeout': 300},
+        'llm': {'model': model, 'timeout': 300, 'max_tokens': 8192},
         'cachier': {
             'cache_dir': str(BASE_DIR / 'traces' / 'llm_cache_airline_v2'),
             'enable_caching': True,
