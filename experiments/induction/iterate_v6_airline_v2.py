@@ -311,6 +311,342 @@ def _run_all_cases(cases: list[dict], model: str) -> list[dict]:
 
 
 # ═══════════════════════════════════════════════════════════════
+# v6 induction: extract paragraph-level items from finish-step thoughts
+# ═══════════════════════════════════════════════════════════════
+
+from collections import Counter  # noqa: E402
+
+# Reuse v3/v5 infrastructure for categorize/synthesize/similarity. We
+# only override the parts that need to be airline-specific (extract,
+# task labels, synthesis prompt).
+sys.path.insert(0, str(_PROJECT_ROOT / 'benchmarks' / 'musr'))
+from iterate_v3 import (  # noqa: E402
+    save_ptool,
+    save_ptools_as_python,
+    save_sample_traces,
+)
+from iterate_v5 import _get_embed_model, _docstring_similarity  # noqa: E402
+from secretagent.llm_util import llm as llm_cached  # noqa: E402
+
+import numpy as np  # noqa: E402
+
+
+def extract_thought_paragraphs(traces: list[dict]) -> list[dict]:
+    """Split each step's thought into paragraphs and return as items.
+
+    On airline v2 each case has 1 step (finish) with a 5k-25k char thought.
+    We split on blank lines into paragraphs of ~100-500 chars each, which
+    gives ~10-15 items per case — comparable to the per-case Do[] count
+    on calendar/team. Each paragraph captures a discrete reasoning sub-step
+    (list bags / determine route / lookup base fee / compute oversize / ...).
+    """
+    items = []
+    for t in traces:
+        for s in t['steps']:
+            thought = (s.get('thought') or '').strip()
+            if not thought:
+                continue
+            # Strip leading <thought> tag if present
+            thought = re.sub(r'^<thought>\s*', '', thought)
+            thought = re.sub(r'\s*</thought>\s*$', '', thought)
+            # Split on blank lines (one or more newlines with optional whitespace)
+            paragraphs = [p.strip() for p in re.split(r'\n\s*\n', thought) if p.strip()]
+            for para_idx, para in enumerate(paragraphs):
+                # Skip very short fragments (likely just a number or heading)
+                if len(para) < 30:
+                    continue
+                # Cap each item at 800 chars (categorize_items truncates to 300
+                # for the LLM call, so anything longer is wasted but kept for
+                # audit/synthesis later)
+                items.append(dict(
+                    case=t['case_name'],
+                    step=f'{s["step"]}.p{para_idx}',
+                    text=para[:800],
+                ))
+    return items
+
+
+# ═══════════════════════════════════════════════════════════════
+# Categorize patterns (airline task label)
+# ═══════════════════════════════════════════════════════════════
+
+CATEGORIZE_TASK_LABEL = "airline baggage fee calculation tasks"
+SYNTHESIZE_TASK_LABEL = "airline baggage fee calculation tasks"
+SYNTHESIZE_NARRATIVE_LABEL = (
+    "the full problem statement: passenger name, customer class, flight route, "
+    "list of bags with sizes (length x width x height in inches) and weights "
+    "(lbs), and the ticket price"
+)
+
+
+def categorize_items_air(items: list[dict], source: str, model: str,
+                         batch_size: int = 30) -> list[tuple[str, int, list]]:
+    if not items:
+        return []
+    cat_map = {}
+    for batch_start in range(0, len(items), batch_size):
+        batch = items[batch_start:batch_start + batch_size]
+        items_text = ''
+        for i, item in enumerate(batch):
+            idx = batch_start + i
+            items_text += f'\n[{idx}] ({item["case"]}, step {item["step"]}): {item["text"][:300]}\n'
+
+        prompt = f"""You are analyzing reasoning paragraphs from an AI agent solving {CATEGORIZE_TASK_LABEL}.
+Categorize each into a short, reusable REASONING ACTION TYPE (3-6 words max).
+
+Rules:
+- Use consistent, canonical names (merge synonyms)
+- Categories must be FUNCTIONALLY DISTINCT
+- Focus on WHAT the agent is doing, not case-specific details
+- Output ONLY a JSON array with "index" and "category" fields
+
+Paragraphs to categorize:
+{items_text}
+
+<answer>
+[{{"index": {batch_start}, "category": "your category"}}, ...]
+</answer>"""
+
+        response, _ = llm_cached(prompt, model)
+        json_str = None
+        m = re.search(r'<answer>(.*)</answer>', response, re.DOTALL)
+        if m:
+            json_str = m.group(1).strip()
+        if not json_str:
+            m = re.search(r'\[.*\]', response, re.DOTALL)
+            if m:
+                json_str = m.group(0)
+        if json_str:
+            try:
+                for c in json.loads(json_str):
+                    cat_map[c['index']] = c['category']
+            except (json.JSONDecodeError, KeyError):
+                pass
+
+    for i, item in enumerate(items):
+        item['category'] = cat_map.get(i, 'unknown')
+
+    freq = Counter(item['category'] for item in items)
+    categories = [cat for cat, _ in freq.most_common()]
+
+    if len(categories) <= 5:
+        merged = freq
+    else:
+        merge_prompt = f"""Below are {len(categories)} category names from analyzing reasoning paragraphs.
+Merge them into 5-10 canonical groups that are FUNCTIONALLY DISTINCT.
+
+Categories:
+{json.dumps(categories, indent=2)}
+
+Output a JSON object mapping each original category to its canonical group name.
+
+<answer>
+{{"original category": "canonical group", ...}}
+</answer>"""
+        response, _ = llm_cached(merge_prompt, model)
+        merge_map = {}
+        m = re.search(r'<answer>(.*)</answer>', response, re.DOTALL)
+        if m:
+            try:
+                merge_map = json.loads(m.group(1).strip())
+            except json.JSONDecodeError:
+                pass
+        if not merge_map:
+            m = re.search(r'\{.*\}', response, re.DOTALL)
+            if m:
+                try:
+                    merge_map = json.loads(m.group(0))
+                except json.JSONDecodeError:
+                    pass
+
+        if merge_map:
+            for item in items:
+                item['merged_category'] = merge_map.get(item['category'], item['category'])
+            merged = Counter(item.get('merged_category', item['category']) for item in items)
+        else:
+            merged = freq
+
+    result = []
+    for cat, count in merged.most_common():
+        examples = [a for a in items if a.get('merged_category', a['category']) == cat]
+        result.append((cat, count, examples))
+    return result
+
+
+# ═══════════════════════════════════════════════════════════════
+# Ptool synthesis (airline task label, structured output)
+# ═══════════════════════════════════════════════════════════════
+
+def synthesize_ptool_air(pattern_name: str, examples: list[dict],
+                         model: str, ptool_id: str,
+                         structured_output: bool = True) -> dict:
+    examples_text = ''
+    for ex in examples[:5]:
+        examples_text += f'  - "{ex["text"][:200]}"\n'
+
+    if structured_output:
+        output_instruction = """
+4. output_format: Specify EXACTLY what the output should look like. Use a structured format like:
+   - A dict/JSON of extracted parameters (e.g., {"customer_class": "Premium Economy", "routine": "China", "direction": 1, "bag_list": [{"id": 1, ...}]})
+   - A list of per-bag fee components (e.g., [{"bag_id": 2, "base_fee": 150, "oversize_fee": 0, "overweight_fee": 100, "rule_cited": "..."}, ...])
+   - A region/class lookup dict (e.g., {"matched_route": "Asia (China)", "matched_class": "Premium Economy", "first_bag_fee": 150, ...})
+   - A boolean validity judgment with cited rule (e.g., {"is_oversize": true, "total_inches": 102, "rule_cited": "..."})
+
+The output format MUST be different from other tools — if one returns extracted params, another should return per-bag fee components, etc.
+Include the output format specification in the docstring under a "Returns:" section with a concrete example."""
+    else:
+        output_instruction = ""
+
+    prompt = f"""You are designing a reusable reasoning tool (Python function) for solving {SYNTHESIZE_TASK_LABEL}.
+
+The tool captures this frequently used reasoning action: "{pattern_name}"
+
+Examples of how agents described this action:
+{examples_text}
+
+The tool will be a Python function with this signature:
+    def tool_name(narrative: str, focus: str) -> str
+
+Where:
+- narrative: {SYNTHESIZE_NARRATIVE_LABEL}
+- focus: what specific aspect to focus on (e.g., a target bag id, a route region, a customer class, a specific fee component)
+
+Design the tool:
+1. func_name: snake_case Python function name
+2. display_name: CamelCase version for the agent to call
+3. short_desc: one sentence for the agent prompt
+{output_instruction}
+
+The docstring is critical — it drives the LLM that executes this tool. Be specific about:
+- What information to extract from the narrative (passenger class, route/region, ticket price, bag list with sizes and weights)
+- How to structure the response
+- What to pay attention to (airline fee calculation: first item is typically a personal item or carry-on (free); checked bag base fees depend on (route region × customer class × bag ordinal); oversize is total dimensions > 62 inches; overweight tiers are 50/70/100 lbs; oversize and overweight surcharges DON'T STACK — apply max(oversize, overweight) per bag)
+
+Output as JSON:
+<answer>
+{{
+  "func_name": "snake_case_name",
+  "display_name": "CamelCaseName",
+  "short_desc": "one sentence for agent prompt",
+  "docstring": "detailed multi-line docstring"
+}}
+</answer>"""
+
+    response, _ = llm_cached(prompt, model)
+    spec = None
+    m = re.search(r'<answer>(.*)</answer>', response, re.DOTALL)
+    if m:
+        try:
+            spec = json.loads(m.group(1).strip())
+        except json.JSONDecodeError:
+            pass
+    if not spec:
+        m = re.search(r'\{.*\}', response, re.DOTALL)
+        if m:
+            try:
+                spec = json.loads(m.group(0))
+            except json.JSONDecodeError:
+                pass
+    if not spec:
+        snake = re.sub(r'[^a-z0-9]+', '_', pattern_name.lower()).strip('_')
+        camel = pattern_name.title().replace(' ', '')
+        spec = {
+            'func_name': snake,
+            'display_name': camel,
+            'short_desc': pattern_name.lower(),
+            'docstring': f'{pattern_name}.\n\nAnalyze the narrative with the given focus.',
+        }
+
+    return {
+        'id': ptool_id,
+        'func_name': spec['func_name'],
+        'display_name': spec['display_name'],
+        'short_desc': spec['short_desc'],
+        'doc': spec['docstring'],
+        'source_pattern': pattern_name,
+        'examples': [ex['text'][:200] for ex in examples[:5]],
+    }
+
+
+def select_and_synthesize_air(categories: list[tuple[str, int, list]],
+                              existing_ptools: list[dict],
+                              model: str, batch_size: int,
+                              sim_threshold: float, min_count: int,
+                              next_id: int, structured_output: bool) -> list[dict]:
+    new_ptools = []
+    all_ptools = list(existing_ptools)
+    for cat, count, examples in categories:
+        if len(new_ptools) >= batch_size:
+            break
+        if count < min_count:
+            break
+        existing_names = {p['source_pattern'].lower() for p in all_ptools}
+        existing_names |= {p.get('display_name', '').lower() for p in all_ptools}
+        if cat.lower() in existing_names:
+            continue
+        ptool_id = f'ptool_{next_id + len(new_ptools):03d}'
+        candidate = synthesize_ptool_air(cat, examples, model, ptool_id,
+                                         structured_output=structured_output)
+        # Use docstring-only similarity (no functional check, since induced
+        # ptools aren't actually invoked — they're scaffolding-by-description)
+        sim = _docstring_similarity(candidate, all_ptools)
+        if sim > sim_threshold:
+            print(f'  SKIP "{cat}" — too similar (docstring={sim:.2f} > {sim_threshold})')
+            continue
+        print(f'  ACCEPT "{cat}" — {candidate["display_name"]} (docstring={sim:.2f})')
+        new_ptools.append(candidate)
+        all_ptools.append(candidate)
+    return new_ptools
+
+
+# ═══════════════════════════════════════════════════════════════
+# Scaffolding-by-description: rebind interface with induced ptool
+# descriptions appended to the task docstring
+# ═══════════════════════════════════════════════════════════════
+
+def _build_task_doc_with_ptools(induced_ptools: list[dict]) -> str:
+    """Construct the airline task docstring with induced ptool descriptions
+    appended as suggested reasoning steps.
+
+    Path D from the discussion: induced ptools are NOT given to ReActFactory
+    as tools (which would require narrative threading + signature changes).
+    Instead, their short_desc + docstring are listed in the task docstring
+    as 'suggested reasoning steps' the agent can mentally apply. This
+    matches the v6cg 'scaffolding by description' effect from murder mystery
+    where the best run had 88% with 0 ptool invocations.
+    """
+    base = _AIRLINE_TASK_DOC
+    if not induced_ptools:
+        return base
+    suggestion_block = ['', '', 'SUGGESTED REUSABLE REASONING STEPS:',
+                         '(These are reasoning patterns that have helped on prior cases.',
+                         'Mentally apply them as relevant — you don\'t need to call them as tools.)',
+                         '']
+    for i, p in enumerate(induced_ptools, start=1):
+        suggestion_block.append(f'{i}. **{p["display_name"]}** — {p["short_desc"]}')
+        # Indent the docstring under the heading, truncate to ~600 chars to keep
+        # total prompt size manageable
+        doc_lines = (p['doc'][:600]).strip().split('\n')
+        for dl in doc_lines:
+            suggestion_block.append(f'   {dl}')
+        suggestion_block.append('')
+    return base + '\n'.join(suggestion_block)
+
+
+def _rebind_interface(induced_ptools: list[dict]):
+    """Rebuild compute_airline_total_cost.doc and rebind to ReActFactory.
+
+    Since Interface.doc is set at decoration time and not a live property,
+    we mutate it directly on the Interface object. ReActFactory reads
+    interface.doc fresh at every call, so this propagates immediately.
+    """
+    new_doc = _build_task_doc_with_ptools(induced_ptools)
+    compute_airline_total_cost.doc = new_doc
+    # Rebind (no actual tool list changes — induced ptools live in the doc)
+    compute_airline_total_cost.implement_via('react', max_steps=14, tools=[])
+
+
+# ═══════════════════════════════════════════════════════════════
 # CLI
 # ═══════════════════════════════════════════════════════════════
 
@@ -355,6 +691,152 @@ def baseline(
     print(f'Avg cost: ${avg_cost:.4f}')
     print(f'Termination breakdown: {by_term}')
     print(f'Saved traces to {cache_path}')
+
+
+@app.command()
+def run(
+    n_cases: int = typer.Option(30, help='Number of cases'),
+    n_iters: int = typer.Option(5, help='Max induction iterations'),
+    model: str = typer.Option('together_ai/deepseek-ai/DeepSeek-V3', help='LLM model'),
+    seed: int = typer.Option(42, help='Random seed'),
+    min_count: int = typer.Option(3, help='Min pattern frequency to induce'),
+    sim_threshold: float = typer.Option(0.75, help='Docstring sim threshold'),
+    batch_size: int = typer.Option(1, help='Ptools to induce per iteration'),
+    structured_output: bool = typer.Option(True, help='Structured output (G fix)'),
+    output_dir: str = typer.Option('iterations_v6cg_airline_v2', help='Output directory'),
+    reuse_iter0: bool = typer.Option(True, help='Reuse cached baseline as iter 0'),
+):
+    """Run iterative ptool induction v6cg-style on airline (Path A: ReActFactory)."""
+    out_dir = BASE_DIR / output_dir
+    config.configure(cfg={
+        'llm': {'model': model, 'timeout': 300, 'max_tokens': 8192},
+        'cachier': {
+            'cache_dir': str(out_dir / 'llm_cache'),
+            'enable_caching': True,
+        },
+    })
+    out_dir.mkdir(parents=True, exist_ok=True)
+    ptools_dir = out_dir / 'ptools'
+
+    cases = load_airline_cases(n_cases, seed)
+    induced: list[dict] = []
+    iteration_stats = []
+
+    print(f'Iterative Ptool Induction v6cg — RULEARENA AIRLINE v2')
+    print(f'  Source: thoughts (paragraph-split), batch={batch_size}, sim_threshold={sim_threshold}')
+    print(f'  Structured output: {structured_output}, min_count={min_count}')
+    print(f'  Cases: {n_cases}, Max iters: {n_iters}')
+    print(f'  Output: {out_dir}\n')
+
+    for iteration in range(n_iters):
+        iter_path = out_dir / f'iter_{iteration}'
+        iter_path.mkdir(parents=True, exist_ok=True)
+
+        print(f'\n{"="*60}')
+        print(f'ITERATION {iteration}  |  ptools: {[p["display_name"] for p in induced]}')
+        print(f'{"="*60}')
+
+        # Rebind interface with current induced ptools in docstring
+        _rebind_interface(induced)
+
+        # Step 1: Run all cases (use cached baseline for iter 0 if available)
+        cached_baseline = BASE_DIR / 'traces' / f'react_traces_airline_v2_n{n_cases}.json'
+        if iteration == 0 and reuse_iter0 and cached_baseline.exists():
+            with open(cached_baseline) as f:
+                cached = json.load(f)
+            case_names = {c['name'] for c in cases}
+            cached_names = {t['case_name'] for t in cached}
+            if case_names.issubset(cached_names):
+                traces = [t for t in cached if t['case_name'] in case_names]
+                print(f'  Loaded {len(traces)} cached baseline traces from {cached_baseline.name}')
+            else:
+                print(f'  Cache missing some cases — running fresh ReAct...')
+                traces = _run_all_cases(cases, model)
+        else:
+            print(f'  Running ReAct with {len(induced)} induced ptools (in docstring), max_steps=14...')
+            traces = _run_all_cases(cases, model)
+
+        with open(iter_path / 'traces.json', 'w') as f:
+            json.dump(traces, f, indent=2, default=str)
+        save_sample_traces(traces, iter_path)
+
+        # Step 2: Stats
+        n_correct = sum(1 for t in traces if t.get('correct', False))
+        accuracy = n_correct / len(traces) if traces else 0
+        total_cost = sum(t.get('stats', {}).get('cost', 0) for t in traces)
+        avg_cost = total_cost / len(traces) if traces else 0
+        avg_thought_len = sum(
+            len(s.get('thought') or '')
+            for t in traces for s in t['steps']
+        ) / max(sum(len(t['steps']) for t in traces), 1)
+
+        stats = dict(
+            iteration=iteration, n_ptools=len(induced),
+            accuracy=accuracy, n_correct=n_correct, n_total=len(traces),
+            avg_cost=avg_cost, avg_thought_len=avg_thought_len,
+        )
+        iteration_stats.append(stats)
+        print(f'\n  Accuracy: {n_correct}/{len(traces)} ({accuracy:.1%})')
+        print(f'  Avg cost: ${avg_cost:.4f}  |  Avg thought len: {avg_thought_len:.0f} chars')
+
+        # Step 3: Extract paragraphs
+        items = extract_thought_paragraphs(traces)
+        print(f'\n  Extracted {len(items)} thought paragraphs')
+        if not items:
+            print('  No items to induce from. Stopping.')
+            break
+
+        # Step 4: Categorize
+        categories = categorize_items_air(items, source='thoughts', model=model)
+        print(f'  Top patterns:')
+        for cat, count, _ in categories[:8]:
+            print(f'    {count:3d}x  {cat}')
+
+        # Step 5: Synthesize
+        print(f'\n  Synthesizing ptools (structured={structured_output})...')
+        new_ptools = select_and_synthesize_air(
+            categories, induced, model,
+            batch_size=batch_size, sim_threshold=sim_threshold,
+            min_count=min_count, next_id=len(induced) + 1,
+            structured_output=structured_output,
+        )
+
+        if not new_ptools:
+            print('  No new orthogonal ptools found. Converged!')
+            break
+
+        for p in new_ptools:
+            save_ptool(p, ptools_dir)
+            induced.append(p)
+            print(f'  New ptool: {p["display_name"]} — {p["short_desc"]}')
+
+        save_ptools_as_python(induced, out_dir / 'ptools_induced.py')
+        meta = {**stats, 'new_ptools': new_ptools}
+        with open(iter_path / 'meta.json', 'w') as f:
+            json.dump(meta, f, indent=2, default=str)
+
+    # Final summary
+    print(f'\n\n{"="*60}')
+    print(f'FINAL SUMMARY')
+    print(f'{"="*60}')
+    print(f'{"Iter":>4}  {"Pt":>3}  {"Acc":>8}  {"Avg$":>9}  {"AvgThoughtLen":>15}')
+    for s in iteration_stats:
+        print(f'{s["iteration"]:4d}  {s["n_ptools"]:3d}  '
+              f'{s["accuracy"]:7.1%}  ${s["avg_cost"]:.4f}  '
+              f'{s["avg_thought_len"]:15.0f}')
+
+    summary = {
+        'iteration_stats': iteration_stats,
+        'ptools': induced,
+        'config': dict(n_cases=n_cases, n_iters=n_iters, model=model,
+                        seed=seed, min_count=min_count,
+                        sim_threshold=sim_threshold, batch_size=batch_size,
+                        source='thoughts', structured_output=structured_output,
+                        output_dir=output_dir, task='rulearena_airline_v2'),
+    }
+    with open(out_dir / 'summary.json', 'w') as f:
+        json.dump(summary, f, indent=2, default=str)
+    print(f'\nSummary saved to {out_dir / "summary.json"}')
 
 
 if __name__ == '__main__':
