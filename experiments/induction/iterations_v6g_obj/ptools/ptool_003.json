@@ -1,0 +1,15 @@
+{
+  "id": "ptool_003",
+  "func_name": "trace_movement_history",
+  "display_name": "TraceMovementHistory",
+  "short_desc": "Reconstructs chronological movements of an object and witnesses present/absent for each transfer.",
+  "doc": "Analyzes a narrative to trace all movements of a specified object and identify who was present/absent for each movement event.\n\nExtracts:\n- Initial location of the object\n- All movement events (actor, from_location, to_location)\n- Characters present and absent during each movement\n- Maintains chronological order of events\n\nReturns:\nA chronological list of dictionaries representing each movement step. Each dictionary contains:\n- 'step': Integer step number (0 for initial state)\n- 'type': 'initial' or 'movement'\n- 'actor': Who performed the action (None for initial state)\n- 'from_location': Previous location\n- 'to_location': New location\n- 'present': List of characters present during movement\n- 'absent': List of characters absent during movement\n\nExample output:\n[\n    {\n        'step': 0,\n        'type': 'initial',\n        'actor': None,\n        'from_location': None,\n        'to_location': \"teacher's desk\",\n        'present': ['all'],\n        'absent': []\n    },\n    {\n        'step': 1,\n        'type': 'movement',\n        'actor': 'Madison',\n        'from_location': 'storage cupboard',\n        'to_location': 'secure location',\n        'present': ['Madison'],\n        'absent': ['teacher', 'other students']\n    }\n]\n\nNote: Focuses on reconstructing the objective movement history rather than character beliefs.",
+  "source_pattern": "Trace Movement History",
+  "examples": [
+    "TraceObjectMovementHistory[laptop]\nObservation 1: \nInitial location: Steve's desk\nMovement 1: Steve moves laptop from desk to meeting room (Steve present, Amy absent, Ben absent)\nMovement 2: Ben moves",
+    "Analyze the narrative to trace all movements of the iPhone and identify who was present/absent for each movement, focusing on Emily's awareness.",
+    "Reconstruct the flight manual movements and who witnessed each step based on the narrative",
+    "Trace the microphone's movements and identify witnesses for each transfer",
+    "TraceObjectMovementHistory[gradebook]\nObservation 1: \nInitial location: teacher's desk (known to all)\nMovement 1: Madison finds gradebook in storage cupboard and secures it (present: Madison)\nMovement"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "ptool_004",
+  "func_name": "verify_presence_matrix",
+  "display_name": "VerifyPresenceMatrix",
+  "short_desc": "Creates a presence matrix showing which characters were present/absent for each object movement event.",
+  "doc": "Analyzes the narrative to extract all object movement events and creates a presence matrix showing which characters\nwere present or absent during each movement. The matrix format helps identify witness patterns and awareness gaps.\n\nArgs:\n    narrative: The full narrative text describing characters, object movements, and who was present/absent\n    focus: The specific focus for analysis (e.g., target character 'Anna', target object 'flight manual',\n           or specific movement 'moved to cockpit')\n\nReturns:\n    A dictionary with two keys:\n    - 'events': List of movement events in chronological order with details\n    - 'matrix': Dictionary mapping (event_id, character) -> presence status ('present'/'absent')\n    \n    Example output:\n    {\n        'events': [\n            {\n                'id': 'event_1',\n                'step': 1,\n                'object': 'flight manual',\n                'from': 'pantry',\n                'to': 'office',\n                'actor': 'Richard',\n                'description': 'Richard moved the flight manual from pantry to office'\n            },\n            {\n                'id': 'event_2', \n                'step': 2,\n                'object': 'flight manual',\n                'from': 'office',\n                'to': 'cockpit',\n                'actor': 'Tom',\n                'description': 'Tom moved the flight manual from office to cockpit'\n            }\n        ],\n        'matrix': {\n            ('event_1', 'Richard'): 'present',\n            ('event_1', 'Tom'): 'absent',\n            ('event_1', 'Ellie'): 'present',\n            ('event_2', 'Richard'): 'absent',\n            ('event_2', 'Tom'): 'present',\n            ('event_2', 'Ellie'): 'present'\n        }\n    }\n    \n    Note: This tool focuses on factual presence/absence during movements, not on character beliefs or\n    subsequent discoveries. The matrix format helps analyze witness patterns across multiple events.",
+  "source_pattern": "Verify Character Presence/Awareness",
+  "examples": [
+    "Identify who was present when Richard moved the flight manual to the office and when Tom moved it to the cockpit",
+    "Check if Ellie witnessed John moving the tandem bicycle to the driveway",
+    "Check the narrative for Mary's presence during the coin movements",
+    "Confirm Camille's awareness of the case's final movement",
+    "Check if Kyle was present in the kitchen when Sophia moved the iPhone and if he witnessed the movement"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "ptool_005",
+  "func_name": "verify_witness_presence",
+  "display_name": "VerifyWitnessPresence",
+  "short_desc": "Check if a specific character was present during a particular object movement event.",
+  "doc": "Verifies whether a specific character witnessed a particular object movement event by analyzing the narrative.\n\nThis function examines the narrative to determine if the focus character was present when a specific\nobject movement occurred. The focus should specify both the character to check and the movement event\nto examine (e.g., 'Ricky when Danny moved the notebook to the producer's desk').\n\nArgs:\n    narrative (str): The full narrative text describing characters, object movements,\n                    and who was present/absent for each event.\n    focus (str): A string specifying both the witness to check and the movement event\n                (e.g., 'Ricky when Danny moved the notebook to the producer's desk').\n\nReturns:\n    dict: A structured response containing:\n        - 'witness_present': Boolean indicating if the character was present\n        - 'movement_details': Details about the movement event\n        - 'witnesses_present': List of characters confirmed present during the event\n        - 'witnesses_absent': List of characters confirmed absent during the event\n        - 'evidence': Direct quotes from the narrative supporting the conclusion\n\nExample:\n    {\n        'witness_present': True,\n        'movement_details': {\n            'actor': 'Danny',\n            'object': 'notebook',\n            'from_location': 'office',\n            'to_location': \"producer's desk\"\n        },\n        'witnesses_present': ['Ricky', 'Danny', 'Anna'],\n        'witnesses_absent': ['Cora'],\n        'evidence': \"Danny moved the notebook from the office to the producer's desk while Ricky, Anna, and Danny were present. Cora was absent.\"\n    }\n\nNote:\n    This function only determines factual presence/absence from the narrative, not character beliefs\n    about what others may have witnessed. Returns None if the specified movement event is not found.",
+  "source_pattern": "Verify Witness Presence",
+  "examples": [
+    "Check if Ricky was present when Danny moved the notebook to the producer's desk",
+    "Check if Francesca was present when Martin moved the microphone to the stage",
+    "Check if Brian witnessed Mabel hanging the painting in the main gallery"
+  ]
+}

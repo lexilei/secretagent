@@ -1,0 +1,31 @@
+{
+  "iteration": 0,
+  "n_ptools": 0,
+  "accuracy": 0.7333333333333333,
+  "n_correct": 55,
+  "n_total": 75,
+  "avg_cost": 0.006733300000000001,
+  "avg_latency": 19.501326449712117,
+  "ptool_uses": 0,
+  "do_uses": 63,
+  "max_step_hits": 0,
+  "neg1_answers": 0,
+  "extracted_finishes": 37,
+  "new_ptools": [
+    {
+      "id": "ptool_001",
+      "func_name": "trace_object_movement_history",
+      "display_name": "TraceObjectMovementHistory",
+      "short_desc": "Trace all movements of a specific object and identify who was present/absent for each movement.",
+      "doc": "Traces the complete movement history of a specified object throughout the narrative, capturing each transfer event with details about participants and witnesses.\n\nArgs:\n    narrative (str): The full narrative text describing characters, object movements, and presence/absence\n    focus (str): The specific object to trace movements for (e.g., 'helmet', 'ancient coin', 'laptop')\n\nReturns:\n    list: A chronological list of dictionaries representing each movement event. Each dictionary contains:\n          - step: Sequential movement number (starting at 1)\n          - from: Location object moved from\n          - to: Location object moved to\n          - actor: Character who performed the movement\n          - present: List of characters present during this movement\n          - absent: List of characters absent during this movement\n          - description: Brief description of the movement event\n\nExample:\n    [\n        {\n            \"step\": 1,\n            \"from\": \"pantry\",\n            \"to\": \"counter\",\n            \"actor\": \"Ben\",\n            \"present\": [\"Anna\", \"Ben\"],\n            \"absent\": [\"Cora\"],\n            \"description\": \"Ben moved the object from pantry to counter\"\n        },\n        {\n            \"step\": 2,\n            \"from\": \"counter\",\n            \"to\": \"drawer\",\n            \"actor\": \"Anna\",\n            \"present\": [\"Anna\"],\n            \"absent\": [\"Ben\", \"Cora\"],\n            \"description\": \"Anna moved the object from counter to drawer\"\n        }\n    ]",
+      "source_pattern": "Trace Object Movement History",
+      "examples": [
+        "Find all movements of the helmets and who was present for each movement",
+        "Identify all movements of the ancient coin and who was present for each movement.",
+        "Identify all movements of the laptop and who witnessed them, especially Steve's perspective.",
+        "Identify all movements of the iPhone and who was present or absent for each movement.",
+        "Identify all movements of the flight manual and who was present for each movement from the narrative."
+      ]
+    }
+  ]
+}
