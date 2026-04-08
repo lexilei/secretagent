@@ -206,12 +206,13 @@ def run(config_file: Path = typer.Argument(..., help='YAML config file')):
 
     # === Optional test ===
     if cfg.get('eval_test', False):
+        test_ptools = ptool_snapshots[best_train_iter] if ptool_snapshots else []
         test_cases = load_cases(OmegaConf.to_container(cfg, resolve=True))['test']
         print(f'\n{"="*60}')
-        print(f'TEST ({len(test_cases)} cases)')
+        print(f'TEST ({len(test_cases)} cases, {len(test_ptools)} ptools from best iter {best_train_iter}, train={best_train_acc:.1%})')
         print(f'{"="*60}')
         test_traces = run_all_cases(
-            test_cases, ptools, cfg.model, cfg.max_steps,
+            test_cases, test_ptools, cfg.model, cfg.max_steps,
             parsing_mode=cfg.parsing.mode,
             benchmark=benchmark,
         )
