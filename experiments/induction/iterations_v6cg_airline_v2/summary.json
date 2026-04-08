@@ -1,0 +1,139 @@
+{
+  "iteration_stats": [
+    {
+      "iteration": 0,
+      "n_ptools": 0,
+      "accuracy": 0.7,
+      "n_correct": 21,
+      "n_total": 30,
+      "avg_cost": 0.022141875,
+      "avg_thought_len": 9977.1875
+    },
+    {
+      "iteration": 1,
+      "n_ptools": 1,
+      "accuracy": 0.7,
+      "n_correct": 21,
+      "n_total": 30,
+      "avg_cost": 0.02047666666666666,
+      "avg_thought_len": 11661.833333333334
+    },
+    {
+      "iteration": 2,
+      "n_ptools": 2,
+      "accuracy": 0.7,
+      "n_correct": 21,
+      "n_total": 30,
+      "avg_cost": 0.021564666666666673,
+      "avg_thought_len": 13799.806451612903
+    },
+    {
+      "iteration": 3,
+      "n_ptools": 3,
+      "accuracy": 0.6333333333333333,
+      "n_correct": 19,
+      "n_total": 30,
+      "avg_cost": 0.02061716666666667,
+      "avg_thought_len": 13535.333333333334
+    },
+    {
+      "iteration": 4,
+      "n_ptools": 4,
+      "accuracy": 0.6666666666666666,
+      "n_correct": 20,
+      "n_total": 30,
+      "avg_cost": 0.021058125000000007,
+      "avg_thought_len": 13982.7
+    }
+  ],
+  "ptools": [
+    {
+      "id": "ptool_001",
+      "func_name": "calculate_individual_bag_fee",
+      "display_name": "CalculateIndividualBagFee",
+      "short_desc": "Calculates the fee for a specific checked bag including base fee, oversize, and overweight components.",
+      "doc": "Calculates the complete fee breakdown for a specific checked bag based on airline baggage policies.\n\nExtracts from narrative:\n- Passenger customer class (Economy, Premium Economy, Business, First)\n- Flight route region (domestic/international/regional specific)\n- Bag dimensions (length \u00d7 width \u00d7 height in inches) and weight (lbs)\n- Ticket price (for potential excess value fee calculation)\n- Bag ordinal position (for base fee determination)\n\nKey calculation rules:\n- Base fee depends on route region \u00d7 customer class \u00d7 bag ordinal\n- Oversize: total dimensions > 62 inches ($30 for 63-65\", $200 for >65\")\n- Overweight tiers: 50-53 lbs ($30), 53-70 lbs ($100), 70-100 lbs ($200), >100 lbs ($400)\n- Oversize and overweight surcharges don't stack - apply max(oversize, overweight) per bag\n- Personal items/carry-ons (typically first items) are free\n\nArgs:\n    narrative (str): Full problem statement with passenger, flight, and bag details\n    focus (str): Specific bag ID to calculate fees for (e.g., \"bag 1\", \"bag 3\")\n\nReturns:\n    dict: Detailed fee breakdown for the specified bag with format:\n    {\n        \"bag_id\": \"bag_2\",\n        \"base_fee\": 200,\n        \"oversize_fee\": 0,\n        \"overweight_fee\": 100,\n        \"max_surcharge\": 100,\n        \"total_fee\": 300,\n        \"dimensions\": \"63 inches\",\n        \"weight\": \"55 lbs\",\n        \"oversize_reason\": \"\",\n        \"overweight_reason\": \"53-70 lbs tier\",\n        \"rule_cited\": \"Base fee: Premium Economy 2nd bag Asia $200, Max(oversize,overweight)=$100\"\n    }\n\nExample output:\n    {\n        \"bag_id\": \"bag_2\",\n        \"base_fee\": 200,\n        \"oversize_fee\": 30,\n        \"overweight_fee\": 0,\n        \"max_surcharge\": 30,\n        \"total_fee\": 230,\n        \"dimensions\": \"64 inches\",\n        \"weight\": \"48 lbs\",\n        \"oversize_reason\": \"63-65 inch oversize\",\n        \"overweight_reason\": \"\",\n        \"rule_cited\": \"Base fee: Economy 2nd bag Domestic $200, Max(oversize,overweight)=$30\"\n    }",
+      "source_pattern": "Calculating Individual Bag Fee",
+      "examples": [
+        "First, free bags: bag 4 and bag 7 (assigned as free)\nBag 4: dimensions 63 inches (oversize, $30), weight 66 lbs (under 70, no overweight fee)\nSo fee: base $0 + oversize $30 = $30",
+        "Bag 7: dimensions 65 inches (oversize, $30), weight 63 lbs (under 70, no overweight fee)\nFee: $0 + $30 = $30",
+        "For each paid bag:\nBag 2: base $200\nOverweight: $100 (62 lbs, over 53-70)\nOversize: $200 (93 >65)\nMax(100,200)=200\nTotal for bag 2: 200 + 200 = $400",
+        "Bag 3: base $200\nOverweight: $30 (53 lbs, in 50-53)\nOversize: $200 (87 >65)\nMax(30,200)=200\nTotal: 200+200=$400",
+        "Bag 5: base $200\nOverweight: $30 (53 lbs)\nOversize: $30 (64 in, 62-65)\nMax(30,30)=30\nTotal: 200+30=$230"
+      ]
+    },
+    {
+      "id": "ptool_002",
+      "func_name": "interpret_policy_ranges",
+      "display_name": "InterpretPolicyRanges",
+      "short_desc": "Parses policy language to extract numeric ranges from 'Over X to Y' patterns and interprets inclusion rules.",
+      "doc": "Interprets policy language containing range descriptions (e.g., 'Over 62 in / 158 cm \u2013 65 in / 165 cm') and extracts numeric thresholds with inclusion rules.\n\nExtracts:\n- Range patterns from the narrative (e.g., \"Over X to Y\")\n- Units (inches, cm, lbs) for context\n- Interprets whether boundaries are inclusive/exclusive (typically 'Over X' means >X, 'to Y' means \u2264Y)\n\nReturns:\nA list of dictionaries with interpreted ranges, each containing:\n- 'range_text': The original text pattern matched\n- 'lower_bound': The lower threshold (exclusive if 'Over' is used)\n- 'upper_bound': The upper threshold (inclusive)\n- 'unit': The unit of measurement (e.g., 'in', 'cm', 'lbs')\n- 'interpretation': A human-readable explanation of the range\n\nExample output:\n[\n    {\n        \"range_text\": \"Over 62 in \u2013 65 in\",\n        \"lower_bound\": 62.0,\n        \"upper_bound\": 65.0,\n        \"unit\": \"in\",\n        \"interpretation\": \"Dimensions >62.0 inches and \u226465.0 inches\"\n    },\n    {\n        \"range_text\": \"Over 50 lbs to 53 lbs\",\n        \"lower_bound\": 50.0,\n        \"upper_bound\": 53.0,\n        \"unit\": \"lbs\",\n        \"interpretation\": \"Weight >50.0 lbs and \u226453.0 lbs\"\n    }\n]",
+      "source_pattern": "Interpreting policy language",
+      "examples": [
+        "But let's confirm with the policy: \"Over 62 in / 158 cm \u2013 65 in / 165 cm\" \u2013 the dash might mean \"to\", so it's \"Over 62in to 65in\", meaning from 62.1 to 65.0 inches.",
+        "Similarly, for weight: \"Over 50 lbs to 53 lbs\" -> from 50.1 to 53.0 lbs.",
+        "\"Over 53 lbs to 70 lbs\" -> from 53.1 to 70.0 lbs.",
+        "From the note: \"^Main Plus includes 1 extra free checked bag in addition to the Main Cabin allowance (max of 2).\" This means that in Main Cabin, the first bag is not free (fee $40), but Main Plus gets",
+        "The note says \"in addition to the Main Cabin allowance\". The Main Cabin allowance is typically 1 checked bag with a fee (unless free due to status or destination). But for Main Plus, it says \"includes"
+      ]
+    },
+    {
+      "id": "ptool_003",
+      "func_name": "recall_policy_rules",
+      "display_name": "RecallPolicyRules",
+      "short_desc": "Extract key parameters from airline baggage narrative and match them to policy rules",
+      "doc": "Extracts passenger class, flight route, ticket price, and bag details from narrative, then identifies applicable policy rules based on the specified focus.\n\nArgs:\n    narrative: Full problem statement containing passenger info, flight details, and bag specifications\n    focus: Specific aspect to focus on (e.g., 'customer_class', 'route_region', 'bag_ordinal_fees', 'size_limits')\n\nReturns:\n    dict: Structured policy rule information based on the focus parameter:\n    - For 'customer_class': {'customer_class': 'Main Cabin', 'class_features': ['free_carry_on', 'checked_bag_fees'], ...}\n    - For 'route_region': {'origin': 'Charlotte', 'destination': 'Washington D.C.', 'region_category': 'US_Domestic', 'route_rules': {...}}\n    - For 'bag_ordinal_fees': {'first_bag_fee': 40, 'second_bag_fee': 45, 'third_bag_fee': 150, 'fourth_plus_fee': 200, 'currency': 'USD'}\n    - For 'size_limits': {'carry_on_max': '22x14x9', 'personal_item_max': '18x14x8', 'checked_max_inches': 62, 'weight_limits': [50, 70, 100]}\n\nExample output for focus='route_region':\n    {\n        'origin': 'Charlotte',\n        'destination': 'Washington D.C.',\n        'region_category': 'US_Domestic',\n        'applicable_regions': ['U.S.', 'Puerto Rico', 'U.S. Virgin Islands'],\n        'route_rules': {\n            'first_bag_fee': 40,\n            'second_bag_fee': 45,\n            'third_bag_fee': 150,\n            'fourth_plus_fee': 200\n        }\n    }\n\nNote: Extracts passenger class, route information, and identifies applicable fee structures based on region and class combinations.",
+      "source_pattern": "Recall Policy Rules",
+      "examples": [
+        "Thomas is flying from Charlotte to Washington D.C., which is within the U.S. (both are in the U.S.). According to the policy, for travel within the U.S., Puerto Rico, and U.S. Virgin Islands, the fees",
+        "According to the carry-on policy:\n- One carry-on bag: max 22 x 14 x 9 inches\n- One personal item: max 18 x 14 x 8 inches",
+        "The flight is within the U.S. (Charlotte to Washington D.C.), and Thomas is Main Cabin class.",
+        "Base fees for checked bags (within U.S.):\n- First bag: $40\n- Second bag: $45\n- Third bag: $150\n- Fourth bag: $200 (since it's the fourth bag, it falls under \"Fourth Bag +\" which is $200 for within U.S",
+        "But let's confirm the policy for the fourth bag: \"Within and between U.S., Canada, Puerto Rico and U.S. Virgin Islands AND you are a Main Cabin^ class passenger, the fee should be $200\" for the fourth"
+      ]
+    },
+    {
+      "id": "ptool_004",
+      "func_name": "apply_size_constraints",
+      "display_name": "ApplySizeConstraints",
+      "short_desc": "Check each bag against size constraints to determine carry-on eligibility and oversize status.",
+      "doc": "Analyzes baggage dimensions to determine if items can be carried on or must be checked due to oversize constraints.\n\nArgs:\n    narrative (str): The full problem statement containing passenger details, flight route, baggage dimensions, and weights.\n    focus (str): Specific aspect to focus on (e.g., bag ID, oversize check, carry-on eligibility).\n\nReturns:\n    dict: A dictionary containing:\n        - 'oversize_bags': List of bag IDs that exceed maximum size constraints\n        - 'oversize_details': List of dicts with detailed oversize analysis per bag\n        - 'carry_on_eligible': List of bag IDs that meet carry-on size requirements\n        - 'oversize_rules_cited': Specific size constraint rules applied\n        \n    Example output format:\n        {\n            \"oversize_bags\": [2, 3],\n            \"oversize_details\": [\n                {\n                    \"bag_id\": 2,\n                    \"dimensions\": \"44x29x20\",\n                    \"total_inches\": 93,\n                    \"oversize_limit\": 62,\n                    \"oversize_reason\": \"Total dimensions exceed 62 inches\"\n                },\n                {\n                    \"bag_id\": 3, \n                    \"dimensions\": \"45x23x19\",\n                    \"total_inches\": 87,\n                    \"oversize_limit\": 62,\n                    \"oversize_reason\": \"Total dimensions exceed 62 inches\"\n                }\n            ],\n            \"carry_on_eligible\": [1],\n            \"oversize_rules_cited\": \"Bags exceeding 62 total inches (L+W+H) must be checked\"\n        }\n\nNote: Uses standard oversize threshold of 62 total inches. Carry-on bags must also meet individual dimension limits (typically 22x14x9 inches).",
+      "source_pattern": "Apply Size Constraints",
+      "examples": [
+        "Let's check each item's dimensions to see if they can be carry-on or personal:",
+        "Personal item: max 18x14x8 inches.\n- Item 1: 21x13x6 -> 21 > 18, so too big for personal item. But it might be a carry-on? Carry-on max is 22x14x9, so 21x13x6 is within carry-on size? 21 <=22, 13<=14,",
+        "1. Backpack: 21x13x6 -> dimensions: 21+13+6 = 40 inches (within carry-on size? Check: each dimension: length 21 <=22, width 13<=14, height 6<=9, so yes, it can be a carry-on bag. But she can only have",
+        "2. Luggage box: 44x29x20 -> total 44+29+20=93 inches > 62, so oversize. Cannot be carry-on. Must be checked.",
+        "3. Luggage box: 45x23x19 -> 45+23+19=87 >62, oversize, must be checked."
+      ]
+    },
+    {
+      "id": "ptool_005",
+      "func_name": "checking_item_dimensions",
+      "display_name": "CheckingItemDimensions",
+      "short_desc": "checking item dimensions",
+      "doc": "Checking Item Dimensions.\n\nAnalyze the narrative with the given focus.",
+      "source_pattern": "Checking Item Dimensions",
+      "examples": [
+        "Also, are there any items that might be personal items? The backpack (item 1) is 21x13x6, which is within personal item dimensions? Personal item: max 18x14x8. This backpack is 21x13x6, so length 21 >",
+        "1. Backpack: 18x12x9 inches. This is within personal item size (18x14x8, and 9>8? Wait, 9 inches height vs 8 allowed? Actually, dimensions should not exceed 18x14x8, so 9 inches exceeds the height. Bu",
+        "But note: the carry-on dimensions are 22x14x9, and this bag is 18x12x9, so it should be fine. However, since it's a backpack, it might be considered a personal item if it fits under the seat. But with",
+        "Let's calculate the total dimensions for each item to see if they exceed carry-on size.",
+        "Item 1: Backpack, 18x12x9 inches, 6 lbs. \n- For personal item: max 18x14x8, this has height 9 > 8, so too big. \n- For carry-on: max 22x14x9, this fits within all dimensions: 18<=22, 12<=14, 9<=9. So i"
+      ]
+    }
+  ],
+  "config": {
+    "n_cases": 30,
+    "n_iters": 5,
+    "model": "together_ai/deepseek-ai/DeepSeek-V3",
+    "seed": 42,
+    "min_count": 3,
+    "sim_threshold": 0.75,
+    "batch_size": 1,
+    "source": "thoughts",
+    "structured_output": true,
+    "output_dir": "iterations_v6cg_airline_v2",
+    "task": "rulearena_airline_v2"
+  }
+}

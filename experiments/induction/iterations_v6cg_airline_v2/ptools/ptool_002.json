@@ -1,0 +1,15 @@
+{
+  "id": "ptool_002",
+  "func_name": "interpret_policy_ranges",
+  "display_name": "InterpretPolicyRanges",
+  "short_desc": "Parses policy language to extract numeric ranges from 'Over X to Y' patterns and interprets inclusion rules.",
+  "doc": "Interprets policy language containing range descriptions (e.g., 'Over 62 in / 158 cm \u2013 65 in / 165 cm') and extracts numeric thresholds with inclusion rules.\n\nExtracts:\n- Range patterns from the narrative (e.g., \"Over X to Y\")\n- Units (inches, cm, lbs) for context\n- Interprets whether boundaries are inclusive/exclusive (typically 'Over X' means >X, 'to Y' means \u2264Y)\n\nReturns:\nA list of dictionaries with interpreted ranges, each containing:\n- 'range_text': The original text pattern matched\n- 'lower_bound': The lower threshold (exclusive if 'Over' is used)\n- 'upper_bound': The upper threshold (inclusive)\n- 'unit': The unit of measurement (e.g., 'in', 'cm', 'lbs')\n- 'interpretation': A human-readable explanation of the range\n\nExample output:\n[\n    {\n        \"range_text\": \"Over 62 in \u2013 65 in\",\n        \"lower_bound\": 62.0,\n        \"upper_bound\": 65.0,\n        \"unit\": \"in\",\n        \"interpretation\": \"Dimensions >62.0 inches and \u226465.0 inches\"\n    },\n    {\n        \"range_text\": \"Over 50 lbs to 53 lbs\",\n        \"lower_bound\": 50.0,\n        \"upper_bound\": 53.0,\n        \"unit\": \"lbs\",\n        \"interpretation\": \"Weight >50.0 lbs and \u226453.0 lbs\"\n    }\n]",
+  "source_pattern": "Interpreting policy language",
+  "examples": [
+    "But let's confirm with the policy: \"Over 62 in / 158 cm \u2013 65 in / 165 cm\" \u2013 the dash might mean \"to\", so it's \"Over 62in to 65in\", meaning from 62.1 to 65.0 inches.",
+    "Similarly, for weight: \"Over 50 lbs to 53 lbs\" -> from 50.1 to 53.0 lbs.",
+    "\"Over 53 lbs to 70 lbs\" -> from 53.1 to 70.0 lbs.",
+    "From the note: \"^Main Plus includes 1 extra free checked bag in addition to the Main Cabin allowance (max of 2).\" This means that in Main Cabin, the first bag is not free (fee $40), but Main Plus gets",
+    "The note says \"in addition to the Main Cabin allowance\". The Main Cabin allowance is typically 1 checked bag with a fee (unless free due to status or destination). But for Main Plus, it says \"includes"
+  ]
+}

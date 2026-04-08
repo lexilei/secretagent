@@ -1,0 +1,15 @@
+{
+  "id": "ptool_003",
+  "func_name": "recall_policy_rules",
+  "display_name": "RecallPolicyRules",
+  "short_desc": "Extract key parameters from airline baggage narrative and match them to policy rules",
+  "doc": "Extracts passenger class, flight route, ticket price, and bag details from narrative, then identifies applicable policy rules based on the specified focus.\n\nArgs:\n    narrative: Full problem statement containing passenger info, flight details, and bag specifications\n    focus: Specific aspect to focus on (e.g., 'customer_class', 'route_region', 'bag_ordinal_fees', 'size_limits')\n\nReturns:\n    dict: Structured policy rule information based on the focus parameter:\n    - For 'customer_class': {'customer_class': 'Main Cabin', 'class_features': ['free_carry_on', 'checked_bag_fees'], ...}\n    - For 'route_region': {'origin': 'Charlotte', 'destination': 'Washington D.C.', 'region_category': 'US_Domestic', 'route_rules': {...}}\n    - For 'bag_ordinal_fees': {'first_bag_fee': 40, 'second_bag_fee': 45, 'third_bag_fee': 150, 'fourth_plus_fee': 200, 'currency': 'USD'}\n    - For 'size_limits': {'carry_on_max': '22x14x9', 'personal_item_max': '18x14x8', 'checked_max_inches': 62, 'weight_limits': [50, 70, 100]}\n\nExample output for focus='route_region':\n    {\n        'origin': 'Charlotte',\n        'destination': 'Washington D.C.',\n        'region_category': 'US_Domestic',\n        'applicable_regions': ['U.S.', 'Puerto Rico', 'U.S. Virgin Islands'],\n        'route_rules': {\n            'first_bag_fee': 40,\n            'second_bag_fee': 45,\n            'third_bag_fee': 150,\n            'fourth_plus_fee': 200\n        }\n    }\n\nNote: Extracts passenger class, route information, and identifies applicable fee structures based on region and class combinations.",
+  "source_pattern": "Recall Policy Rules",
+  "examples": [
+    "Thomas is flying from Charlotte to Washington D.C., which is within the U.S. (both are in the U.S.). According to the policy, for travel within the U.S., Puerto Rico, and U.S. Virgin Islands, the fees",
+    "According to the carry-on policy:\n- One carry-on bag: max 22 x 14 x 9 inches\n- One personal item: max 18 x 14 x 8 inches",
+    "The flight is within the U.S. (Charlotte to Washington D.C.), and Thomas is Main Cabin class.",
+    "Base fees for checked bags (within U.S.):\n- First bag: $40\n- Second bag: $45\n- Third bag: $150\n- Fourth bag: $200 (since it's the fourth bag, it falls under \"Fourth Bag +\" which is $200 for within U.S",
+    "But let's confirm the policy for the fourth bag: \"Within and between U.S., Canada, Puerto Rico and U.S. Virgin Islands AND you are a Main Cabin^ class passenger, the fee should be $200\" for the fourth"
+  ]
+}

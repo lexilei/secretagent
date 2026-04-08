@@ -1,0 +1,26 @@
+{
+  "iteration": 0,
+  "n_ptools": 0,
+  "accuracy": 0.7,
+  "n_correct": 21,
+  "n_total": 30,
+  "avg_cost": 0.022141875,
+  "avg_thought_len": 9977.1875,
+  "new_ptools": [
+    {
+      "id": "ptool_001",
+      "func_name": "calculate_individual_bag_fee",
+      "display_name": "CalculateIndividualBagFee",
+      "short_desc": "Calculates the fee for a specific checked bag including base fee, oversize, and overweight components.",
+      "doc": "Calculates the complete fee breakdown for a specific checked bag based on airline baggage policies.\n\nExtracts from narrative:\n- Passenger customer class (Economy, Premium Economy, Business, First)\n- Flight route region (domestic/international/regional specific)\n- Bag dimensions (length \u00d7 width \u00d7 height in inches) and weight (lbs)\n- Ticket price (for potential excess value fee calculation)\n- Bag ordinal position (for base fee determination)\n\nKey calculation rules:\n- Base fee depends on route region \u00d7 customer class \u00d7 bag ordinal\n- Oversize: total dimensions > 62 inches ($30 for 63-65\", $200 for >65\")\n- Overweight tiers: 50-53 lbs ($30), 53-70 lbs ($100), 70-100 lbs ($200), >100 lbs ($400)\n- Oversize and overweight surcharges don't stack - apply max(oversize, overweight) per bag\n- Personal items/carry-ons (typically first items) are free\n\nArgs:\n    narrative (str): Full problem statement with passenger, flight, and bag details\n    focus (str): Specific bag ID to calculate fees for (e.g., \"bag 1\", \"bag 3\")\n\nReturns:\n    dict: Detailed fee breakdown for the specified bag with format:\n    {\n        \"bag_id\": \"bag_2\",\n        \"base_fee\": 200,\n        \"oversize_fee\": 0,\n        \"overweight_fee\": 100,\n        \"max_surcharge\": 100,\n        \"total_fee\": 300,\n        \"dimensions\": \"63 inches\",\n        \"weight\": \"55 lbs\",\n        \"oversize_reason\": \"\",\n        \"overweight_reason\": \"53-70 lbs tier\",\n        \"rule_cited\": \"Base fee: Premium Economy 2nd bag Asia $200, Max(oversize,overweight)=$100\"\n    }\n\nExample output:\n    {\n        \"bag_id\": \"bag_2\",\n        \"base_fee\": 200,\n        \"oversize_fee\": 30,\n        \"overweight_fee\": 0,\n        \"max_surcharge\": 30,\n        \"total_fee\": 230,\n        \"dimensions\": \"64 inches\",\n        \"weight\": \"48 lbs\",\n        \"oversize_reason\": \"63-65 inch oversize\",\n        \"overweight_reason\": \"\",\n        \"rule_cited\": \"Base fee: Economy 2nd bag Domestic $200, Max(oversize,overweight)=$30\"\n    }",
+      "source_pattern": "Calculating Individual Bag Fee",
+      "examples": [
+        "First, free bags: bag 4 and bag 7 (assigned as free)\nBag 4: dimensions 63 inches (oversize, $30), weight 66 lbs (under 70, no overweight fee)\nSo fee: base $0 + oversize $30 = $30",
+        "Bag 7: dimensions 65 inches (oversize, $30), weight 63 lbs (under 70, no overweight fee)\nFee: $0 + $30 = $30",
+        "For each paid bag:\nBag 2: base $200\nOverweight: $100 (62 lbs, over 53-70)\nOversize: $200 (93 >65)\nMax(100,200)=200\nTotal for bag 2: 200 + 200 = $400",
+        "Bag 3: base $200\nOverweight: $30 (53 lbs, in 50-53)\nOversize: $200 (87 >65)\nMax(30,200)=200\nTotal: 200+200=$400",
+        "Bag 5: base $200\nOverweight: $30 (53 lbs)\nOversize: $30 (64 in, 62-65)\nMax(30,30)=30\nTotal: 200+30=$230"
+      ]
+    }
+  ]
+}

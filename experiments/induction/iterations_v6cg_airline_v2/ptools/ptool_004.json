@@ -1,0 +1,15 @@
+{
+  "id": "ptool_004",
+  "func_name": "apply_size_constraints",
+  "display_name": "ApplySizeConstraints",
+  "short_desc": "Check each bag against size constraints to determine carry-on eligibility and oversize status.",
+  "doc": "Analyzes baggage dimensions to determine if items can be carried on or must be checked due to oversize constraints.\n\nArgs:\n    narrative (str): The full problem statement containing passenger details, flight route, baggage dimensions, and weights.\n    focus (str): Specific aspect to focus on (e.g., bag ID, oversize check, carry-on eligibility).\n\nReturns:\n    dict: A dictionary containing:\n        - 'oversize_bags': List of bag IDs that exceed maximum size constraints\n        - 'oversize_details': List of dicts with detailed oversize analysis per bag\n        - 'carry_on_eligible': List of bag IDs that meet carry-on size requirements\n        - 'oversize_rules_cited': Specific size constraint rules applied\n        \n    Example output format:\n        {\n            \"oversize_bags\": [2, 3],\n            \"oversize_details\": [\n                {\n                    \"bag_id\": 2,\n                    \"dimensions\": \"44x29x20\",\n                    \"total_inches\": 93,\n                    \"oversize_limit\": 62,\n                    \"oversize_reason\": \"Total dimensions exceed 62 inches\"\n                },\n                {\n                    \"bag_id\": 3, \n                    \"dimensions\": \"45x23x19\",\n                    \"total_inches\": 87,\n                    \"oversize_limit\": 62,\n                    \"oversize_reason\": \"Total dimensions exceed 62 inches\"\n                }\n            ],\n            \"carry_on_eligible\": [1],\n            \"oversize_rules_cited\": \"Bags exceeding 62 total inches (L+W+H) must be checked\"\n        }\n\nNote: Uses standard oversize threshold of 62 total inches. Carry-on bags must also meet individual dimension limits (typically 22x14x9 inches).",
+  "source_pattern": "Apply Size Constraints",
+  "examples": [
+    "Let's check each item's dimensions to see if they can be carry-on or personal:",
+    "Personal item: max 18x14x8 inches.\n- Item 1: 21x13x6 -> 21 > 18, so too big for personal item. But it might be a carry-on? Carry-on max is 22x14x9, so 21x13x6 is within carry-on size? 21 <=22, 13<=14,",
+    "1. Backpack: 21x13x6 -> dimensions: 21+13+6 = 40 inches (within carry-on size? Check: each dimension: length 21 <=22, width 13<=14, height 6<=9, so yes, it can be a carry-on bag. But she can only have",
+    "2. Luggage box: 44x29x20 -> total 44+29+20=93 inches > 62, so oversize. Cannot be carry-on. Must be checked.",
+    "3. Luggage box: 45x23x19 -> 45+23+19=87 >62, oversize, must be checked."
+  ]
+}
