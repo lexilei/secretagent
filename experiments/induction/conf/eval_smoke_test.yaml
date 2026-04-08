@@ -1,0 +1,17 @@
+# Murder mystery test split baseline (no ptools)
+# P0.1 from experiment_queue.md: needed to cite +Δpp delta vs v6cg test 83.0%
+model: together_ai/deepseek-ai/DeepSeek-V3
+max_steps: 14
+
+data:
+  mode: split
+  benchmark: murder
+
+parsing:
+  mode: llm_extract
+
+ptools_dir: ""
+n_ptools: 0
+
+eval_splits: [test]
+output_dir: eval/smoke_test

@@ -1,0 +1,48 @@
+{
+  "results": {
+    "test": {
+      "accuracy": 0.67,
+      "correct": 67,
+      "total": 100,
+      "neg1": 0,
+      "extracted": 100,
+      "avg_cost": 0.003450812499999999,
+      "avg_steps": 1.24,
+      "ptool_uses": 0,
+      "do_uses": 0
+    }
+  },
+  "ptools": [],
+  "config": {
+    "model": "together_ai/deepseek-ai/DeepSeek-V3",
+    "n_iters": 5,
+    "max_steps": 14,
+    "min_count": 3,
+    "batch_size": 1,
+    "max_ptools": 10,
+    "source": "actions",
+    "filter_mode": "all",
+    "rank_by": "frequency",
+    "data": {
+      "mode": "split",
+      "benchmark": "murder"
+    },
+    "similarity": {
+      "mode": "combined",
+      "threshold": 0.75
+    },
+    "synthesis": {
+      "structured_output": false
+    },
+    "parsing": {
+      "mode": "llm_extract"
+    },
+    "output_dir": "eval/smoke_test",
+    "eval_test": false,
+    "ptools_dir": "",
+    "n_ptools": 0,
+    "eval_splits": [
+      "test"
+    ]
+  }
+}
