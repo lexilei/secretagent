@@ -1143,5 +1143,90 @@ def run_split(
     print(f'\nSummary saved to {out_dir / "summary.json"}')
 
 
+@app.command()
+def eval_with_ptools(
+    ptools_dir: str = typer.Option(..., help="Path to dir with ptool_*.json files"),
+    split: str = typer.Option('val', help="train | val | test"),
+    seed: int = typer.Option(42, help='Random seed (default 42)'),
+    n_train: int = typer.Option(75, help='Train split size'),
+    n_val: int = typer.Option(75, help='Val split size'),
+    n_test: int = typer.Option(100, help='Test split size'),
+    model: str = typer.Option('together_ai/deepseek-ai/DeepSeek-V3', help='LLM model'),
+    max_steps: int = typer.Option(14, help='Max ReAct steps'),
+    output_dir: str = typer.Option('eval_n30_ptools_on_val', help='Output dir'),
+    only_first_ptool: bool = typer.Option(False, help='Use only ptool_001.json (skip the rest)'),
+):
+    """Evaluate a SAVED set of induced ptools on one split, without re-inducing.
+
+    Loads ptool_*.json files from ptools_dir, registers them via
+    create_ptool_interface, then runs ReAct on the chosen split.
+    Useful for taking ptools induced on one sample (e.g., n=30) and
+    testing them on a held-out sample (e.g., the n=75 val split).
+    """
+    out_dir = BASE_DIR / output_dir
+    out_dir.mkdir(parents=True, exist_ok=True)
+    config.configure(cfg={
+        'llm': {'model': model, 'timeout': 300},
+        'cachier': {
+            'cache_dir': str(out_dir / 'llm_cache'),
+            'enable_caching': True,
+        },
+    })
+
+    # Load ptool specs
+    pdir = Path(ptools_dir)
+    if not pdir.is_absolute():
+        pdir = BASE_DIR / pdir
+    ptool_files = sorted(pdir.glob('ptool_*.json'))
+    if only_first_ptool and ptool_files:
+        ptool_files = ptool_files[:1]
+    ptools: list[dict] = []
+    for pf in ptool_files:
+        with open(pf) as f:
+            spec = json.load(f)
+        ptools.append(spec)
+        # Register the @interface so ReAct loop can find it
+        create_ptool_interface(spec['func_name'], spec['doc'])
+        print(f'  Loaded ptool: {spec["display_name"]} ({spec["func_name"]})')
+    print(f'Loaded {len(ptools)} ptools from {pdir}')
+
+    cases = load_team_split(split, seed=seed,
+                             n_train=n_train, n_val=n_val, n_test=n_test)
+    print(f'Evaluating on {split} split: {len(cases)} cases')
+    print(f'  Model: {model}, Max steps: {max_steps}, Seed: {seed}\n')
+
+    traces = _run_all_cases_obj(cases, ptools=ptools, model=model, max_steps=max_steps)
+    with open(out_dir / f'{split}_traces.json', 'w') as f:
+        json.dump(traces, f, indent=2, default=str)
+
+    n_correct = sum(1 for t in traces if t.get('correct'))
+    avg_cost = sum(t.get('stats', {}).get('cost', 0) for t in traces) / max(len(traces), 1)
+    n_ptool_uses = sum(1 for t in traces for s in t['steps'] if s.get('ptool_used'))
+    n_extracted = sum(1 for t in traces if 'extracted' in t.get('termination', ''))
+    n_neg1 = sum(1 for t in traces if t.get('answer') == -1)
+
+    print(f'\n[{split}] accuracy with {len(ptools)} ptools: {n_correct}/{len(traces)} ({n_correct/len(traces):.1%})')
+    print(f'Avg cost: ${avg_cost:.4f}  |  Total ptool invocations: {n_ptool_uses}')
+    print(f'Extracted: {n_extracted}  |  -1 answers: {n_neg1}')
+
+    summary = {
+        'split': split,
+        'n_cases': len(cases),
+        'n_ptools': len(ptools),
+        'ptools_dir': str(pdir),
+        'ptools_loaded': [p['display_name'] for p in ptools],
+        'accuracy': n_correct / len(traces) if traces else 0,
+        'n_correct': n_correct,
+        'n_total': len(traces),
+        'avg_cost': avg_cost,
+        'n_ptool_invocations': n_ptool_uses,
+        'n_extracted_finishes': n_extracted,
+        'n_neg1_answers': n_neg1,
+    }
+    with open(out_dir / f'{split}_summary.json', 'w') as f:
+        json.dump(summary, f, indent=2, default=str)
+    print(f'\nSummary saved to {out_dir / f"{split}_summary.json"}')
+
+
 if __name__ == '__main__':
     app()
