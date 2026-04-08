@@ -1173,11 +1173,30 @@ def eval_with_ptools(
         },
     })
 
-    # Load ptool specs
+    # Load ptool specs.
+    # Resolve relative paths against the project root (parent of experiments/),
+    # NOT against BASE_DIR which is `experiments/induction` itself and would
+    # double-prefix any "experiments/induction/..." path.
     pdir = Path(ptools_dir)
     if not pdir.is_absolute():
-        pdir = BASE_DIR / pdir
+        # Try interpreting relative to current working directory first
+        cwd_resolved = Path.cwd() / pdir
+        if cwd_resolved.exists():
+            pdir = cwd_resolved
+        else:
+            # Try relative to project root (parent of experiments/)
+            project_resolved = _PROJECT_ROOT / pdir
+            if project_resolved.exists():
+                pdir = project_resolved
+            else:
+                # Last resort: relative to BASE_DIR (experiments/induction)
+                pdir = BASE_DIR / pdir
+    pdir = pdir.resolve()
+    if not pdir.exists():
+        raise SystemExit(f'ptools_dir does not exist: {pdir}')
     ptool_files = sorted(pdir.glob('ptool_*.json'))
+    if not ptool_files:
+        raise SystemExit(f'no ptool_*.json files found in {pdir}')
     if only_first_ptool and ptool_files:
         ptool_files = ptool_files[:1]
     ptools: list[dict] = []
